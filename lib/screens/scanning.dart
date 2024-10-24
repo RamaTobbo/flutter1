@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import 'package:track_pro/screens/BluetoothPairingSuccess.dart';
+
 class QrCodeScanner extends StatelessWidget {
   QrCodeScanner({
     required this.setResult,
@@ -21,10 +23,14 @@ class QrCodeScanner extends StatelessWidget {
         if (barcode.rawValue != null) {
           setResult(barcode.rawValue);
 
-          await controller
-              .stop()
-              .then((value) => controller.dispose())
-              .then((value) => Navigator.of(context).pop());
+          await controller.stop();
+          controller.dispose();
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Bluetoothpairingsuccess()),
+          );
         }
       },
     );
