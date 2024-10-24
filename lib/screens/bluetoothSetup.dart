@@ -20,6 +20,11 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
 
   final pairingChoices = ['Bluetooth', 'ScanQr Code'];
   var selectedPairingMethod = 'ScanQr Code';
+  String? _result;
+
+  void setResult(String result) {
+    setState(() => _result = result);
+  }
 
   Widget screen = const Text('');
   void nextSetup() {
@@ -31,7 +36,8 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
     } else {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (ctx) => const Scanning()),
+        MaterialPageRoute(
+            builder: (ctx) => QrCodeScanner(setResult: setResult)),
       );
     }
   }
