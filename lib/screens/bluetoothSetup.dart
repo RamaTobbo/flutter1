@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:track_pro/data/setup.dart';
-import 'package:track_pro/models/bluetoothpairing.dart';
-import 'package:track_pro/screens/bluetoothPairingSuccess.dart';
+
 import 'package:track_pro/screens/bluetoothpairingScreen1.dart';
 import 'package:track_pro/screens/scanning.dart';
 
