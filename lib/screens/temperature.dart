@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:track_pro/models/location.dart';
+import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/map.dart';
 
 class Temperature extends StatefulWidget {
@@ -69,6 +71,7 @@ class _TemperatureState extends State<Temperature> {
       GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold);
   @override
   Widget build(BuildContext context) {
+    final themeProvider1 = Provider.of<ThemeProvider>(context);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -79,8 +82,10 @@ class _TemperatureState extends State<Temperature> {
               child: Container(
                 width: 375,
                 height: 169.92,
-                decoration: const BoxDecoration(
-                  color: Color(0xff93b0b6),
+                decoration: BoxDecoration(
+                  color: themeProvider1.isDarkMode
+                      ? Color(0xffADD8E6)
+                      : Color(0xff93b0b6),
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(55),
                     topLeft: Radius.circular(55),
@@ -93,10 +98,15 @@ class _TemperatureState extends State<Temperature> {
               left: 30,
               child: Text(
                 'Weather',
-                style: GoogleFonts.roboto(
-                    fontSize: 24,
-                    color: const Color(0xff3d494b),
-                    fontWeight: FontWeight.bold),
+                style: themeProvider1.isDarkMode
+                    ? GoogleFonts.roboto(
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)
+                    : GoogleFonts.roboto(
+                        fontSize: 24,
+                        color: const Color(0xff3d494b),
+                        fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
@@ -211,7 +221,9 @@ class _TemperatureState extends State<Temperature> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF4a4d7a)),
+                              backgroundColor: themeProvider1.isDarkMode
+                                  ? Color(0xffADD8E6)
+                                  : const Color(0xFF4a4d7a)),
                           child: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 30.0),
                             child: Text(

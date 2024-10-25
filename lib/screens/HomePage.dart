@@ -2,14 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/heartRate.dart';
 import 'package:track_pro/widgets/chatbot.dart';
 
 class Homepage extends StatefulWidget {
-  Homepage(
-      {super.key, this.isSwitchedDark = false, required this.ontoggleDarkmode});
-  bool isSwitchedDark;
-  Function(bool) ontoggleDarkmode;
+  Homepage({super.key});
 
   @override
   State<Homepage> createState() => _HomepageState();
@@ -18,6 +17,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider1 = Provider.of<ThemeProvider>(context);
     return PopScope(
       canPop: false,
       child: Stack(
@@ -53,12 +53,19 @@ class _HomepageState extends State<Homepage> {
                             borderRadius: BorderRadius.circular(12),
                             color: const Color(0xFFf9e0e4),
                             boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: const Offset(0, 3),
-                              ),
+                              themeProvider1.isDarkMode
+                                  ? BoxShadow(
+                                      color: Colors.grey.withOpacity(0.01),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 0),
+                                    )
+                                  : BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 3),
+                                    )
                             ],
                           ),
                           child: Column(
@@ -113,12 +120,19 @@ class _HomepageState extends State<Homepage> {
                                 borderRadius: BorderRadius.circular(12),
                                 color: const Color(0xFF8183a2),
                                 boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
-                                  ),
+                                  themeProvider1.isDarkMode
+                                      ? BoxShadow(
+                                          color: Colors.grey.withOpacity(0.01),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: const Offset(0, 0),
+                                        )
+                                      : BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: const Offset(0, 3),
+                                        ),
                                 ],
                               ),
                               child: Column(
@@ -176,12 +190,19 @@ class _HomepageState extends State<Homepage> {
                                 borderRadius: BorderRadius.circular(12),
                                 color: const Color(0xFFffdd7f),
                                 boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 5,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
-                                  ),
+                                  themeProvider1.isDarkMode
+                                      ? BoxShadow(
+                                          color: Colors.grey.withOpacity(0.01),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: const Offset(0, 0),
+                                        )
+                                      : BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 5,
+                                          blurRadius: 7,
+                                          offset: const Offset(0, 3),
+                                        ),
                                 ],
                               ),
                               child: Column(
@@ -244,12 +265,19 @@ class _HomepageState extends State<Homepage> {
                             borderRadius: BorderRadius.circular(12),
                             color: const Color(0xFFb6c7ca),
                             boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: const Offset(0, 3),
-                              ),
+                              themeProvider1.isDarkMode
+                                  ? BoxShadow(
+                                      color: Colors.grey.withOpacity(0.01),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 0),
+                                    )
+                                  : BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 5,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 3),
+                                    ),
                             ],
                           ),
                           child: Column(

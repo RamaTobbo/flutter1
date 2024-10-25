@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:track_pro/provider/themeprovider.dart';
 
 class Heartrate extends StatefulWidget {
   const Heartrate({super.key});
@@ -13,6 +15,7 @@ class _HeartrateState extends State<Heartrate> {
   @override
   @override
   Widget build(BuildContext context) {
+    final themeProvider1 = Provider.of<ThemeProvider>(context);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -23,8 +26,10 @@ class _HeartrateState extends State<Heartrate> {
                 Container(
                   width: 368,
                   height: 350,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFf9e0e4),
+                  decoration: BoxDecoration(
+                    color: themeProvider1.isDarkMode
+                        ? Colors.red
+                        : Color(0xFFf9e0e4),
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(110),
                       bottomRight: Radius.circular(110),
@@ -160,10 +165,12 @@ class _HeartrateState extends State<Heartrate> {
               left: 40,
               child: Text(
                 'Heart Rate',
-                style: GoogleFonts.roboto(
-                  fontSize: 24,
-                  color: const Color(0xff554c4e),
-                ),
+                style: themeProvider1.isDarkMode
+                    ? GoogleFonts.roboto(fontSize: 24, color: Colors.white)
+                    : GoogleFonts.roboto(
+                        fontSize: 24,
+                        color: const Color(0xff554c4e),
+                      ),
               ),
             ),
             Positioned(

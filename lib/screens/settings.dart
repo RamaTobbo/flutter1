@@ -44,19 +44,21 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     final ThemeData theme =
         isSwitchedDark ? ThemeData.dark() : ThemeData.light();
     var textStyle = GoogleFonts.poppins(
         fontSize: 20,
         fontWeight: FontWeight.bold,
-        color: isSwitchedDark ? Colors.white : Colors.black);
+        color: themeProvider.isDarkMode ? Colors.white : Colors.black);
 
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: isSwitchedDark ? Colors.black : Colors.white,
+        backgroundColor: themeProvider.isDarkMode ? Colors.black : Colors.white,
         appBar: AppBar(
-          backgroundColor: isSwitchedDark ? Colors.black : Colors.white,
+          backgroundColor:
+              themeProvider.isDarkMode ? Colors.black : Colors.white,
           title: Text('Settings', style: textStyle),
         ),
         body: Stack(
@@ -80,7 +82,7 @@ class _SettingsState extends State<Settings> {
                 padding: const EdgeInsets.symmetric(horizontal: 70.0),
                 child: Text(
                   'Automatically send notifications \nin cases of high pulse or low \npulse heart',
-                  style: isSwitchedDark
+                  style: themeProvider.isDarkMode
                       ? GoogleFonts.poppins(
                           fontSize: 13,
                           color: Colors.white,
@@ -113,11 +115,12 @@ class _SettingsState extends State<Settings> {
                 scale: 1.2,
                 child: Switch(
                   activeColor: isSwitchedDark ? Colors.amber : Colors.black,
-                  value: isSwitchedDark,
+                  value: themeProvider.isDarkMode,
                   onChanged: (value) {
                     setState(() {
-                      isSwitchedDark = value;
-                      _saveSwitchState(value);
+                      themeProvider.setDarkMode(value);
+                      // isSwitchedDark = value;
+                      // _saveSwitchState(value);
                     });
                   },
                 ),
@@ -127,7 +130,7 @@ class _SettingsState extends State<Settings> {
               top: 60,
               right: 10,
               child: Text(
-                isSwitchedDark ? 'Dark Mode' : 'Light Mode',
+                themeProvider.isDarkMode ? 'Dark Mode' : 'Light Mode',
                 style: textStyle,
               ),
             ),
@@ -138,16 +141,17 @@ class _SettingsState extends State<Settings> {
   }
 
   Row buildWarningRow() {
+    final themeProvider1 = Provider.of<ThemeProvider>(context);
     return Row(
       children: [
-        isSwitchedDark
+        themeProvider1.isDarkMode
             ? Image.asset('assets/images/call.png', width: 60)
             : Image.asset('assets/images/Doorbell.png', width: 60),
         const SizedBox(width: 6),
         Column(
           children: [
             Text('Abnormal pulse heart rate warning',
-                style: isSwitchedDark
+                style: themeProvider1.isDarkMode
                     ? GoogleFonts.poppins(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -163,6 +167,7 @@ class _SettingsState extends State<Settings> {
   }
 
   Padding buildSettingsList(BuildContext context, TextStyle textStyle) {
+    final themeProvider1 = Provider.of<ThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 48.0, top: 60),
       child: Column(
@@ -170,33 +175,33 @@ class _SettingsState extends State<Settings> {
           buildSettingsRow(
               context,
               'Profile',
-              isSwitchedDark
+              themeProvider1.isDarkMode
                   ? 'assets/images/profileamber.png'
                   : 'assets/images/profile.png',
               ProfileUser()),
-          isSwitchedDark ? buildDividerDark() : buildDivider(),
+          themeProvider1.isDarkMode ? buildDividerDark() : buildDivider(),
           buildSettingsRow(
               context,
               'How to use',
-              isSwitchedDark
+              themeProvider1.isDarkMode
                   ? 'assets/images/questioamber.png'
                   : 'assets/images/howtouse.png',
               PrivacyPolicyPage()),
-          isSwitchedDark ? buildDividerDark() : buildDivider(),
+          themeProvider1.isDarkMode ? buildDividerDark() : buildDivider(),
           buildRateUsRow(),
-          isSwitchedDark ? buildDividerDark() : buildDivider(),
+          themeProvider1.isDarkMode ? buildDividerDark() : buildDivider(),
           buildSettingsRow(
               context,
               'Share to',
-              isSwitchedDark
+              themeProvider1.isDarkMode
                   ? 'assets/images/shareamber.png'
                   : 'assets/images/Share.png',
               null),
-          isSwitchedDark ? buildDividerDark() : buildDivider(),
+          themeProvider1.isDarkMode ? buildDividerDark() : buildDivider(),
           buildSettingsRow(
               context,
               'Privacy policy',
-              isSwitchedDark
+              themeProvider1.isDarkMode
                   ? 'assets/images/privacyamber.png'
                   : 'assets/images/policy.png',
               PrivacyPolicyPage()),
@@ -207,6 +212,7 @@ class _SettingsState extends State<Settings> {
 
   Row buildSettingsRow(BuildContext context, String title, String assetPath,
       Widget? navigateTo) {
+    final themeProvider1 = Provider.of<ThemeProvider>(context);
     return Row(
       children: [
         Image.asset(assetPath),
@@ -223,7 +229,7 @@ class _SettingsState extends State<Settings> {
             style: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: isSwitchedDark ? Colors.white : Colors.black,
+              color: themeProvider1.isDarkMode ? Colors.white : Colors.black,
             ),
           ),
         ),
@@ -252,9 +258,10 @@ class _SettingsState extends State<Settings> {
   }
 
   Row buildRateUsRow() {
+    final themeProvider1 = Provider.of<ThemeProvider>(context);
     return Row(
       children: [
-        Image.asset(isSwitchedDark
+        Image.asset(themeProvider1.isDarkMode
             ? 'assets/images/staramber.png'
             : 'assets/images/Star.png'),
         const SizedBox(width: 25),
@@ -269,7 +276,7 @@ class _SettingsState extends State<Settings> {
             style: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: isSwitchedDark ? Colors.white : Colors.black,
+              color: themeProvider1.isDarkMode ? Colors.white : Colors.black,
             ),
           ),
         ),

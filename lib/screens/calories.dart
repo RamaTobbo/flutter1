@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:track_pro/provider/themeprovider.dart';
 
 class Calories extends StatefulWidget {
   const Calories({super.key});
@@ -13,6 +15,7 @@ class Calories extends StatefulWidget {
 class _CaloriesState extends State<Calories> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider1 = Provider.of<ThemeProvider>(context);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -23,8 +26,10 @@ class _CaloriesState extends State<Calories> {
                 Container(
                   width: 375,
                   height: 248,
-                  decoration: const BoxDecoration(
-                      color: Color(0xffffce48),
+                  decoration: BoxDecoration(
+                      color: themeProvider1.isDarkMode
+                          ? Color(0xffFFD700)
+                          : Color(0xffffce48),
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(56),
                           bottomRight: Radius.circular(44))),
@@ -36,7 +41,9 @@ class _CaloriesState extends State<Calories> {
               top: 40,
               child: Text('Calories And Steps',
                   style: GoogleFonts.roboto(
-                      color: const Color(0xff574619),
+                      color: themeProvider1.isDarkMode
+                          ? Colors.white
+                          : Color(0xff574619),
                       fontSize: 24,
                       fontWeight: FontWeight.bold)),
             ),
@@ -185,7 +192,9 @@ class _CaloriesState extends State<Calories> {
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4a4d7a)),
+                                backgroundColor: themeProvider1.isDarkMode
+                                    ? Color(0xffFFD700)
+                                    : const Color(0xFF4a4d7a)),
                             child: const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 30.0),
                               child: Text(

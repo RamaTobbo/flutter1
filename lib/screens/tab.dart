@@ -105,10 +105,7 @@ class _TabNavState extends State<TabNav> {
 
     switch (selectedPageIndex) {
       case 0:
-        activeScreen = Homepage(
-          isSwitchedDark: isSwitchedDark,
-          ontoggleDarkmode: toggleDarkMode,
-        );
+        activeScreen = Homepage();
         break;
       case 1:
         activeScreen = const Heartrate();

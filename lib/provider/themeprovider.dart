@@ -7,7 +7,7 @@ class ThemeProvider with ChangeNotifier {
 
   void toggleDarkMode() {
     _isDarkMode = !_isDarkMode;
-    notifyListeners(); // Notify listeners to rebuild widgets that depend on this value
+    notifyListeners();
   }
 
   void setDarkMode(bool value) {
