@@ -6,7 +6,10 @@ import 'package:track_pro/screens/heartRate.dart';
 import 'package:track_pro/widgets/chatbot.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  Homepage(
+      {super.key, this.isSwitchedDark = false, required this.ontoggleDarkmode});
+  bool isSwitchedDark;
+  Function(bool) ontoggleDarkmode;
 
   @override
   State<Homepage> createState() => _HomepageState();

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/privacyPolicy.dart';
 import 'package:track_pro/screens/profile.dart';
 import 'package:track_pro/screens/rating.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({super.key, this.isSwitchedDark = false});
+  const Settings(
+      {super.key, this.isSwitchedDark = false, required this.ontoggledarkmode});
   final bool isSwitchedDark;
+  final Function(bool) ontoggledarkmode;
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -21,6 +26,20 @@ class _SettingsState extends State<Settings> {
   void initState() {
     super.initState();
     isSwitchedDark = widget.isSwitchedDark;
+
+    _loadSwitchState();
+  }
+
+  _loadSwitchState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isSwitchedDark = prefs.getBool('switch_state') ?? false;
+    });
+  }
+
+  _saveSwitchState(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('switch_state', value);
   }
 
   @override
@@ -32,84 +51,88 @@ class _SettingsState extends State<Settings> {
         fontWeight: FontWeight.bold,
         color: isSwitchedDark ? Colors.white : Colors.black);
 
-    return Scaffold(
-      backgroundColor: isSwitchedDark ? Colors.black : Colors.white,
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
         backgroundColor: isSwitchedDark ? Colors.black : Colors.white,
-        title: Text('Settings', style: textStyle),
-      ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 48.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const SizedBox(height: 60),
-                  buildWarningRow(),
-                  const SizedBox(height: 30),
-                  buildSettingsList(context, textStyle),
-                ],
+        appBar: AppBar(
+          backgroundColor: isSwitchedDark ? Colors.black : Colors.white,
+          title: Text('Settings', style: textStyle),
+        ),
+        body: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 48.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 60),
+                    buildWarningRow(),
+                    const SizedBox(height: 30),
+                    buildSettingsList(context, textStyle),
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: 160,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 70.0),
-              child: Text(
-                'Automatically send notifications \nin cases of high pulse or low \npulse heart',
-                style: isSwitchedDark
-                    ? GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: Colors.white,
-                      )
-                    : GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: Colors.black,
-                      ),
-                textAlign: TextAlign.justify,
+            Positioned(
+              top: 160,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                child: Text(
+                  'Automatically send notifications \nin cases of high pulse or low \npulse heart',
+                  style: isSwitchedDark
+                      ? GoogleFonts.poppins(
+                          fontSize: 13,
+                          color: Colors.white,
+                        )
+                      : GoogleFonts.poppins(
+                          fontSize: 13,
+                          color: Colors.black,
+                        ),
+                  textAlign: TextAlign.justify,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: 150,
-            right: 10,
-            child: Switch(
-              activeColor: Colors.green,
-              value: isSwitched,
-              onChanged: (value) {
-                setState(() {
-                  isSwitched = value;
-                });
-              },
-            ),
-          ),
-          Positioned(
-            top: 10,
-            right: 30,
-            child: Transform.scale(
-              scale: 1.2,
+            Positioned(
+              top: 150,
+              right: 10,
               child: Switch(
-                activeColor: isSwitchedDark ? Colors.amber : Colors.black,
-                value: isSwitchedDark,
+                activeColor: Colors.green,
+                value: isSwitched,
                 onChanged: (value) {
                   setState(() {
-                    isSwitchedDark = value;
+                    isSwitched = value;
                   });
                 },
               ),
             ),
-          ),
-          Positioned(
-            top: 60,
-            right: 10,
-            child: Text(
-              isSwitchedDark ? 'Dark Mode' : 'Light Mode',
-              style: textStyle,
+            Positioned(
+              top: 10,
+              right: 30,
+              child: Transform.scale(
+                scale: 1.2,
+                child: Switch(
+                  activeColor: isSwitchedDark ? Colors.amber : Colors.black,
+                  value: isSwitchedDark,
+                  onChanged: (value) {
+                    setState(() {
+                      isSwitchedDark = value;
+                      _saveSwitchState(value);
+                    });
+                  },
+                ),
+              ),
             ),
-          ),
-        ],
+            Positioned(
+              top: 60,
+              right: 10,
+              child: Text(
+                isSwitchedDark ? 'Dark Mode' : 'Light Mode',
+                style: textStyle,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -193,9 +216,7 @@ class _SettingsState extends State<Settings> {
             if (navigateTo != null) {
               Navigator.push(
                   context, MaterialPageRoute(builder: (ctx) => navigateTo));
-            } else {
-              // Implement the share functionality here if needed
-            }
+            } else {}
           },
           child: Text(
             title,

@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:track_pro/screens/calories.dart';
-
+import 'package:provider/provider.dart';
+import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/splash1Screen.dart';
-import 'package:track_pro/screens/tab.dart';
-import 'package:track_pro/screens/temperature.dart';
-import 'package:track_pro/widgets/chatbot.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Splash1screen(),
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
     ),
   );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: themeProvider.isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      home: const Splash1screen(),
+    );
+  }
 }

@@ -21,6 +21,12 @@ class _TabNavState extends State<TabNav> {
   int selectedPageIndex = 0;
   PlaceLocation? pickedPlace;
   PlaceLocation? currentLocation;
+  bool isSwitchedDark = false;
+  void toggleDarkMode(bool value) {
+    setState(() {
+      isSwitchedDark = value;
+    });
+  }
 
   void selectPage(int index) {
     setState(() {
@@ -30,7 +36,7 @@ class _TabNavState extends State<TabNav> {
 
   void updateLocation(PlaceLocation location) {
     setState(() {
-      currentLocation = location; // Update the location state
+      currentLocation = location;
     });
   }
 
@@ -76,7 +82,10 @@ class _TabNavState extends State<TabNav> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activeScreen = const Homepage();
+    Widget activeScreen = Settings(
+      isSwitchedDark: isSwitchedDark,
+      ontoggledarkmode: toggleDarkMode,
+    );
     var color = const Color(0x000000ff);
     if (selectedPageIndex == 0) {
       color = const Color(0xFF8183a2);
@@ -96,7 +105,10 @@ class _TabNavState extends State<TabNav> {
 
     switch (selectedPageIndex) {
       case 0:
-        activeScreen = const Homepage();
+        activeScreen = Homepage(
+          isSwitchedDark: isSwitchedDark,
+          ontoggleDarkmode: toggleDarkMode,
+        );
         break;
       case 1:
         activeScreen = const Heartrate();
@@ -111,7 +123,8 @@ class _TabNavState extends State<TabNav> {
         break;
       case 4:
         activeScreen = Settings(
-          isSwitchedDark: false,
+          isSwitchedDark: isSwitchedDark,
+          ontoggledarkmode: toggleDarkMode,
         );
         break;
     }
