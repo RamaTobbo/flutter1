@@ -110,7 +110,9 @@ class _TabNavState extends State<TabNav> {
         );
         break;
       case 4:
-        activeScreen = const Settings();
+        activeScreen = Settings(
+          isSwitchedDark: false,
+        );
         break;
     }
 
