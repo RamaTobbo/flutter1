@@ -6,6 +6,7 @@ import 'package:track_pro/models/location.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/scan.dart';
 import 'package:track_pro/noSmartwatch/settings.dart';
+import 'package:track_pro/noSmartwatch/temp.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/HomePage.dart';
 import 'package:track_pro/screens/calories.dart';
@@ -125,7 +126,7 @@ class _TabNav1State extends State<TabNav1> {
         activeScreen = const Calories();
         break;
       case 4:
-        activeScreen = Temperature(
+        activeScreen = Temperature1(
           place: getCurrentLocation,
         );
         break;
