@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:track_pro/noSmartwatch/Home.dart';
+import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/screens/HomePage.dart';
+import 'package:track_pro/screens/calories.dart';
 
 import 'package:track_pro/screens/tab.dart';
 
 class Welcomescreen extends StatelessWidget {
-  const Welcomescreen({required this.enteredName, super.key});
+  const Welcomescreen(
+      {required this.enteredName,
+      super.key,
+      required this.isContinueWithoutSmartwatc});
   final String enteredName;
-
+  final bool isContinueWithoutSmartwatc;
   @override
   Widget build(BuildContext context) {
     String toUpperCase(String name) {
@@ -15,9 +21,13 @@ class Welcomescreen extends StatelessWidget {
           name.substring(1).toLowerCase();
     }
 
-    void nextPage() {
+    void nextPageSmartWatch() {
       Navigator.push(
           context, MaterialPageRoute(builder: (ctx) => const TabNav()));
+    }
+
+    void nextPageWithoutSmartWatch() {
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) => TabNav1()));
     }
 
     return PopScope(
@@ -44,7 +54,9 @@ class Welcomescreen extends StatelessWidget {
                 height: 79,
               ),
               ElevatedButton(
-                onPressed: nextPage,
+                onPressed: isContinueWithoutSmartwatc
+                    ? nextPageWithoutSmartWatch
+                    : nextPageSmartWatch,
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4a4d7a)),
                 child: const Padding(

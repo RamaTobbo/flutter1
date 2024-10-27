@@ -3,8 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:track_pro/screens/welcomeScreen.dart';
 
 class congratulationscreen extends StatelessWidget {
-  const congratulationscreen({super.key, required this.enteredName});
+  const congratulationscreen(
+      {super.key,
+      required this.enteredName,
+      required this.isContinueWithoutSmartwatch});
   final String enteredName;
+  final bool isContinueWithoutSmartwatch;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +16,10 @@ class congratulationscreen extends StatelessWidget {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (ctx) => Welcomescreen(enteredName: enteredName)));
+              builder: (ctx) => Welcomescreen(
+                    enteredName: enteredName,
+                    isContinueWithoutSmartwatc: isContinueWithoutSmartwatch,
+                  )));
     }
 
     return PopScope(

@@ -7,8 +7,8 @@ import 'package:track_pro/screens/profile.dart';
 import 'package:track_pro/screens/rating.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({
+class Settings1 extends StatefulWidget {
+  const Settings1({
     super.key,
     this.isSwitchedDark = false,
     required this.ontoggledarkmode,
@@ -17,10 +17,10 @@ class Settings extends StatefulWidget {
   final Function(bool) ontoggledarkmode;
 
   @override
-  State<Settings> createState() => _SettingsState();
+  State<Settings1> createState() => _Settings1State();
 }
 
-class _SettingsState extends State<Settings> {
+class _Settings1State extends State<Settings1> {
   bool isSwitched = false;
   bool isSwitchedDark = false;
   bool showRatingBar = false;
@@ -101,14 +101,36 @@ class _SettingsState extends State<Settings> {
             Positioned(
               top: 150,
               right: 10,
-              child: Switch(
-                activeColor: Colors.green,
-                value: isSwitched,
-                onChanged: (value) {
-                  setState(() {
-                    isSwitched = value;
-                  });
+              child: GestureDetector(
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: themeProvider.isDarkMode
+                          ? Colors.black
+                          : Colors.white,
+                      content: Text(
+                        'Cannot enable notifications without syncing with the Track Pro smartwatch.',
+                        style: TextStyle(
+                            color: themeProvider.isDarkMode
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
                 },
+                child: Switch(
+                  activeColor: Colors.green,
+                  value: isSwitched,
+                  onChanged: null,
+                  // onChanged: (value) {
+                  //   setState(() {
+                  //     SnackBar(
+                  //         content: Text(
+                  //             'Can not enable notifications warning without syncing with the track pro smartwatc'));
+                  //   });
+                  // },
+                ),
               ),
             ),
             Positioned(

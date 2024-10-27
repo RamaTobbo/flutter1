@@ -29,8 +29,8 @@ class _HeartrateState extends State<Heartrate> {
                   decoration: BoxDecoration(
                     color: themeProvider1.isDarkMode
                         ? Colors.red
-                        : Color(0xFFf9e0e4),
-                    borderRadius: BorderRadius.only(
+                        : const Color(0xFFf9e0e4),
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(110),
                       bottomRight: Radius.circular(110),
                     ),

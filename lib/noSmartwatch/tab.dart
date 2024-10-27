@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 import 'package:track_pro/models/location.dart';
+import 'package:track_pro/noSmartwatch/Home.dart';
+import 'package:track_pro/noSmartwatch/scan.dart';
+import 'package:track_pro/noSmartwatch/settings.dart';
+import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/HomePage.dart';
 import 'package:track_pro/screens/calories.dart';
 import 'package:track_pro/screens/heartRate.dart';
@@ -12,14 +17,14 @@ import 'dart:convert';
 
 import 'package:track_pro/screens/trainingExercises.dart';
 
-class TabNav extends StatefulWidget {
-  const TabNav({super.key});
+class TabNav1 extends StatefulWidget {
+  const TabNav1({super.key});
 
   @override
-  State<TabNav> createState() => _TabNavState();
+  State<TabNav1> createState() => _TabNav1State();
 }
 
-class _TabNavState extends State<TabNav> {
+class _TabNav1State extends State<TabNav1> {
   int selectedPageIndex = 0;
   PlaceLocation? pickedPlace;
   PlaceLocation? currentLocation;
@@ -84,7 +89,8 @@ class _TabNavState extends State<TabNav> {
 
   @override
   Widget build(BuildContext context) {
-    Widget activeScreen = Settings(
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    Widget activeScreen = Settings1(
       isSwitchedDark: isSwitchedDark,
       ontoggledarkmode: toggleDarkMode,
     );
@@ -105,15 +111,15 @@ class _TabNavState extends State<TabNav> {
       color = const Color(0xFF686d76);
     }
     if (selectedPageIndex == 3) {
-      color = const Color(0xFF686d76);
+      color = themeProvider.isDarkMode ? Colors.white : const Color(0xFF686d76);
     }
 
     switch (selectedPageIndex) {
       case 0:
-        activeScreen = Homepage();
+        activeScreen = Home();
         break;
       case 1:
-        activeScreen = const Heartrate();
+        activeScreen = const ConnectingTotrackPro();
         break;
       case 2:
         activeScreen = const Calories();
@@ -127,7 +133,7 @@ class _TabNavState extends State<TabNav> {
         activeScreen = Trainingexercises();
         break;
       case 5:
-        activeScreen = Settings(
+        activeScreen = Settings1(
           isSwitchedDark: isSwitchedDark,
           ontoggledarkmode: toggleDarkMode,
         );
@@ -170,12 +176,19 @@ class _TabNavState extends State<TabNav> {
             label: 'Steps',
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              FontAwesomeIcons.dumbbell,
-              color: selectedPageIndex == 3
-                  ? Colors.grey
-                  : const Color(0xFF666666),
-            ),
+            icon: themeProvider.isDarkMode
+                ? Icon(
+                    FontAwesomeIcons.dumbbell,
+                    color: selectedPageIndex == 3
+                        ? Colors.white
+                        : const Color(0xFF666666),
+                  )
+                : Icon(
+                    FontAwesomeIcons.dumbbell,
+                    color: selectedPageIndex == 3
+                        ? Colors.grey
+                        : const Color(0xFF666666),
+                  ),
             label: 'Exercises',
           ),
           BottomNavigationBarItem(

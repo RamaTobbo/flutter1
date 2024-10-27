@@ -21,7 +21,11 @@ class _BluetoothpairingsuccessState extends State<Bluetoothpairingsuccess> {
         FlutterNativeSplash.remove();
 
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (ctx) => const Setupscreens()));
+            context,
+            MaterialPageRoute(
+                builder: (ctx) => Setupscreens(
+                      isContinueWithoutSmartWatch: false,
+                    )));
       });
     });
   }

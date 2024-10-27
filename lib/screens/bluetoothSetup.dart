@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:track_pro/data/setup.dart';
+import 'package:track_pro/screens/SetupScreens.dart';
 
 import 'package:track_pro/screens/bluetoothpairingScreen1.dart';
 import 'package:track_pro/screens/scanning.dart';
@@ -20,6 +21,7 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
   final pairingChoices = ['Bluetooth', 'ScanQr Code'];
   var selectedPairingMethod = 'ScanQr Code';
   String? _result;
+  bool isContinueWithoutSmartWatch = false;
 
   void setResult(String result) {
     setState(() => _result = result);
@@ -41,7 +43,6 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
     }
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     final Indicator = setupItems[0].progressIndicator;
@@ -139,12 +140,25 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
               ],
             ),
             Positioned(
-              top: 20,
-              right: 60,
-              child: Text(
-                '${pageindex + 1}/5',
-                style: GoogleFonts.robotoSlab(
-                    color: const Color(0xFFFFCE48), fontSize: 20),
+              right: 50,
+              bottom: 10,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.amber,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => Setupscreens(
+                                isContinueWithoutSmartWatch:
+                                    isContinueWithoutSmartWatch,
+                              )));
+                  setState(() {
+                    isContinueWithoutSmartWatch = true;
+                  });
+                },
+                child: Text('Continue Without trackPro smartwatch'),
               ),
             ),
           ],

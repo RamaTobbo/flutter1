@@ -7,8 +7,8 @@ import 'package:track_pro/screens/congratulations.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
 
 class Setupscreens extends StatefulWidget {
-  const Setupscreens({super.key});
-
+  Setupscreens({super.key, required this.isContinueWithoutSmartWatch});
+  bool isContinueWithoutSmartWatch;
   @override
   State<Setupscreens> createState() => _SetupscreensState();
 }
@@ -256,6 +256,8 @@ class _SetupscreensState extends State<Setupscreens> {
                           MaterialPageRoute(
                             builder: (ctx) => congratulationscreen(
                               enteredName: EnteredUserName,
+                              isContinueWithoutSmartwatch:
+                                  widget.isContinueWithoutSmartWatch,
                             ),
                           ),
                         );
