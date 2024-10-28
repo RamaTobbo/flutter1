@@ -193,7 +193,7 @@ class _HomeState extends State<Home> {
                       child: InkWell(
                         onTap: () {},
                         child: Container(
-                          width: 335,
+                          width: 315,
                           height: 146,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),

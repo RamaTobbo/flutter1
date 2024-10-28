@@ -28,7 +28,7 @@ class _CaloriesState extends State<Calories> {
                   height: 248,
                   decoration: BoxDecoration(
                       color: themeProvider1.isDarkMode
-                          ? Color(0xffFFD700)
+                          ? Color(0xffffce48)
                           : Color(0xffffce48),
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(56),
@@ -193,7 +193,7 @@ class _CaloriesState extends State<Calories> {
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: themeProvider1.isDarkMode
-                                    ? Color(0xffFFD700)
+                                    ? Color(0xffffce48)
                                     : const Color(0xFF4a4d7a)),
                             child: const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 30.0),

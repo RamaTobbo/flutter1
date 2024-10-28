@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/screens/HomePage.dart';
 import 'package:track_pro/screens/privacyPolicy.dart';
 import 'package:track_pro/screens/profile.dart';
 import 'package:track_pro/screens/rating.dart';

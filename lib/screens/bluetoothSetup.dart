@@ -161,6 +161,15 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
                 child: Text('Continue Without trackPro smartwatch'),
               ),
             ),
+            Positioned(
+              top: 20,
+              right: 60,
+              child: Text(
+                '${pageindex + 1}/5',
+                style: GoogleFonts.robotoSlab(
+                    color: const Color(0xFFFFCE48), fontSize: 20),
+              ),
+            ),
           ],
         ),
       ),
