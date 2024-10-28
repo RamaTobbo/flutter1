@@ -31,20 +31,20 @@ class _SettingsState extends State<Settings> {
     super.initState();
     isSwitchedDark = widget.isSwitchedDark;
 
-    _loadSwitchState();
+    // _loadSwitchState();
   }
 
-  _loadSwitchState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isSwitchedDark = prefs.getBool('switch_state') ?? false;
-    });
-  }
+  // _loadSwitchState() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     isSwitchedDark = prefs.getBool('switch_state') ?? false;
+  //   });
+  // }
 
-  _saveSwitchState(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('switch_state', value);
-  }
+  // _saveSwitchState(bool value) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool('switch_state', value);
+  // }
 
   @override
   Widget build(BuildContext context) {

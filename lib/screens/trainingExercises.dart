@@ -4,6 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/screens/workout.dart';
+import 'package:track_pro/screens/workout2.dart';
+import 'package:track_pro/screens/workout3.dart';
 
 class Trainingexercises extends StatefulWidget {
   const Trainingexercises({super.key});
@@ -13,7 +16,7 @@ class Trainingexercises extends StatefulWidget {
 }
 
 class _TrainingexercisesState extends State<Trainingexercises> {
-  Color _getColorForIndex(int index) {
+  _getColorForIndex(int index) {
     switch (index) {
       case 0:
         return const Color(0xfff9e0e4);
@@ -28,9 +31,38 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     }
   }
 
+  _getIcons(int index) {
+    switch (index) {
+      case 0:
+        return Image.asset('assets/images/dumble.png');
+      case 1:
+        return Image.asset('assets/images/dumble.png');
+      case 2:
+        return Image.asset('assets/images/dumble.png');
+      case 3:
+        return Image.asset('assets/images/dumble.png');
+      default:
+        return Image.asset('assets/images/dumble.png');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvide = Provider.of<ThemeProvider>(context);
+
+    _gotToExercises(int index) {
+      switch (index) {
+        case 0:
+          return Navigator.push(
+              context, MaterialPageRoute(builder: (ctx) => Workout1()));
+        case 1:
+          return Navigator.push(
+              context, MaterialPageRoute(builder: (ctx) => Workout2()));
+        case 2:
+          return Navigator.push(
+              context, MaterialPageRoute(builder: (ctx) => Workout3()));
+      }
+    }
 
     return Consumer<WorkoutData>(
       builder: (context, value, child) => Stack(
@@ -58,13 +90,20 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                              width: 80,
+                              width: 100,
                               decoration: BoxDecoration(
-                                color: _getColorForIndex(index),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                                  color: _getColorForIndex(index),
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 2,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 3),
+                                    )
+                                  ]),
                               child: Center(
-                                child: Image.asset('assets/images/Heart.png'),
+                                child: _getIcons(index),
                               ),
                             ),
                           );
@@ -74,7 +113,6 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                     const SizedBox(height: 16),
                     ListView.builder(
                       shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: value.getWorkoutList().length,
                       itemBuilder: (context, index) {
                         final workout = value.getWorkoutList()[index];
@@ -87,6 +125,14 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   color: _getColorForIndex(index),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 2,
+                                      blurRadius: 7,
+                                      offset: const Offset(0, 3),
+                                    )
+                                  ],
                                 ),
                                 child: Padding(
                                   padding:
@@ -108,7 +154,13 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                                 top: 90,
                                 left: 260,
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (ctx) => Workout()));
+                                    _gotToExercises(index);
+                                  },
                                   icon: Icon(
                                     Icons.arrow_forward_ios,
                                     color: themeProvide.isDarkMode

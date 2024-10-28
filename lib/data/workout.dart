@@ -22,4 +22,14 @@ class WorkoutData extends ChangeNotifier {
   List<Workout> getWorkoutList() {
     return workoutList;
   }
+
+  List<String> getWorkoutNames() {
+    return workoutList.map((workout) => workout.name).toList();
+  }
+
+  List<Exercise> getExercisesForWorkout(String workoutName) {
+    return workoutList
+        .firstWhere((workout) => workout.name == workoutName)
+        .exercise;
+  }
 }
