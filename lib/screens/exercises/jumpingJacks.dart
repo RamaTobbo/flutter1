@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/jumping.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+import 'package:track_pro/provider/userdata.dart';
+
+var userWeight;
 
 class Jumpingjacks extends StatefulWidget {
   const Jumpingjacks({super.key});
@@ -13,6 +17,7 @@ class Jumpingjacks extends StatefulWidget {
 }
 
 class _JumpingjacksState extends State<Jumpingjacks> {
+  double caloriesBurned = 0.0;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -28,6 +33,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
               countdownTimer--;
             } else {
               pauseTimer();
+              calculateCaloriesBurned();
             }
           });
         });
@@ -57,9 +63,37 @@ class _JumpingjacksState extends State<Jumpingjacks> {
     super.dispose();
   }
 
+  double metValue = 8;
+  void calculateCaloriesBurned() {
+    caloriesBurned = metValue * userWeight * (selectedDuration / 3600);
+    showCaloriesBurnedDialog();
+  }
+
+  void showCaloriesBurnedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Workout Complete"),
+          content:
+              Text("You burned ${caloriesBurned.toStringAsFixed(2)} calories!"),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
+    userWeight = Provider.of<UserData>(context).weight;
 
     return Scaffold(
       appBar: AppBar(
@@ -114,8 +148,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
                   if (selectedDuration > 1) {
                     setState(() {
                       selectedDuration--;
-                      countdownTimer =
-                          selectedDuration; // reset countdown timer
+                      countdownTimer = selectedDuration;
                     });
                   }
                 },

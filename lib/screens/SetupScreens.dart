@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:track_pro/data/setup.dart';
-
+import 'package:provider/provider.dart';
+import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/congratulations.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
 
@@ -174,6 +175,8 @@ class _SetupscreensState extends State<Setupscreens> {
                       onValueChanged: (value) {
                         setState(() {
                           selectedWeightValue = value;
+                          Provider.of<UserData>(context, listen: false)
+                              .setWeight(value);
                         });
                       },
                       maxValue: 200,
