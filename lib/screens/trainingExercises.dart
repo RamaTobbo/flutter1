@@ -7,6 +7,9 @@ import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/workout.dart';
 import 'package:track_pro/screens/workout2.dart';
 import 'package:track_pro/screens/workout3.dart';
+import 'package:track_pro/screens/workouts/workout1.dart';
+import 'package:track_pro/screens/workouts/workoutCardio.dart';
+import 'package:track_pro/screens/workouts/workoutCore.dart';
 
 class Trainingexercises extends StatefulWidget {
   const Trainingexercises({super.key});
@@ -54,14 +57,14 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     _gotToExercises(int index) {
       switch (index) {
         case 0:
-          return Navigator.push(
-              context, MaterialPageRoute(builder: (ctx) => Workout1()));
+          return Navigator.push(context,
+              MaterialPageRoute(builder: (ctx) => WorkoutLowerBoddy()));
         case 1:
           return Navigator.push(
-              context, MaterialPageRoute(builder: (ctx) => Workout2()));
+              context, MaterialPageRoute(builder: (ctx) => WorkoutCore()));
         case 2:
           return Navigator.push(
-              context, MaterialPageRoute(builder: (ctx) => Workout3()));
+              context, MaterialPageRoute(builder: (ctx) => WorkoutCardio()));
       }
     }
 

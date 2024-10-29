@@ -72,15 +72,15 @@ class _Workout3State extends State<Workout3> {
                         ),
                         color: Colors.white,
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.access_time_filled_outlined,
                                 color: Colors.black),
-                            const SizedBox(width: 5),
+                            SizedBox(width: 5),
                             Text(
-                              '${exercise.timer} min',
+                              '0 min',
                               style: TextStyle(color: Colors.black),
                             ),
                           ],

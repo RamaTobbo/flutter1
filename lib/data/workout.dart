@@ -5,24 +5,18 @@ import 'package:track_pro/models/workout.dart';
 class WorkoutData extends ChangeNotifier {
   List<Workout> workoutList = [
     Workout(name: 'Lower Body', exercise: [
-      Exercise(name: 'Lunges', timer: 1, image: 'assets/images/low.png'),
-      Exercise(name: 'Squats', timer: 1, image: 'assets/images/squats.png')
+      Exercise(name: 'Lunges', image: 'assets/images/low.png'),
+      Exercise(name: 'Squats', image: 'assets/images/squats.png')
     ]),
     Workout(name: 'Core', exercise: [
-      Exercise(name: 'Plank', timer: 1, image: 'assets/images/plank.png'),
-      Exercise(
-          name: 'Russian Twist',
-          timer: 1,
-          image: 'assets/images/russian-twist.png')
+      Exercise(name: 'Plank', image: 'assets/images/plank.png'),
+      Exercise(name: 'Russian Twist', image: 'assets/images/russian-twist.png')
     ]),
     Workout(name: 'Cardio', exercise: [
-      Exercise(
-          name: 'Jumping Jacks',
-          timer: 1,
-          image: 'assets/images/jumping-jack.png'),
-      Exercise(name: 'Burpees', timer: 1, image: 'assets/images/low.png'),
-      Exercise(name: 'Walking', timer: 1, image: 'assets/images/walk.png'),
-      Exercise(name: 'Bicycle', timer: 1, image: 'assets/images/bicycle.png'),
+      Exercise(name: 'Jumping Jacks', image: 'assets/images/jumping-jack.png'),
+      Exercise(name: 'Burpees', image: 'assets/images/low.png'),
+      Exercise(name: 'Walking', image: 'assets/images/walk.png'),
+      Exercise(name: 'Bicycle', image: 'assets/images/bicycle.png'),
     ])
   ];
   List<Workout> getWorkoutList() {
