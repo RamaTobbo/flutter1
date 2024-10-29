@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/data/workout.dart';
-import 'package:track_pro/noSmartwatch/Home.dart';
+
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 
@@ -32,8 +32,7 @@ class _Workout1State extends State<Workout1> {
           _remainingTime--;
         });
       } else {
-        timer.cancel(); // Stop the timer when it reaches zero
-        // You can show a notification or alert here
+        timer.cancel();
       }
     });
   }

@@ -4,6 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/screens/exercises/burpees.dart';
+import 'package:track_pro/screens/exercises/jumpingJacks.dart';
+import 'package:track_pro/screens/exercises/lunge.dart';
+import 'package:track_pro/screens/exercises/plank.dart';
+import 'package:track_pro/screens/exercises/russian_twist.dart';
 import 'package:track_pro/screens/workout.dart';
 import 'package:track_pro/screens/workout2.dart';
 import 'package:track_pro/screens/workout3.dart';
@@ -34,10 +39,31 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     }
   }
 
+  _goToexerciseForIndex(int index) {
+    switch (index) {
+      case 0:
+        return Navigator.push(
+            context, MaterialPageRoute(builder: (ctx) => Lunge()));
+      case 1:
+        return Navigator.push(
+            context, MaterialPageRoute(builder: (ctx) => Jumpingjacks()));
+      case 2:
+        return Navigator.push(
+            context, MaterialPageRoute(builder: (ctx) => Burpees()));
+      case 3:
+        return Navigator.push(
+            context, MaterialPageRoute(builder: (ctx) => RussianTwist()));
+      default:
+        return Navigator.push(
+            context, MaterialPageRoute(builder: (ctx) => Plank()));
+    }
+  }
+
   _getIcons(int index) {
     switch (index) {
       case 0:
         return Image.asset('assets/images/dumble.png');
+
       case 1:
         return Image.asset('assets/images/training.png');
       case 2:
@@ -90,13 +116,13 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: 4,
-                        itemBuilder: (context, index) {
+                        itemBuilder: (context, index1) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               width: 100,
                               decoration: BoxDecoration(
-                                  color: _getColorForIndex(index),
+                                  color: _getColorForIndex(index1),
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
@@ -106,8 +132,13 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                                       offset: const Offset(0, 3),
                                     )
                                   ]),
-                              child: Center(
-                                child: _getIcons(index),
+                              child: InkWell(
+                                onTap: () {
+                                  _goToexerciseForIndex(index1);
+                                },
+                                child: Center(
+                                  child: _getIcons(index1),
+                                ),
                               ),
                             ),
                           );

@@ -103,6 +103,8 @@ class _SetupscreensState extends State<Setupscreens> {
                     onValueChanged: (value) {
                       setState(() {
                         selectedAgeValue = value;
+                        Provider.of<UserData>(context, listen: false)
+                            .setAge(value);
                       });
                     },
                     maxValue: 190,
@@ -134,6 +136,8 @@ class _SetupscreensState extends State<Setupscreens> {
                       onValueChanged: (value) {
                         setState(() {
                           selectedHeightValue = value;
+                          Provider.of<UserData>(context, listen: false)
+                              .setHeight(value);
                         });
                       },
                       maxValue: 290,
