@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
 
-class Lunge extends StatefulWidget {
-  const Lunge({super.key});
+class RussianTwist extends StatefulWidget {
+  const RussianTwist({super.key});
 
   @override
-  State<Lunge> createState() => _LungeState();
+  State<RussianTwist> createState() => _RussianTwistState();
 }
 
-class _LungeState extends State<Lunge> {
+class _RussianTwistState extends State<RussianTwist> {
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -62,7 +62,7 @@ class _LungeState extends State<Lunge> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lunge Exercise'),
+        title: Text('Russian_Twist Exercise'),
       ),
       body: Column(
         children: [
@@ -91,7 +91,7 @@ class _LungeState extends State<Lunge> {
               if (index == 1) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (ctx) => LungeExercise()),
+                  MaterialPageRoute(builder: (ctx) => RussianTwist()),
                 );
               }
             },

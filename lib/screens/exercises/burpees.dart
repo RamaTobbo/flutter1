@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
 
-class Lunge extends StatefulWidget {
-  const Lunge({super.key});
+class Burpees extends StatefulWidget {
+  const Burpees({super.key});
 
   @override
-  State<Lunge> createState() => _LungeState();
+  State<Burpees> createState() => _BurpeesState();
 }
 
-class _LungeState extends State<Lunge> {
+class _BurpeesState extends State<Burpees> {
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -62,7 +62,7 @@ class _LungeState extends State<Lunge> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lunge Exercise'),
+        title: Text('Burpee Exercise'),
       ),
       body: Column(
         children: [

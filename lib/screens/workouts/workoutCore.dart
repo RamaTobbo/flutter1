@@ -7,6 +7,8 @@ import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/screens/exercises/plank.dart';
+import 'package:track_pro/screens/exercises/russian_twist.dart';
 
 class WorkoutCore extends StatefulWidget {
   const WorkoutCore({super.key});
@@ -168,7 +170,10 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                     top: 50,
                     right: 30,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (ctx) => Plank()));
+                      },
                       child: Text(
                         'Begin',
                         style: style,
@@ -223,7 +228,12 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                     top: 50,
                     right: 30,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) => RussianTwist()));
+                      },
                       child: Text(
                         'Begin',
                         style: style,

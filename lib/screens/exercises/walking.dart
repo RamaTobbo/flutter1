@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
 
-class Lunge extends StatefulWidget {
-  const Lunge({super.key});
+class Walking extends StatefulWidget {
+  const Walking({super.key});
 
   @override
-  State<Lunge> createState() => _LungeState();
+  State<Walking> createState() => _WalkingState();
 }
 
-class _LungeState extends State<Lunge> {
+class _WalkingState extends State<Walking> {
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -62,7 +62,7 @@ class _LungeState extends State<Lunge> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lunge Exercise'),
+        title: Text('Walking Exercise'),
       ),
       body: Column(
         children: [
@@ -81,20 +81,11 @@ class _LungeState extends State<Lunge> {
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.grey,
             inactiveFgColor: Colors.white,
-            totalSwitches: 2,
-            labels: ['Animation', 'How to do'],
+            totalSwitches: 1,
+            labels: ['Animation'],
             activeBgColors: [
               [Color(0xffffce48)],
-              [Color(0xffffce48)],
             ],
-            onToggle: (index) {
-              if (index == 1) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (ctx) => LungeExercise()),
-                );
-              }
-            },
           ),
           SizedBox(height: 20),
           Row(

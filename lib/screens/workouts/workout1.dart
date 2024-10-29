@@ -8,6 +8,7 @@ import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/exercises/lunge.dart';
+import 'package:track_pro/screens/exercises/squats.dart';
 
 class WorkoutLowerBoddy extends StatefulWidget {
   const WorkoutLowerBoddy({super.key});
@@ -243,7 +244,10 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                     top: 50,
                     right: 30,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (ctx) => Squats()));
+                      },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white),

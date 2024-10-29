@@ -7,6 +7,10 @@ import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/screens/exercises/bicycle.dart';
+import 'package:track_pro/screens/exercises/burpees.dart';
+import 'package:track_pro/screens/exercises/jumpingJacks.dart';
+import 'package:track_pro/screens/exercises/walking.dart';
 
 class WorkoutCardio extends StatefulWidget {
   const WorkoutCardio({super.key});
@@ -256,7 +260,12 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                     top: 50,
                     right: 30,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) => Jumpingjacks()));
+                      },
                       child: Text(
                         'Begin',
                         style: style,
@@ -330,7 +339,10 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                     right: 30,
 
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (ctx) => Burpees()));
+                      },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white),
@@ -397,7 +409,10 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                     top: 50,
                     right: 30,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (ctx) => Walking()));
+                      },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white),
@@ -463,7 +478,10 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                     top: 50,
                     right: 30,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (ctx) => Bicycle()));
+                      },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white),
