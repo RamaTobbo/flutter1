@@ -177,40 +177,13 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                                 ),
                               ),
                               Positioned(
-                                top: 100,
-                                left: 30,
-                                child: SizedBox(
-                                  height: 30,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    shrinkWrap: true,
-                                    itemCount: value
-                                        .getExercisesForWorkout(
-                                            selectedWorkoutName)
-                                        .length,
-                                    itemBuilder: (context, index) {
-                                      final exerciseImage = value
-                                          .getExercisesForWorkout(
-                                              selectedWorkoutName)[index]
-                                          .image;
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: Container(
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: const Color(0xfff9e0e4),
-                                          ),
-                                          child: Image.asset(exerciseImage),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
+                                  top: 50,
+                                  left: 30,
+                                  child: Image.asset(
+                                    value.workoutList[index].image,
+                                    width: 90,
+                                    height: 90,
+                                  )),
                               Positioned(
                                   top: 10,
                                   right: 30,

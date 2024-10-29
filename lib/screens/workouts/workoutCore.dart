@@ -20,7 +20,7 @@ class _WorkoutCoreState extends State<WorkoutCore> {
   int _selectedMinutes1 = 1;
   Timer? _timer;
   int _remainingTime = 0;
-
+  final style = TextStyle(color: Colors.black);
   void startTimer(int minutes) {
     setState(() {
       _remainingTime = minutes * 60;
@@ -167,32 +167,14 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                   Positioned(
                     top: 50,
                     right: 30,
-                    child: Container(
-                      width: 110,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                        color: Colors.white,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Begin',
+                        style: style,
                       ),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                                onPressed: showTimerDialog,
-                                icon: const Icon(
-                                    Icons.access_time_filled_outlined),
-                                color: Colors.black),
-                            const SizedBox(width: 5),
-                            Text(
-                              '$_selectedMinutes min',
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white),
                     ),
                   ),
                   Positioned(
@@ -240,33 +222,33 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                   Positioned(
                     top: 50,
                     right: 30,
-                    child: Container(
-                      width: 110,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                        color: Colors.white,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Begin',
+                        style: style,
                       ),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                                onPressed: showTimerDialog1,
-                                icon: const Icon(
-                                    Icons.access_time_filled_outlined),
-                                color: Colors.black),
-                            const SizedBox(width: 5),
-                            Text(
-                              '$_selectedMinutes1 min',
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white),
                     ),
+
+                    // child: Center(
+                    //   child: Row(
+                    //     mainAxisSize: MainAxisSize.min,
+                    //     children: [
+                    //       IconButton(
+                    //           onPressed: showTimerDialog1,
+                    //           icon: const Icon(
+                    //               Icons.access_time_filled_outlined),
+                    //           color: Colors.black),
+                    //       const SizedBox(width: 5),
+                    //       Text(
+                    //         '$_selectedMinutes1 min',
+                    //         style: const TextStyle(color: Colors.black),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   ),
                   Positioned(
                     top: 60,

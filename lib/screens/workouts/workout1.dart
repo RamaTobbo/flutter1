@@ -7,6 +7,7 @@ import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/screens/exercises/lunge.dart';
 
 class WorkoutLowerBoddy extends StatefulWidget {
   const WorkoutLowerBoddy({super.key});
@@ -16,6 +17,8 @@ class WorkoutLowerBoddy extends StatefulWidget {
 }
 
 class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
+  final style = TextStyle(color: Colors.black);
+
   int _selectedMinutes = 1;
   int _selectedMinutes1 = 1;
   Timer? _timer;
@@ -167,32 +170,31 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                   Positioned(
                     top: 50,
                     right: 30,
-                    child: Container(
-                      width: 110,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                        color: Colors.white,
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (ctx) => Lunge()));
+                        },
+                        child: Text('Begin', style: style),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white),
                       ),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                                onPressed: showTimerDialog,
-                                icon: const Icon(
-                                    Icons.access_time_filled_outlined),
-                                color: Colors.black),
-                            const SizedBox(width: 5),
-                            Text(
-                              '$_selectedMinutes min',
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // child: Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   children: [
+                      //     IconButton(
+                      //         onPressed: showTimerDialog,
+                      //         icon: const Icon(
+                      //             Icons.access_time_filled_outlined),
+                      //         color: Colors.black),
+                      //     const SizedBox(width: 5),
+                      //     Text(
+                      //       '$_selectedMinutes min',
+                      //       style: const TextStyle(color: Colors.black),
+                      //     ),
+                      //   ],
+                      // ),
                     ),
                   ),
                   Positioned(
@@ -240,32 +242,11 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                   Positioned(
                     top: 50,
                     right: 30,
-                    child: Container(
-                      width: 110,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                        color: Colors.white,
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                                onPressed: showTimerDialog1,
-                                icon: const Icon(
-                                    Icons.access_time_filled_outlined),
-                                color: Colors.black),
-                            const SizedBox(width: 5),
-                            Text(
-                              '$_selectedMinutes1 min',
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Begin', style: style),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white),
                     ),
                   ),
                   Positioned(
