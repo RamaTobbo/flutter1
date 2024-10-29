@@ -76,20 +76,12 @@ class _Workout2State extends State<Workout2> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
-                              Icons.access_time_filled_outlined,
-                              color: themeProvide.isDarkMode
-                                  ? Colors.black
-                                  : Colors.grey,
-                            ),
+                            Icon(Icons.access_time_filled_outlined,
+                                color: Colors.black),
                             const SizedBox(width: 5),
                             Text(
                               '${exercise.timer} min',
-                              style: TextStyle(
-                                color: themeProvide.isDarkMode
-                                    ? Colors.black
-                                    : Colors.grey,
-                              ),
+                              style: TextStyle(color: Colors.black),
                             ),
                           ],
                         ),

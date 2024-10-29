@@ -36,11 +36,11 @@ class _TrainingexercisesState extends State<Trainingexercises> {
       case 0:
         return Image.asset('assets/images/dumble.png');
       case 1:
-        return Image.asset('assets/images/dumble.png');
+        return Image.asset('assets/images/training.png');
       case 2:
-        return Image.asset('assets/images/dumble.png');
+        return Image.asset('assets/images/sport.png');
       case 3:
-        return Image.asset('assets/images/dumble.png');
+        return Image.asset('assets/images/walk.png');
       default:
         return Image.asset('assets/images/dumble.png');
     }
@@ -49,6 +49,7 @@ class _TrainingexercisesState extends State<Trainingexercises> {
   @override
   Widget build(BuildContext context) {
     final themeProvide = Provider.of<ThemeProvider>(context);
+    final workoutData = Provider.of<WorkoutData>(context);
 
     _gotToExercises(int index) {
       switch (index) {
@@ -115,6 +116,9 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                       shrinkWrap: true,
                       itemCount: value.getWorkoutList().length,
                       itemBuilder: (context, index) {
+                        String selectedWorkoutName =
+                            workoutData.getWorkoutNames()[index];
+
                         final workout = value.getWorkoutList()[index];
                         return ListTile(
                           title: Stack(
@@ -170,40 +174,83 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                                 ),
                               ),
                               Positioned(
-                                top: 90,
+                                top: 100,
                                 left: 30,
-                                child: Container(
-                                  width: 110,
-                                  height: 40,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(30),
-                                    ),
-                                    color: Colors.white,
-                                  ),
-                                  child: Center(
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.access_time_filled_outlined,
-                                          color: themeProvide.isDarkMode
-                                              ? Colors.black
-                                              : Colors.grey,
-                                        ),
-                                        const SizedBox(width: 5),
-                                        Text(
-                                          '${workout.exercise.map((e) => e.timer).reduce((a, b) => a + b)} min',
-                                          style: TextStyle(
-                                            color: themeProvide.isDarkMode
-                                                ? Colors.black
-                                                : Colors.grey,
+                                child: SizedBox(
+                                  height: 30,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    itemCount: value
+                                        .getExercisesForWorkout(
+                                            selectedWorkoutName)
+                                        .length,
+                                    itemBuilder: (context, index) {
+                                      final exerciseImage = value
+                                          .getExercisesForWorkout(
+                                              selectedWorkoutName)[index]
+                                          .image;
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: Container(
+                                          width: 30,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            color: const Color(0xfff9e0e4),
                                           ),
+                                          child: Image.asset(exerciseImage),
                                         ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
+                              Positioned(
+                                  top: 10,
+                                  right: 30,
+                                  child: Text(
+                                    '${value.getExercisesForWorkout(selectedWorkoutName).length} exercises',
+                                    style: const TextStyle(color: Colors.black),
+                                  ))
+
+                              // Positioned(
+                              //   top: 90,
+                              //   left: 30,
+                              //   // child: Container(
+                              //   //   width: 110,
+                              //   //   height: 40,
+                              //   //   decoration: const BoxDecoration(
+                              //   //     borderRadius: BorderRadius.all(
+                              //   //       Radius.circular(30),
+                              //   //     ),
+                              //   //     color: Colors.white,
+                              //   //   ),
+                              //   //   child: Center(
+                              //   //     child: Row(
+                              //   //       children: [
+                              //   //         Icon(
+                              //   //           Icons.access_time_filled_outlined,
+                              //   //           color: themeProvide.isDarkMode
+                              //   //               ? Colors.black
+                              //   //               : Colors.grey,
+                              //   //         ),
+                              //   //         const SizedBox(width: 5),
+                              //   //         Text(
+                              //   //           '${workout.exercise.map((e) => e.timer).reduce((a, b) => a + b)} min',
+                              //   //           style: TextStyle(
+                              //   //             color: themeProvide.isDarkMode
+                              //   //                 ? Colors.black
+                              //   //                 : Colors.grey,
+                              //   //           ),
+                              //   //         ),
+                              //   //       ],
+                              //   //     ),
+                              //   //   ),
+                              //   // ),
+                              // ),
                             ],
                           ),
                         );
@@ -221,7 +268,9 @@ class _TrainingexercisesState extends State<Trainingexercises> {
               onPressed: () {},
               icon: FaIcon(
                 FontAwesomeIcons.fire,
-                color: themeProvide.isDarkMode ? Colors.red : Colors.black,
+                color: themeProvide.isDarkMode
+                    ? Colors.red
+                    : const Color(0xffffdd7f),
               ),
             ),
           ),
