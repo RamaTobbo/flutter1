@@ -76,12 +76,15 @@ class _Workout1State extends State<Workout1> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.access_time_filled_outlined,
+                            IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                    Icons.access_time_filled_outlined),
                                 color: Colors.black),
                             const SizedBox(width: 5),
                             Text(
                               '${exercise.timer} min',
-                              style: TextStyle(color: Colors.black),
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ],
                         ),
