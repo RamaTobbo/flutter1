@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+import 'package:track_pro/provider/userdata.dart';
+
+var userWeight;
 
 class Bicycle extends StatefulWidget {
   const Bicycle({super.key});
@@ -12,6 +16,7 @@ class Bicycle extends StatefulWidget {
 }
 
 class _BicycleState extends State<Bicycle> {
+  double caloriesBurned = 0.0;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -27,11 +32,33 @@ class _BicycleState extends State<Bicycle> {
               countdownTimer--;
             } else {
               pauseTimer();
+              calculateCaloriesBurned();
             }
           });
         });
       }
     });
+  }
+
+  void showCaloriesBurnedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Workout Complete"),
+          content:
+              Text("You burned ${caloriesBurned.toStringAsFixed(2)} calories!"),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void pauseTimer() {
@@ -56,9 +83,16 @@ class _BicycleState extends State<Bicycle> {
     super.dispose();
   }
 
+  double metValue = 8;
+  void calculateCaloriesBurned() {
+    caloriesBurned = metValue * userWeight * (selectedDuration / 3600);
+    showCaloriesBurnedDialog();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
+    userWeight = Provider.of<UserData>(context).weight;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,18 +108,21 @@ class _BicycleState extends State<Bicycle> {
                 )
               : Text('youtube video'),
           SizedBox(height: 20),
-          ToggleSwitch(
-            minWidth: 140.0,
-            initialLabelIndex: 0,
-            cornerRadius: 20.0,
-            activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
-            totalSwitches: 1,
-            labels: ['Animation'],
-            activeBgColors: [
-              [Color(0xffffce48)],
-            ],
+          Padding(
+            padding: const EdgeInsets.only(right: 222.0),
+            child: ToggleSwitch(
+              minWidth: 140.0,
+              initialLabelIndex: 0,
+              cornerRadius: 20.0,
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey,
+              inactiveFgColor: Colors.white,
+              totalSwitches: 1,
+              labels: ['Animation'],
+              activeBgColors: [
+                [Color(0xffffce48)],
+              ],
+            ),
           ),
           SizedBox(height: 20),
           Row(
@@ -104,8 +141,7 @@ class _BicycleState extends State<Bicycle> {
                   if (selectedDuration > 1) {
                     setState(() {
                       selectedDuration--;
-                      countdownTimer =
-                          selectedDuration; // reset countdown timer
+                      countdownTimer = selectedDuration;
                     });
                   }
                 },

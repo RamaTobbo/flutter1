@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+import 'package:track_pro/provider/userdata.dart';
+
+var userWeight;
 
 class RussianTwist extends StatefulWidget {
   const RussianTwist({super.key});
@@ -12,6 +16,7 @@ class RussianTwist extends StatefulWidget {
 }
 
 class _RussianTwistState extends State<RussianTwist> {
+  double caloriesBurned = 0.0;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -27,11 +32,39 @@ class _RussianTwistState extends State<RussianTwist> {
               countdownTimer--;
             } else {
               pauseTimer();
+              calculateCaloriesBurned();
             }
           });
         });
       }
     });
+  }
+
+  double metValue = 8;
+  void calculateCaloriesBurned() {
+    caloriesBurned = metValue * userWeight * (selectedDuration / 3600);
+    showCaloriesBurnedDialog();
+  }
+
+  void showCaloriesBurnedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Workout Complete"),
+          content:
+              Text("You burned ${caloriesBurned.toStringAsFixed(2)} calories!"),
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void pauseTimer() {
@@ -59,6 +92,7 @@ class _RussianTwistState extends State<RussianTwist> {
   @override
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
+    userWeight = Provider.of<UserData>(context).weight;
 
     return Scaffold(
       appBar: AppBar(

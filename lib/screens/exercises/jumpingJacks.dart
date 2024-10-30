@@ -97,7 +97,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Jumpingjacks Exercise'),
+        title: Text('JumpingJacks Exercise'),
       ),
       body: Column(
         children: [
