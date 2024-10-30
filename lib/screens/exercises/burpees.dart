@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:track_pro/exercisesTutorial/burpee.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/jumpingJacks.dart';
@@ -165,7 +166,7 @@ class _BurpeesState extends State<Burpees> {
                   'assets/images/burpee.gif',
                 )
               : Text('youtube video'),
-          SizedBox(height: 20),
+          SizedBox(height: 0),
           ToggleSwitch(
             minWidth: 140.0,
             initialLabelIndex: 0,
@@ -183,12 +184,12 @@ class _BurpeesState extends State<Burpees> {
               if (index == 1) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (ctx) => LungeExercise()),
+                  MaterialPageRoute(builder: (ctx) => BurpeeExercise()),
                 );
               }
             },
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
