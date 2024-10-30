@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
 import 'package:track_pro/provider/userdata.dart';
+import 'package:track_pro/screens/exercises/bicycle.dart';
 
 var userWeight;
 
@@ -16,12 +18,20 @@ class Walking extends StatefulWidget {
 }
 
 class _WalkingState extends State<Walking> {
+  final audioPlayer = AudioPlayer();
   double caloriesBurned = 0.0;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
   final int maxTimer = 3600;
   Timer? timer;
+  void playTestSound() async {
+    try {
+      await audioPlayer.play(AssetSource('completed.mp3'));
+    } catch (e) {
+      print('Error playing audio: $e');
+    }
+  }
 
   void startTimer() {
     setState(() {
@@ -32,6 +42,7 @@ class _WalkingState extends State<Walking> {
               countdownTimer--;
             } else {
               pauseTimer();
+              playTestSound();
               calculateCaloriesBurned();
             }
           });
@@ -68,25 +79,67 @@ class _WalkingState extends State<Walking> {
     showCaloriesBurnedDialog();
   }
 
+  void nextWorkout() {
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) => Bicycle()));
+  }
+
+  void previousExercise() {
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) => Walking()));
+  }
+
   void showCaloriesBurnedDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Workout Complete"),
-          content:
-              Text("You burned ${caloriesBurned.toStringAsFixed(2)} calories!"),
-          actions: [
-            TextButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return SizedBox(
+            width: 700,
+            height: 300,
+            child: Column(
+              children: [
+                Image.asset('assets/images/fire.gif'),
+                Text(
+                  "You burned ${caloriesBurned.toStringAsFixed(2)} calories!",
+                  style: GoogleFonts.roboto(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 80.0),
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: previousExercise,
+                          icon: Icon(Icons.arrow_left)),
+                      TextButton(
+                        onPressed: previousExercise,
+                        child: Text(
+                          'Previous Exerice',
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 130.0),
+                  child: Row(
+                    children: [
+                      TextButton(
+                        onPressed: nextWorkout,
+                        child: Text(
+                          'Next Workout',
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: nextWorkout,
+                          icon: Icon(Icons.arrow_right)),
+                    ],
+                  ),
+                )
+              ],
             ),
-          ],
-        );
-      },
-    );
+          );
+        });
   }
 
   @override

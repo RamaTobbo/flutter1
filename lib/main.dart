@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/userdata.dart';
+import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/splash1Screen.dart';
 
 void main() {
