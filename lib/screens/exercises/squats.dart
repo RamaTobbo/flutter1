@@ -157,7 +157,7 @@ class _SquatsState extends State<Squats> {
         children: [
           isAnimationDisplayed
               ? Image.asset(
-                  'assets/images/heartpulse.png',
+                  'assets/images/squats.gif',
                   width: 90,
                   height: 90,
                 )

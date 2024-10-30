@@ -161,18 +161,21 @@ class _WalkingState extends State<Walking> {
                 )
               : Text('youtube video'),
           SizedBox(height: 20),
-          ToggleSwitch(
-            minWidth: 140.0,
-            initialLabelIndex: 0,
-            cornerRadius: 20.0,
-            activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
-            totalSwitches: 1,
-            labels: ['Animation'],
-            activeBgColors: [
-              [Color(0xffffce48)],
-            ],
+          Padding(
+            padding: const EdgeInsets.only(right: 220.0),
+            child: ToggleSwitch(
+              minWidth: 140.0,
+              initialLabelIndex: 0,
+              cornerRadius: 20.0,
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey,
+              inactiveFgColor: Colors.white,
+              totalSwitches: 1,
+              labels: ['Animation'],
+              activeBgColors: [
+                [Color(0xffffce48)],
+              ],
+            ),
           ),
           SizedBox(height: 20),
           Row(
@@ -226,8 +229,8 @@ class _WalkingState extends State<Walking> {
           Padding(
             padding: const EdgeInsets.only(top: 60.0),
             child: SizedBox(
-              width: 200,
-              height: 200,
+              width: 162,
+              height: 162,
               child: Stack(
                 fit: StackFit.expand,
                 children: [

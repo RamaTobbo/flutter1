@@ -132,13 +132,14 @@ class _LungeState extends State<Lunge> {
       body: Column(
         children: [
           isAnimationDisplayed
-              ? Image.asset(
-                  'assets/images/heartpulse.png',
-                  width: 90,
-                  height: 90,
+              ? SizedBox(
+                  width: 170,
+                  height: 170,
+                  child:
+                      Image.asset('assets/images/lunge.gif', fit: BoxFit.cover),
                 )
               : Text('youtube video'),
-          SizedBox(height: 20),
+          SizedBox(height: 0),
           ToggleSwitch(
             minWidth: 140.0,
             initialLabelIndex: 0,
@@ -213,8 +214,8 @@ class _LungeState extends State<Lunge> {
           Padding(
             padding: const EdgeInsets.only(top: 60.0),
             child: SizedBox(
-              width: 200,
-              height: 200,
+              width: 162,
+              height: 162,
               child: Stack(
                 fit: StackFit.expand,
                 children: [

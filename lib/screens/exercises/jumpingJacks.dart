@@ -154,13 +154,16 @@ class _JumpingjacksState extends State<Jumpingjacks> {
       body: Column(
         children: [
           isAnimationDisplayed
-              ? Image.asset(
-                  'assets/images/heartpulse.png',
-                  width: 90,
-                  height: 90,
+              ? SizedBox(
+                  width: 250,
+                  height: 200,
+                  child: Image.asset(
+                    'assets/images/jackss.gif',
+                    fit: BoxFit.cover,
+                  ),
                 )
               : Text('youtube video'),
-          SizedBox(height: 20),
+          SizedBox(height: 0),
           ToggleSwitch(
             minWidth: 140.0,
             initialLabelIndex: 0,
@@ -183,7 +186,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
               }
             },
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -234,8 +237,8 @@ class _JumpingjacksState extends State<Jumpingjacks> {
           Padding(
             padding: const EdgeInsets.only(top: 60.0),
             child: SizedBox(
-              width: 200,
-              height: 200,
+              width: 162,
+              height: 162,
               child: Stack(
                 fit: StackFit.expand,
                 children: [

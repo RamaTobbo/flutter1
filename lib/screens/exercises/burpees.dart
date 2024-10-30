@@ -162,11 +162,16 @@ class _BurpeesState extends State<Burpees> {
       body: Column(
         children: [
           isAnimationDisplayed
-              ? Image.asset(
-                  'assets/images/burpee.gif',
+              ? SizedBox(
+                  width: 250,
+                  height: 180,
+                  child: Image.asset(
+                    'assets/images/burpee.gif',
+                    fit: BoxFit.cover,
+                  ),
                 )
               : Text('youtube video'),
-          SizedBox(height: 0),
+          SizedBox(height: 3),
           ToggleSwitch(
             minWidth: 140.0,
             initialLabelIndex: 0,
@@ -241,8 +246,8 @@ class _BurpeesState extends State<Burpees> {
           Padding(
             padding: const EdgeInsets.only(top: 60.0),
             child: SizedBox(
-              width: 200,
-              height: 200,
+              width: 162,
+              height: 162,
               child: Stack(
                 fit: StackFit.expand,
                 children: [
