@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/screens/CaloriesBurnedPerExercise.dart';
 import 'package:track_pro/screens/exercises/burpees.dart';
 import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/exercises/lunge.dart';
@@ -282,7 +283,12 @@ class _TrainingexercisesState extends State<Trainingexercises> {
             top: 22,
             right: 20,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (ctx) => Caloriesburnedperexercise()));
+              },
               icon: FaIcon(
                 FontAwesomeIcons.fire,
                 color: themeProvide.isDarkMode

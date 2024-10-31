@@ -5,11 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/squats.dart';
 import 'package:track_pro/screens/workouts/workout1.dart';
 
 var userWeight;
+var BurnedCaloriesPerExercise;
 
 class Lunge extends StatefulWidget {
   const Lunge({super.key});
@@ -81,8 +83,8 @@ class _LungeState extends State<Lunge> {
   }
 
   void nextExercise() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (ctx) => Squats()));
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (ctx) => Squats()), (Route) => false);
   }
 
   void showCaloriesBurnedDialog() {
@@ -124,6 +126,8 @@ class _LungeState extends State<Lunge> {
 
   @override
   Widget build(BuildContext context) {
+    BurnedCaloriesPerExercise =
+        Provider.of<CaloriesBurned>(context).setCaloriesBurned(caloriesBurned);
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
 

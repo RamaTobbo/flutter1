@@ -38,12 +38,6 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 15, vertical: 34),
                       child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) => const Heartrate()));
-                        },
                         child: Container(
                           width: 315,
                           height: 146,
