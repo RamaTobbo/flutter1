@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/screens/SetupScreens.dart';
 import 'package:track_pro/screens/animatedCheckMark.dart';
 

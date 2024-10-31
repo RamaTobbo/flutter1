@@ -6,12 +6,16 @@ import 'package:provider/provider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/exercises/bicycle.dart';
 import 'package:track_pro/screens/exercises/burpees.dart';
 import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/exercises/walking.dart';
+import 'package:track_pro/screens/tab.dart';
 import 'package:track_pro/screens/trainingExercises.dart';
+
+var UserWithSmartWatch;
 
 class WorkoutCardio extends StatefulWidget {
   const WorkoutCardio({super.key});
@@ -73,8 +77,9 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
             TextButton(
               onPressed: () {
                 startTimer(_selectedMinutes);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => TabNav1()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) =>
+                        UserWithSmartWatch ? TabNav() : TabNav1()));
               },
               child: Text('Start Exercise'),
             ),
@@ -197,6 +202,9 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
 
   @override
   Widget build(BuildContext context) {
+    UserWithSmartWatch =
+        Provider.of<Isasmartwatchuser>(context).isUsingSmartwatch;
+
     final workoutData = Provider.of<WorkoutData>(context);
     final themeProvide = Provider.of<ThemeProvider>(context);
     final exercise1 =
@@ -527,7 +535,7 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (ctx) => Trainingexercises()),
+                      MaterialPageRoute(builder: (ctx) => TabNav1()),
                       (Route) => false);
                 },
                 icon: Icon(Icons.arrow_back)))

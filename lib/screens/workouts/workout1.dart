@@ -6,10 +6,14 @@ import 'package:provider/provider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/exercises/lunge.dart';
 import 'package:track_pro/screens/exercises/squats.dart';
+import 'package:track_pro/screens/tab.dart';
 import 'package:track_pro/screens/trainingExercises.dart';
+
+var UserWithSmartWatch;
 
 class WorkoutLowerBoddy extends StatefulWidget {
   const WorkoutLowerBoddy({super.key});
@@ -121,6 +125,8 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
   @override
   Widget build(BuildContext context) {
     final workoutData = Provider.of<WorkoutData>(context);
+    UserWithSmartWatch =
+        Provider.of<Isasmartwatchuser>(context).isUsingSmartwatch;
     final themeProvide = Provider.of<ThemeProvider>(context);
     final exercise1 =
         workoutData.getExercisesForWorkout(workoutData.getWorkoutNames()[0])[0];
@@ -294,7 +300,9 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (ctx) => Trainingexercises()),
+                      MaterialPageRoute(
+                          builder: (ctx) =>
+                              UserWithSmartWatch ? TabNav() : TabNav1()),
                       (Route) => false);
                 },
                 icon: Icon(Icons.arrow_back),

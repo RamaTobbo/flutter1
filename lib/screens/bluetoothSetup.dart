@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:track_pro/data/setup.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/screens/SetupScreens.dart';
 
 import 'package:track_pro/screens/bluetoothpairingScreen1.dart';
@@ -45,6 +47,7 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
 
   @override
   Widget build(BuildContext context) {
+    final UserUsingSmartWatch = Provider.of<Isasmartwatchuser>(context);
     final Indicator = setupItems[0].progressIndicator;
     final title = setupItems[0].title;
     final subtitle = setupItems[0].subtitle;
@@ -155,6 +158,7 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
                                     isContinueWithoutSmartWatch,
                               )));
                   setState(() {
+                    UserUsingSmartWatch.setUserMode(false);
                     isContinueWithoutSmartWatch = true;
                   });
                 },

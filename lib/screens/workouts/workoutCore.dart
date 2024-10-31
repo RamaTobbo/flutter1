@@ -6,10 +6,14 @@ import 'package:provider/provider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/exercises/plank.dart';
 import 'package:track_pro/screens/exercises/russian_twist.dart';
+import 'package:track_pro/screens/tab.dart';
 import 'package:track_pro/screens/trainingExercises.dart';
+
+var UserWithSmartWatch;
 
 class WorkoutCore extends StatefulWidget {
   const WorkoutCore({super.key});
@@ -120,6 +124,8 @@ class _WorkoutCoreState extends State<WorkoutCore> {
   Widget build(BuildContext context) {
     final workoutData = Provider.of<WorkoutData>(context);
     final themeProvide = Provider.of<ThemeProvider>(context);
+    UserWithSmartWatch =
+        Provider.of<Isasmartwatchuser>(context).isUsingSmartwatch;
     final exercise1 =
         workoutData.getExercisesForWorkout(workoutData.getWorkoutNames()[1])[0];
     final exercise2 =
@@ -297,7 +303,8 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (ctx) => const Trainingexercises()));
+                          builder: (ctx) =>
+                              UserWithSmartWatch ? TabNav() : TabNav1()));
                 },
                 icon: Icon(Icons.arrow_back)))
       ],

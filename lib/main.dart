@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/userdata.dart';
@@ -13,6 +14,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => WorkoutData()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => UserData()),
+        ChangeNotifierProvider(create: (_) => Isasmartwatchuser()),
       ],
       child: const MyApp(),
     ),
