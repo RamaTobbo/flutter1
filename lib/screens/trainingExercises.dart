@@ -42,20 +42,24 @@ class _TrainingexercisesState extends State<Trainingexercises> {
   _goToexerciseForIndex(int index) {
     switch (index) {
       case 0:
-        return Navigator.push(
-            context, MaterialPageRoute(builder: (ctx) => Lunge()));
+        return Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (ctx) => Plank()), (Route) => false);
       case 1:
-        return Navigator.push(
-            context, MaterialPageRoute(builder: (ctx) => Jumpingjacks()));
+        return Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (ctx) => Jumpingjacks()),
+            (Route) => false);
       case 2:
-        return Navigator.push(
-            context, MaterialPageRoute(builder: (ctx) => Burpees()));
+        return Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (ctx) => Burpees()), (Route) => false);
       case 3:
-        return Navigator.push(
-            context, MaterialPageRoute(builder: (ctx) => RussianTwist()));
+        return Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (ctx) => RussianTwist()),
+            (Route) => false);
       default:
-        return Navigator.push(
-            context, MaterialPageRoute(builder: (ctx) => Plank()));
+        return Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (ctx) => Plank()), (Route) => false);
     }
   }
 
@@ -83,14 +87,20 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     _gotToExercises(int index) {
       switch (index) {
         case 0:
-          return Navigator.push(context,
-              MaterialPageRoute(builder: (ctx) => WorkoutLowerBoddy()));
+          return Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (ctx) => WorkoutLowerBoddy()),
+              (Route) => false);
         case 1:
-          return Navigator.push(
-              context, MaterialPageRoute(builder: (ctx) => WorkoutCore()));
+          return Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (ctx) => WorkoutCore()),
+              (Route) => false);
         case 2:
-          return Navigator.push(
-              context, MaterialPageRoute(builder: (ctx) => WorkoutCardio()));
+          return Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (ctx) => WorkoutCardio()),
+              (Route) => false);
       }
     }
 

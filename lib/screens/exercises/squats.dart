@@ -9,6 +9,7 @@ import 'package:track_pro/exercisesTutorial/squatsExercise.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/lunge.dart';
 import 'package:track_pro/screens/exercises/plank.dart';
+import 'package:track_pro/widgets/finishedWorkouts.dart';
 
 var userWeight;
 
@@ -28,11 +29,23 @@ class _SquatsState extends State<Squats> {
   final int maxTimer = 3600;
   Timer? timer;
   void nextWorkout() {
-    Navigator.push(context, MaterialPageRoute(builder: (ctx) => Plank()));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) => Finishedworkouts(
+                  Workout: 'Lower Boddy',
+                  repeatWorkout: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (ctx) => Lunge()),
+                        (Route) => false);
+                  },
+                )));
   }
 
   void previousExercise() {
-    Navigator.push(context, MaterialPageRoute(builder: (ctx) => Lunge()));
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (ctx) => Lunge()), (Route) => false);
   }
 
   void showCaloriesBurnedDialog() {
@@ -156,13 +169,16 @@ class _SquatsState extends State<Squats> {
       body: Column(
         children: [
           isAnimationDisplayed
-              ? Image.asset(
-                  'assets/images/squats.gif',
-                  width: 90,
-                  height: 90,
+              ? SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: Image.asset(
+                    'assets/images/squats.gif',
+                    fit: BoxFit.cover,
+                  ),
                 )
               : Text('youtube video'),
-          SizedBox(height: 20),
+          SizedBox(height: 0),
           ToggleSwitch(
             minWidth: 140.0,
             initialLabelIndex: 0,
@@ -185,7 +201,7 @@ class _SquatsState extends State<Squats> {
               }
             },
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 0),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -237,8 +253,8 @@ class _SquatsState extends State<Squats> {
           Padding(
             padding: const EdgeInsets.only(top: 60.0),
             child: SizedBox(
-              width: 200,
-              height: 200,
+              width: 162,
+              height: 162,
               child: Stack(
                 fit: StackFit.expand,
                 children: [

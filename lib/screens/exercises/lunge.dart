@@ -7,6 +7,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/squats.dart';
+import 'package:track_pro/screens/workouts/workout1.dart';
 
 var userWeight;
 
@@ -80,7 +81,8 @@ class _LungeState extends State<Lunge> {
   }
 
   void nextExercise() {
-    Navigator.push(context, MaterialPageRoute(builder: (ctx) => Squats()));
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (ctx) => Squats()));
   }
 
   void showCaloriesBurnedDialog() {
@@ -125,128 +127,145 @@ class _LungeState extends State<Lunge> {
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Lunge Exercise'),
-      ),
-      body: Column(
-        children: [
-          isAnimationDisplayed
-              ? SizedBox(
-                  width: 170,
-                  height: 170,
-                  child:
-                      Image.asset('assets/images/lunge.gif', fit: BoxFit.cover),
-                )
-              : Text('youtube video'),
-          SizedBox(height: 0),
-          ToggleSwitch(
-            minWidth: 140.0,
-            initialLabelIndex: 0,
-            cornerRadius: 20.0,
-            activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.white,
-            totalSwitches: 2,
-            labels: ['Animation', 'How to do'],
-            activeBgColors: [
-              [Color(0xffffce48)],
-              [Color(0xffffce48)],
-            ],
-            onToggle: (index) {
-              if (index == 1) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (ctx) => LungeExercise()),
-                );
-              }
-            },
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: Padding(
+              padding: const EdgeInsets.only(left: 48.0),
+              child: Text('Lunge Exercise'),
+            ),
           ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          body: Column(
             children: [
-              Text(
-                'Duration',
-                style: GoogleFonts.roboto(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
-              ),
-              SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (selectedDuration > 1) {
-                    setState(() {
-                      selectedDuration--;
-                      countdownTimer =
-                          selectedDuration; // reset countdown timer
-                    });
+              isAnimationDisplayed
+                  ? SizedBox(
+                      width: 170,
+                      height: 170,
+                      child: Image.asset('assets/images/lunge.gif',
+                          fit: BoxFit.cover),
+                    )
+                  : Text('youtube video'),
+              SizedBox(height: 0),
+              ToggleSwitch(
+                minWidth: 140.0,
+                initialLabelIndex: 0,
+                cornerRadius: 20.0,
+                activeFgColor: Colors.white,
+                inactiveBgColor: Colors.grey,
+                inactiveFgColor: Colors.white,
+                totalSwitches: 2,
+                labels: ['Animation', 'How to do'],
+                activeBgColors: [
+                  [Color(0xffffce48)],
+                  [Color(0xffffce48)],
+                ],
+                onToggle: (index) {
+                  if (index == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (ctx) => LungeExercise()),
+                    );
                   }
                 },
-                child: Text('-'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffffce48),
-                ),
               ),
-              SizedBox(width: 10),
-              Text(
-                formatTime(selectedDuration),
-                style: TextStyle(fontSize: 24),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  if (selectedDuration < maxTimer) {
-                    setState(() {
-                      selectedDuration++;
-                      countdownTimer = selectedDuration;
-                    });
-                  }
-                },
-                child: Text('+'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffffce48),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 60.0),
-            child: SizedBox(
-              width: 162,
-              height: 162,
-              child: Stack(
-                fit: StackFit.expand,
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(
-                    value: countdownTimer / selectedDuration,
-                    color: Colors.amber,
+                  Text(
+                    'Duration',
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
                   ),
-                  Center(
-                    child: Text(
-                      formatTime(countdownTimer),
-                      style:
-                          TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (selectedDuration > 1) {
+                        setState(() {
+                          selectedDuration--;
+                          countdownTimer =
+                              selectedDuration; // reset countdown timer
+                        });
+                      }
+                    },
+                    child: Text('-'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffffce48),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    formatTime(selectedDuration),
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (selectedDuration < maxTimer) {
+                        setState(() {
+                          selectedDuration++;
+                          countdownTimer = selectedDuration;
+                        });
+                      }
+                    },
+                    child: Text('+'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffffce48),
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: IconButton(
-              iconSize: 100,
-              onPressed: isRunning ? pauseTimer : resumeTimer,
-              icon: Icon(
-                isRunning ? Icons.pause : Icons.play_arrow_rounded,
-                size: 100,
+              Padding(
+                padding: const EdgeInsets.only(top: 60.0),
+                child: SizedBox(
+                  width: 162,
+                  height: 162,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      CircularProgressIndicator(
+                        value: countdownTimer / selectedDuration,
+                        color: Colors.amber,
+                      ),
+                      Center(
+                        child: Text(
+                          formatTime(countdownTimer),
+                          style: TextStyle(
+                              fontSize: 40, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30.0),
+                child: IconButton(
+                  iconSize: 100,
+                  onPressed: isRunning ? pauseTimer : resumeTimer,
+                  icon: Icon(
+                    isRunning ? Icons.pause : Icons.play_arrow_rounded,
+                    size: 100,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        Positioned(
+            top: 30,
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (ctx) => WorkoutLowerBoddy()),
+                      (Route) => false);
+                },
+                icon: Icon(Icons.arrow_back)))
+      ],
     );
   }
 }
