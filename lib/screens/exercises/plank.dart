@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
 import 'package:track_pro/exercisesTutorial/plankExercise.dart';
+import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/russian_twist.dart';
 import 'package:track_pro/screens/workouts/workoutCore.dart';
@@ -22,6 +23,7 @@ class Plank extends StatefulWidget {
 class _PlankState extends State<Plank> {
   final audioPlayer = AudioPlayer();
   double caloriesBurned = 0.0;
+  bool isWorkoutFinished = false;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -89,6 +91,7 @@ class _PlankState extends State<Plank> {
               playTestSound();
 
               calculateCaloriesBurned();
+              isWorkoutFinished = true;
             }
           });
         });
@@ -128,6 +131,10 @@ class _PlankState extends State<Plank> {
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
+    if (isWorkoutFinished)
+      final BurnedCaloriesPerExerciseburpee =
+          Provider.of<CaloriesBurned>(context)
+              .addExercise('Plank', caloriesBurned);
 
     return Stack(
       children: [

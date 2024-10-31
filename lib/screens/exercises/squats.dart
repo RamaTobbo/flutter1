@@ -6,12 +6,14 @@ import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
 import 'package:track_pro/exercisesTutorial/squatsExercise.dart';
+import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/lunge.dart';
 import 'package:track_pro/screens/exercises/plank.dart';
 import 'package:track_pro/widgets/finishedWorkouts.dart';
 
 var userWeight;
+var BurnedCaloriesPerExerciseSquats;
 
 class Squats extends StatefulWidget {
   const Squats({super.key});
@@ -23,6 +25,7 @@ class Squats extends StatefulWidget {
 class _SquatsState extends State<Squats> {
   final audioPlayer = AudioPlayer();
   double caloriesBurned = 0.0;
+  bool isWorkoutFinished = false;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -114,6 +117,7 @@ class _SquatsState extends State<Squats> {
               pauseTimer();
               playTestSound();
               calculateCaloriesBurned();
+              isWorkoutFinished = true;
             }
           });
         });
@@ -159,6 +163,10 @@ class _SquatsState extends State<Squats> {
 
   @override
   Widget build(BuildContext context) {
+    if (isWorkoutFinished)
+      final BurnedCaloriesPerExerciseSquats =
+          Provider.of<CaloriesBurned>(context)
+              .addExercise('Squats', caloriesBurned);
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
 

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/exercises/walking.dart';
@@ -23,6 +24,7 @@ class Bicycle extends StatefulWidget {
 class _BicycleState extends State<Bicycle> {
   final audioPlayer = AudioPlayer();
   double caloriesBurned = 0.0;
+  bool isWorkoutFinished = false;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -52,6 +54,7 @@ class _BicycleState extends State<Bicycle> {
               pauseTimer();
               playTestSound();
               calculateCaloriesBurned();
+              isWorkoutFinished = true;
             }
           });
         });
@@ -166,6 +169,10 @@ class _BicycleState extends State<Bicycle> {
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
+    if (isWorkoutFinished)
+      final BurnedCaloriesPerExerciseSquats =
+          Provider.of<CaloriesBurned>(context)
+              .addExercise('lunge', caloriesBurned);
 
     return Stack(children: [
       Scaffold(

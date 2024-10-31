@@ -22,6 +22,7 @@ class Lunge extends StatefulWidget {
 
 class _LungeState extends State<Lunge> {
   final audioPlayer = AudioPlayer();
+  bool isWorkoutFinished = false;
   double caloriesBurned = 0.0;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
@@ -47,6 +48,7 @@ class _LungeState extends State<Lunge> {
               pauseTimer();
               playTestSound();
               calculateCaloriesBurned();
+              isWorkoutFinished = true;
             }
           });
         });
@@ -126,8 +128,10 @@ class _LungeState extends State<Lunge> {
 
   @override
   Widget build(BuildContext context) {
-    BurnedCaloriesPerExercise =
-        Provider.of<CaloriesBurned>(context).setCaloriesBurned(caloriesBurned);
+    if (isWorkoutFinished)
+      final BurnedCaloriesPerExerciseLunge =
+          Provider.of<CaloriesBurned>(context)
+              .addExercise('lunge', caloriesBurned);
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
 

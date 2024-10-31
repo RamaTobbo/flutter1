@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/jumping.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/burpees.dart';
 import 'package:track_pro/screens/workouts/workoutCardio.dart';
@@ -24,6 +25,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
 
   double caloriesBurned = 0.0;
   bool isAnimationDisplayed = true;
+  bool isWorkoutFinished = false;
   int selectedDuration = 25;
   int countdownTimer = 25;
   final int maxTimer = 3600;
@@ -40,6 +42,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
               pauseTimer();
               playTestSound();
               calculateCaloriesBurned();
+              isWorkoutFinished = true;
             }
           });
         });
@@ -148,6 +151,10 @@ class _JumpingjacksState extends State<Jumpingjacks> {
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
+    if (isWorkoutFinished)
+      final BurnedCaloriesPerExerciseburpee =
+          Provider.of<CaloriesBurned>(context)
+              .addExercise('JumpinJacks', caloriesBurned);
 
     return Stack(
       children: [

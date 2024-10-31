@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/burpee.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/exercises/walking.dart';
@@ -23,6 +24,7 @@ class Burpees extends StatefulWidget {
 class _BurpeesState extends State<Burpees> {
   final audioPlayer = AudioPlayer();
   double caloriesBurned = 0.0;
+  bool isWorkoutFinished = false;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -44,6 +46,7 @@ class _BurpeesState extends State<Burpees> {
               pauseTimer();
               playTestSound();
               calculateCaloriesBurned();
+              isWorkoutFinished = true;
             }
           });
         });
@@ -156,7 +159,10 @@ class _BurpeesState extends State<Burpees> {
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
-
+    if (isWorkoutFinished)
+      final BurnedCaloriesPerExerciseburpee =
+          Provider.of<CaloriesBurned>(context)
+              .addExercise('burpee', caloriesBurned);
     return Stack(
       children: [
         Scaffold(

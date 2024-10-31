@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/exercises/plank.dart';
@@ -23,6 +24,7 @@ class RussianTwist extends StatefulWidget {
 class _RussianTwistState extends State<RussianTwist> {
   final audioPlayer = AudioPlayer();
   double caloriesBurned = 0.0;
+  bool isWorkoutFinished = false;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
@@ -40,6 +42,7 @@ class _RussianTwistState extends State<RussianTwist> {
               pauseTimer();
               playTestSound();
               calculateCaloriesBurned();
+              isWorkoutFinished = true;
             }
           });
         });
@@ -162,7 +165,10 @@ class _RussianTwistState extends State<RussianTwist> {
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
-
+    if (isWorkoutFinished)
+      final BurnedCaloriesPerExerciseburpee =
+          Provider.of<CaloriesBurned>(context)
+              .addExercise('Russian Twist', caloriesBurned);
     return Stack(
       children: [
         Scaffold(

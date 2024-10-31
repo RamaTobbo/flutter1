@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:track_pro/models/Exercises.dart';
+import 'package:track_pro/models/exercise.dart';
 
+// class CaloriesBurned with ChangeNotifier {
+//   double _caloriesBurned = 0;
+
+//   double get caloriesBurned => _caloriesBurned;
+
+//   double setCaloriesBurned(double value) {
+//     _caloriesBurned = value;
+//     return _caloriesBurned;
+//     notifyListeners();
+//   }
+// }
 class CaloriesBurned with ChangeNotifier {
-  double _caloriesBurned = 0;
+  List<Exercises> _exercises = [];
 
-  double get caloriesBurned => _caloriesBurned;
+  List<Exercises> get exercises => _exercises;
 
-  double setCaloriesBurned(double value) {
-    _caloriesBurned = value;
-    return _caloriesBurned;
+  void addExercise(String name, double caloriesBurned) {
+    _exercises.add(Exercises(name: name, caloriesBurned: caloriesBurned));
     notifyListeners();
   }
 }
