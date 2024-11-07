@@ -85,8 +85,7 @@ class _LungeState extends State<Lunge> {
   }
 
   void nextExercise() {
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (ctx) => Squats()), (Route) => false);
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) => Squats()));
   }
 
   void showCaloriesBurnedDialog() {

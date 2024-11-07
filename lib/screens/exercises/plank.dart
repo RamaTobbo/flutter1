@@ -38,8 +38,10 @@ class _PlankState extends State<Plank> {
   }
 
   void nextExercise() {
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (ctx) => RussianTwist()), (Route) => false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (ctx) => RussianTwist()),
+    );
   }
 
   void showCaloriesBurnedDialog() {
@@ -141,7 +143,7 @@ class _PlankState extends State<Plank> {
         Scaffold(
           appBar: AppBar(
             title: Padding(
-              padding: const EdgeInsets.only(left: 48.0),
+              padding: const EdgeInsets.only(left: 8.0),
               child: Text('Plank Exercise'),
             ),
           ),
@@ -263,16 +265,16 @@ class _PlankState extends State<Plank> {
             ],
           ),
         ),
-        Positioned(
-            top: 30,
-            child: IconButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (ctx) => WorkoutCore()),
-                      (Route) => false);
-                },
-                icon: Icon(Icons.arrow_back)))
+        // Positioned(
+        //     top: 30,
+        //     child: IconButton(
+        //         onPressed: () {
+        //           Navigator.pushAndRemoveUntil(
+        //               context,
+        //               MaterialPageRoute(builder: (ctx) => WorkoutCore()),
+        //               (Route) => false);
+        //         },
+        //         icon: Icon(Icons.arrow_back)))
       ],
     );
   }
