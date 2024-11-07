@@ -4,6 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:sensors_plus/sensors_plus.dart';
+import 'dart:math';
+
+import 'package:track_pro/provider/userdata.dart';
+
+var userProviderHeight;
 
 class Calories extends StatefulWidget {
   const Calories({super.key});
@@ -14,8 +20,34 @@ class Calories extends StatefulWidget {
 
 class _CaloriesState extends State<Calories> {
   @override
+  int _steps = 0;
+  double _previousMagnitude = 0.0;
+  double _burnedCalories = 0;
+  double _distance = 0;
+  double _strideLength = (userProviderHeight! * 0.415) / 100;
+  final double _threshold = 1.9;
+
+  @override
+  void initState() {
+    super.initState();
+    accelerometerEventStream().listen((AccelerometerEvent event) {
+      double magnitude =
+          sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2));
+
+      if ((_previousMagnitude - magnitude).abs() > _threshold) {
+        setState(() {
+          _steps++;
+          _burnedCalories = _steps * 0.04;
+          _strideLength = _steps * 0.64;
+        });
+      }
+      _previousMagnitude = magnitude;
+    });
+  }
+
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
+    userProviderHeight = Provider.of<UserData>(context).height;
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -84,7 +116,7 @@ class _CaloriesState extends State<Calories> {
                               width: 60,
                             ),
                             Text(
-                              'Result',
+                              '${_steps}',
                               style: GoogleFonts.roboto(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -118,9 +150,19 @@ class _CaloriesState extends State<Calories> {
                               width: 30,
                             ),
                             Text(
-                              'Result',
+                              '$_burnedCalories',
                               style: GoogleFonts.roboto(
                                 fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 3,
+                            ),
+                            Text(
+                              'calorie',
+                              style: GoogleFonts.roboto(
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -143,7 +185,7 @@ class _CaloriesState extends State<Calories> {
                                       const SizedBox(
                                         height: 3,
                                       ),
-                                      const Text('result',
+                                      Text('${_strideLength}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold)),
                                     ],
@@ -157,7 +199,7 @@ class _CaloriesState extends State<Calories> {
                                 child: Column(
                                   children: [
                                     Image.asset('assets/images/fire.png'),
-                                    const Text('result',
+                                    Text('$_burnedCalories',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold)),
                                   ],

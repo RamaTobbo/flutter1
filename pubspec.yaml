@@ -72,6 +72,8 @@ dependencies:
   item_count_number_button: ^1.9.2
   audioplayers: ^6.1.0
   timezone: ^0.9.4
+  pedometer: ^4.0.2
+  sensors_plus: ^6.1.0
 
 
 dev_dependencies:
