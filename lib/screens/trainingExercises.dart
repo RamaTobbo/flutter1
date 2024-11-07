@@ -211,34 +211,42 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                               return ListTile(
                                 title: Stack(
                                   children: [
-                                    Container(
-                                      width: 350,
-                                      height: 147,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: _getColorForIndex(index),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.5),
-                                            spreadRadius: 2,
-                                            blurRadius: 7,
-                                            offset: const Offset(0, 3),
-                                          )
-                                        ],
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 8.0, left: 20),
-                                        child: Text(
-                                          workout.name,
-                                          style: themeProvide.isDarkMode
-                                              ? GoogleFonts.robotoFlex(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black)
-                                              : GoogleFonts.robotoFlex(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold),
+                                    InkWell(
+                                      onTap: () {
+                                        _gotToExercises(index);
+                                      },
+                                      child: Container(
+                                        width: 350,
+                                        height: 147,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: _getColorForIndex(index),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 2,
+                                              blurRadius: 7,
+                                              offset: const Offset(0, 3),
+                                            )
+                                          ],
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 8.0, left: 20),
+                                          child: Text(
+                                            workout.name,
+                                            style: themeProvide.isDarkMode
+                                                ? GoogleFonts.robotoFlex(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black)
+                                                : GoogleFonts.robotoFlex(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
