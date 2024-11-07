@@ -118,46 +118,46 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                       fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 100,
-                      width: 350,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 4,
-                        itemBuilder: (context, index1) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 100,
-                              decoration: BoxDecoration(
-                                  color: _getColorForIndex(index1),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 7,
-                                      offset: const Offset(0, 3),
-                                    )
-                                  ]),
-                              child: InkWell(
-                                onTap: () {
-                                  _goToexerciseForIndex(index1);
-                                },
-                                child: Center(
-                                  child: _getIcons(index1),
-                                ),
+              body: Column(
+                children: [
+                  Container(
+                    height: 100,
+                    width: 350,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 4,
+                      itemBuilder: (context, index1) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: 100,
+                            decoration: BoxDecoration(
+                                color: _getColorForIndex(index1),
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 2,
+                                    blurRadius: 7,
+                                    offset: const Offset(0, 3),
+                                  )
+                                ]),
+                            child: InkWell(
+                              onTap: () {
+                                _goToexerciseForIndex(index1);
+                              },
+                              child: Center(
+                                child: _getIcons(index1),
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                    const SizedBox(height: 16),
-                    ListView.builder(
+                  ),
+                  const SizedBox(height: 5),
+                  Expanded(
+                    child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: value.getWorkoutList().length,
                       itemBuilder: (context, index) {
@@ -274,8 +274,8 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                         );
                       },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
