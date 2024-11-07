@@ -63,8 +63,10 @@ class _Workout1State extends State<Workout1> {
             TextButton(
               onPressed: () {
                 startTimer(_selectedMinutes);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => TabNav1()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => TabNav1(
+                          index: 3,
+                        )));
               },
               child: Text('Start Exercise'),
             ),

@@ -10,6 +10,7 @@ import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/splash1Screen.dart';
 import 'package:track_pro/provider/temp.dart';
+import 'package:track_pro/screens/trainingExercises.dart';
 
 void main() {
   runApp(

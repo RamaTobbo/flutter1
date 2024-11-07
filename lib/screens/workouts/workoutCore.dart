@@ -72,8 +72,10 @@ class _WorkoutCoreState extends State<WorkoutCore> {
             TextButton(
               onPressed: () {
                 startTimer(_selectedMinutes);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => TabNav1()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => TabNav1(
+                          index: 3,
+                        )));
               },
               child: Text('Start Exercise'),
             ),
@@ -109,8 +111,10 @@ class _WorkoutCoreState extends State<WorkoutCore> {
             TextButton(
               onPressed: () {
                 startTimer(_selectedMinutes1);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => TabNav1()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => TabNav1(
+                          index: 3,
+                        )));
               },
               child: Text('Start Exercise'),
             ),
@@ -303,8 +307,13 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (ctx) =>
-                              UserWithSmartWatch ? TabNav() : TabNav1()));
+                          builder: (ctx) => UserWithSmartWatch
+                              ? TabNav(
+                                  index: 3,
+                                )
+                              : TabNav1(
+                                  index: 3,
+                                )));
                 },
                 icon: Icon(Icons.arrow_back)))
       ],

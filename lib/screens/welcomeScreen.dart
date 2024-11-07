@@ -23,11 +23,16 @@ class Welcomescreen extends StatelessWidget {
 
     void nextPageSmartWatch() {
       Navigator.push(
-          context, MaterialPageRoute(builder: (ctx) => const TabNav()));
+          context, MaterialPageRoute(builder: (ctx) => TabNav(index: 0)));
     }
 
     void nextPageWithoutSmartWatch() {
-      Navigator.push(context, MaterialPageRoute(builder: (ctx) => TabNav1()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (ctx) => TabNav1(
+                    index: 0,
+                  )));
     }
 
     return PopScope(

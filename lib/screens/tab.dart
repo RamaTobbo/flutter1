@@ -13,7 +13,8 @@ import 'dart:convert';
 import 'package:track_pro/screens/trainingExercises.dart';
 
 class TabNav extends StatefulWidget {
-  const TabNav({super.key});
+  TabNav({super.key, this.index = 0});
+  int index;
 
   @override
   State<TabNav> createState() => _TabNavState();
@@ -28,6 +29,12 @@ class _TabNavState extends State<TabNav> {
     setState(() {
       isSwitchedDark = value;
     });
+  }
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedPageIndex = widget.index;
   }
 
   void selectPage(int index) {

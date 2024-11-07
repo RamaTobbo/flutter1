@@ -24,7 +24,7 @@ class WorkoutLowerBoddy extends StatefulWidget {
 
 class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
   final style = TextStyle(color: Colors.black);
-
+  bool isgoingback = true;
   int _selectedMinutes = 1;
   int _selectedMinutes1 = 1;
   Timer? _timer;
@@ -73,8 +73,10 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
             TextButton(
               onPressed: () {
                 startTimer(_selectedMinutes);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => TabNav1()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => TabNav1(
+                          index: 3,
+                        )));
               },
               child: Text('Start Exercise'),
             ),
@@ -110,8 +112,10 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
             TextButton(
               onPressed: () {
                 startTimer(_selectedMinutes1);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => TabNav1()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => TabNav1(
+                          index: 3,
+                        )));
               },
               child: Text('Start Exercise'),
             ),
@@ -300,10 +304,15 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (ctx) =>
-                              UserWithSmartWatch ? TabNav() : TabNav1()),
+                          builder: (ctx) => UserWithSmartWatch
+                              ? TabNav(
+                                  index: 3,
+                                )
+                              : TabNav1(
+                                  index: 3,
+                                )),
                       // UserWithSmartWatch ? TabNav() : TabNav1()),
-                      (Route) => false);
+                      (Route) => true);
                 },
                 icon: Icon(Icons.arrow_back),
               ),
