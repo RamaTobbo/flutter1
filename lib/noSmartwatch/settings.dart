@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/themeprovider.dart';
@@ -33,6 +34,45 @@ class _Settings1State extends State<Settings1> {
     _loadSwitchState();
   }
 
+  DateTime? _lastPressed;
+  Future<bool> _onWillPop() async {
+    DateTime now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > Duration(seconds: 2)) {
+      _lastPressed = now;
+      return false;
+    } else {
+      return await _showExitDialog() ?? false;
+    }
+  }
+
+  Future<bool?> _showExitDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit'),
+          content: const Text('Do you want to exit trackPro app?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                SystemNavigator.pop();
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   _loadSwitchState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -55,8 +95,8 @@ class _Settings1State extends State<Settings1> {
         fontWeight: FontWeight.bold,
         color: themeProvider.isDarkMode ? Colors.white : Colors.black);
 
-    return PopScope(
-      canPop: false,
+    return WillPopScope(
+      onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: themeProvider.isDarkMode ? Colors.black : Colors.white,
         appBar: AppBar(
@@ -139,7 +179,8 @@ class _Settings1State extends State<Settings1> {
               child: Transform.scale(
                 scale: 1.2,
                 child: Switch(
-                  activeColor: isSwitchedDark ? Colors.amber : Colors.black,
+                  activeColor:
+                      themeProvider.isDarkMode ? Colors.white : Colors.black,
                   value: themeProvider.isDarkMode,
                   onChanged: (value) {
                     setState(() {

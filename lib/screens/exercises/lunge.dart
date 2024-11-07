@@ -149,7 +149,7 @@ class _LungeState extends State<Lunge> {
               isAnimationDisplayed
                   ? SizedBox(
                       width: 170,
-                      height: 170,
+                      height: 160,
                       child: Image.asset('assets/images/lunge.gif',
                           fit: BoxFit.cover),
                     )

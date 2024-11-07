@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:track_pro/provider/steps.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:math';
@@ -20,7 +22,7 @@ class StepsCalories extends StatefulWidget {
 }
 
 class _StepsCaloriesState extends State<StepsCalories> {
-  int _steps = 0;
+  double _steps = 0;
   double _previousMagnitude = 0.0;
   double _burnedCalories = 0;
   double _distance = 0;
@@ -35,6 +37,45 @@ class _StepsCaloriesState extends State<StepsCalories> {
     });
   }
 
+  DateTime? _lastPressed;
+  Future<bool> _onWillPop() async {
+    DateTime now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > Duration(seconds: 2)) {
+      _lastPressed = now;
+      return false;
+    } else {
+      return await _showExitDialog() ?? false;
+    }
+  }
+
+  Future<bool?> _showExitDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit'),
+          content: const Text('Do you want to exit trackPro app?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                SystemNavigator.pop();
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +86,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
       if ((_previousMagnitude - magnitude).abs() > _threshold) {
         setState(() {
           _steps++;
+          Provider.of<Steps>(context, listen: false).setSteps(_steps);
           _burnedCalories = _steps * 0.04;
           _strideLength = _steps * 0.64;
         });
@@ -55,10 +97,11 @@ class _StepsCaloriesState extends State<StepsCalories> {
 
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
+
     userProviderHeight1 = Provider.of<UserData>(context).height;
     _strideLength = (userProviderHeight1! * 0.415) / 100;
-    return PopScope(
-      canPop: false,
+    return WillPopScope(
+      onWillPop: _onWillPop,
       child: Scaffold(
         body: Stack(
           children: [
@@ -126,20 +169,30 @@ class _StepsCaloriesState extends State<StepsCalories> {
                             ),
                             Text(
                               '${_steps}',
-                              style: GoogleFonts.roboto(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: themeProvider1.isDarkMode
+                                  ? GoogleFonts.roboto(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)
+                                  : GoogleFonts.roboto(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                             ),
                             const SizedBox(
                               width: 3,
                             ),
                             Text(
                               'step',
-                              style: GoogleFonts.roboto(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: themeProvider1.isDarkMode
+                                  ? GoogleFonts.roboto(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold)
+                                  : GoogleFonts.roboto(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                             ),
                           ],
                         ),
@@ -160,20 +213,30 @@ class _StepsCaloriesState extends State<StepsCalories> {
                             ),
                             Text(
                               '$_burnedCalories',
-                              style: GoogleFonts.roboto(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: themeProvider1.isDarkMode
+                                  ? GoogleFonts.roboto(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)
+                                  : GoogleFonts.roboto(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                             ),
                             const SizedBox(
                               width: 3,
                             ),
                             Text(
                               'calorie',
-                              style: GoogleFonts.roboto(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: themeProvider1.isDarkMode
+                                  ? GoogleFonts.roboto(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold)
+                                  : GoogleFonts.roboto(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                             ),
                           ],
                         ),
@@ -196,8 +259,12 @@ class _StepsCaloriesState extends State<StepsCalories> {
                                       ),
                                       Text(
                                           '${_strideLength.toStringAsFixed(2)}',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold)),
+                                          style: themeProvider1.isDarkMode
+                                              ? GoogleFonts.roboto(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold)
+                                              : TextStyle(
+                                                  fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                 ),
@@ -210,8 +277,12 @@ class _StepsCaloriesState extends State<StepsCalories> {
                                   children: [
                                     Image.asset('assets/images/fire.png'),
                                     Text('$_burnedCalories',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
+                                        style: themeProvider1.isDarkMode
+                                            ? GoogleFonts.roboto(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold)
+                                            : TextStyle(
+                                                fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                               ),
@@ -224,10 +295,14 @@ class _StepsCaloriesState extends State<StepsCalories> {
                                   child: Column(
                                     children: [
                                       Image.asset('assets/images/time.png'),
-                                      const Text(
+                                      Text(
                                         'result',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        style: themeProvider1.isDarkMode
+                                            ? GoogleFonts.roboto(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold)
+                                            : const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
@@ -271,10 +346,17 @@ class _StepsCaloriesState extends State<StepsCalories> {
                   children: [
                     IconButton(
                         onPressed: restartCounter,
-                        icon: Icon(Icons.restart_alt)),
+                        icon: themeProvider1.isDarkMode
+                            ? Icon(
+                                Icons.restart_alt,
+                                color: Colors.black,
+                              )
+                            : Icon(Icons.restart_alt)),
                     Text(
                       'Restart Counter',
-                      style: TextStyle(fontSize: 10),
+                      style: themeProvider1.isDarkMode
+                          ? TextStyle(fontSize: 10, color: Colors.black)
+                          : TextStyle(fontSize: 10),
                     ),
                   ],
                 ))

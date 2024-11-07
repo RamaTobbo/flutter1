@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
@@ -6,8 +7,12 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:track_pro/models/location.dart';
+import 'package:track_pro/models/weather.dart';
+import 'package:track_pro/provider/location.dart';
+import 'package:track_pro/provider/temp.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/map.dart';
+import 'package:track_pro/services/weather.dart';
 
 class Temperature1 extends StatefulWidget {
   const Temperature1({super.key, required this.place});
@@ -19,6 +24,77 @@ class Temperature1 extends StatefulWidget {
 
 class _TemperatureState extends State<Temperature1> {
   PlaceLocation? pickedPlace;
+  final _weatherService = WeatherService('f8f10eafbcae3f86eabf5628da94f88a');
+  Weather? _weather;
+  DateTime? _lastPressed;
+  Future<bool> _onWillPop() async {
+    DateTime now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > Duration(seconds: 2)) {
+      _lastPressed = now;
+      return false;
+    } else {
+      return await _showExitDialog() ?? false;
+    }
+  }
+
+  Future<bool?> _showExitDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit'),
+          content: const Text('Do you want to exit trackPro app?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                SystemNavigator.pop();
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _fetchWeather() async {
+    try {
+      Location location = Location();
+      LocationData locationData = await location.getLocation();
+      final weather = await _weatherService.getWeatherByCoordinates(
+        locationData.latitude!,
+        locationData.longitude!,
+      );
+      print('Weather fetched: ${weather.temperature}°C');
+      setState(() {
+        _weather = weather;
+      });
+      Provider.of<temp>(context, listen: false)
+          .setHumidity(weather.Humidity.round());
+      Provider.of<temp>(context, listen: false)
+          .setHumidity(weather.temperature.round());
+      Provider.of<temp>(context, listen: false)
+          .setCondition(weather.mainCondition);
+    } catch (e) {
+      print('Error fetching weather data: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchWeather();
+  }
+
   @override
   var isGettingLocation = false;
   void getCurrentLocation() async {
@@ -72,8 +148,8 @@ class _TemperatureState extends State<Temperature1> {
   @override
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
-    return PopScope(
-      canPop: false,
+    return WillPopScope(
+      onWillPop: _onWillPop,
       child: Scaffold(
         body: Stack(
           children: [
@@ -158,7 +234,9 @@ class _TemperatureState extends State<Temperature1> {
                                     width: 10,
                                   ),
                                   Text(
-                                    'result${"\u2103"}',
+                                    _weather != null
+                                        ? '${_weather?.temperature.round()}°C'
+                                        : 'Loading...',
                                     style: resultstyle,
                                   ),
                                 ],
@@ -177,7 +255,11 @@ class _TemperatureState extends State<Temperature1> {
                                 const SizedBox(
                                   width: 35,
                                 ),
-                                Text('result', style: resultstyle),
+                                Text(
+                                    _weather != null
+                                        ? '${_weather?.Humidity.round()}%'
+                                        : 'Loading...',
+                                    style: resultstyle),
                               ],
                             ),
                             const SizedBox(

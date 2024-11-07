@@ -179,7 +179,7 @@ class _SquatsState extends State<Squats> {
           isAnimationDisplayed
               ? SizedBox(
                   width: 200,
-                  height: 200,
+                  height: 180,
                   child: Image.asset(
                     'assets/images/squats.gif',
                     fit: BoxFit.cover,

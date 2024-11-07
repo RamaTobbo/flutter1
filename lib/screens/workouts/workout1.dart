@@ -42,8 +42,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
           _remainingTime--;
         });
       } else {
-        timer.cancel(); // Stop the timer when it reaches zero
-        // You can show a notification or alert here
+        timer.cancel();
       }
     });
   }
@@ -303,6 +302,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                       MaterialPageRoute(
                           builder: (ctx) =>
                               UserWithSmartWatch ? TabNav() : TabNav1()),
+                      // UserWithSmartWatch ? TabNav() : TabNav1()),
                       (Route) => false);
                 },
                 icon: Icon(Icons.arrow_back),

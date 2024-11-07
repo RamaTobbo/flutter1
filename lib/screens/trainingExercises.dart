@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -80,6 +81,45 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     }
   }
 
+  DateTime? _lastPressed;
+  Future<bool> _onWillPop() async {
+    DateTime now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > Duration(seconds: 2)) {
+      _lastPressed = now;
+      return false;
+    } else {
+      return await _showExitDialog() ?? false;
+    }
+  }
+
+  Future<bool?> _showExitDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit'),
+          content: const Text('Do you want to exit trackPro app?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                SystemNavigator.pop();
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvide = Provider.of<ThemeProvider>(context);
@@ -108,179 +148,195 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     return Consumer<WorkoutData>(
       builder: (context, value, child) => Stack(
         children: [
-          PopScope(
-            canPop: false,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  'Workout',
-                  style: GoogleFonts.roboto(
-                      fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-              ),
-              body: Column(
-                children: [
-                  Container(
-                    height: 100,
-                    width: 350,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 4,
-                      itemBuilder: (context, index1) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: 100,
-                            decoration: BoxDecoration(
-                                color: _getColorForIndex(index1),
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 2,
-                                    blurRadius: 7,
-                                    offset: const Offset(0, 3),
-                                  )
-                                ]),
-                            child: InkWell(
-                              onTap: () {
-                                _goToexerciseForIndex(index1);
-                              },
-                              child: Center(
-                                child: _getIcons(index1),
-                              ),
-                            ),
+          WillPopScope(
+            onWillPop: _onWillPop,
+            child: Stack(
+              children: [
+                Scaffold(
+                  // appBar: AppBar(
+                  //   title: Text(
+                  //     'Workout',
+                  //     style: GoogleFonts.roboto(
+                  //         fontSize: 30, fontWeight: FontWeight.bold),
+                  //   ),
+                  // ),
+                  body: Padding(
+                    padding: const EdgeInsets.only(top: 108.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 100,
+                          width: 350,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 4,
+                            itemBuilder: (context, index1) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                      color: _getColorForIndex(index1),
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 2,
+                                          blurRadius: 7,
+                                          offset: const Offset(0, 3),
+                                        )
+                                      ]),
+                                  child: InkWell(
+                                    onTap: () {
+                                      _goToexerciseForIndex(index1);
+                                    },
+                                    child: Center(
+                                      child: _getIcons(index1),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: value.getWorkoutList().length,
-                      itemBuilder: (context, index) {
-                        String selectedWorkoutName =
-                            workoutData.getWorkoutNames()[index];
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: value.getWorkoutList().length,
+                            itemBuilder: (context, index) {
+                              String selectedWorkoutName =
+                                  workoutData.getWorkoutNames()[index];
 
-                        final workout = value.getWorkoutList()[index];
-                        return ListTile(
-                          title: Stack(
-                            children: [
-                              Container(
-                                width: 350,
-                                height: 147,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: _getColorForIndex(index),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 7,
-                                      offset: const Offset(0, 3),
-                                    )
+                              final workout = value.getWorkoutList()[index];
+                              return ListTile(
+                                title: Stack(
+                                  children: [
+                                    Container(
+                                      width: 350,
+                                      height: 147,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: _getColorForIndex(index),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 2,
+                                            blurRadius: 7,
+                                            offset: const Offset(0, 3),
+                                          )
+                                        ],
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 8.0, left: 20),
+                                        child: Text(
+                                          workout.name,
+                                          style: themeProvide.isDarkMode
+                                              ? GoogleFonts.robotoFlex(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black)
+                                              : GoogleFonts.robotoFlex(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 90,
+                                      left: 260,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          // Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //         builder: (ctx) => Workout()));
+                                          _gotToExercises(index);
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: themeProvide.isDarkMode
+                                              ? Colors.black
+                                              : Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 50,
+                                        left: 30,
+                                        child: Image.asset(
+                                          value.workoutList[index].image,
+                                          width: 90,
+                                          height: 90,
+                                        )),
+                                    Positioned(
+                                        top: 10,
+                                        right: 30,
+                                        child: Text(
+                                          '${value.getExercisesForWorkout(selectedWorkoutName).length} exercises',
+                                          style: const TextStyle(
+                                              color: Colors.black),
+                                        ))
+
+                                    // Positioned(
+                                    //   top: 90,
+                                    //   left: 30,
+                                    //   // child: Container(
+                                    //   //   width: 110,
+                                    //   //   height: 40,
+                                    //   //   decoration: const BoxDecoration(
+                                    //   //     borderRadius: BorderRadius.all(
+                                    //   //       Radius.circular(30),
+                                    //   //     ),
+                                    //   //     color: Colors.white,
+                                    //   //   ),
+                                    //   //   child: Center(
+                                    //   //     child: Row(
+                                    //   //       children: [
+                                    //   //         Icon(
+                                    //   //           Icons.access_time_filled_outlined,
+                                    //   //           color: themeProvide.isDarkMode
+                                    //   //               ? Colors.black
+                                    //   //               : Colors.grey,
+                                    //   //         ),
+                                    //   //         const SizedBox(width: 5),
+                                    //   //         Text(
+                                    //   //           '${workout.exercise.map((e) => e.timer).reduce((a, b) => a + b)} min',
+                                    //   //           style: TextStyle(
+                                    //   //             color: themeProvide.isDarkMode
+                                    //   //                 ? Colors.black
+                                    //   //                 : Colors.grey,
+                                    //   //           ),
+                                    //   //         ),
+                                    //   //       ],
+                                    //   //     ),
+                                    //   //   ),
+                                    //   // ),
+                                    // ),
                                   ],
                                 ),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 8.0, left: 20),
-                                  child: Text(
-                                    workout.name,
-                                    style: themeProvide.isDarkMode
-                                        ? GoogleFonts.robotoFlex(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black)
-                                        : GoogleFonts.robotoFlex(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                top: 90,
-                                left: 260,
-                                child: IconButton(
-                                  onPressed: () {
-                                    // Navigator.push(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //         builder: (ctx) => Workout()));
-                                    _gotToExercises(index);
-                                  },
-                                  icon: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: themeProvide.isDarkMode
-                                        ? Colors.black
-                                        : Colors.grey,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                  top: 50,
-                                  left: 30,
-                                  child: Image.asset(
-                                    value.workoutList[index].image,
-                                    width: 90,
-                                    height: 90,
-                                  )),
-                              Positioned(
-                                  top: 10,
-                                  right: 30,
-                                  child: Text(
-                                    '${value.getExercisesForWorkout(selectedWorkoutName).length} exercises',
-                                    style: const TextStyle(color: Colors.black),
-                                  ))
-
-                              // Positioned(
-                              //   top: 90,
-                              //   left: 30,
-                              //   // child: Container(
-                              //   //   width: 110,
-                              //   //   height: 40,
-                              //   //   decoration: const BoxDecoration(
-                              //   //     borderRadius: BorderRadius.all(
-                              //   //       Radius.circular(30),
-                              //   //     ),
-                              //   //     color: Colors.white,
-                              //   //   ),
-                              //   //   child: Center(
-                              //   //     child: Row(
-                              //   //       children: [
-                              //   //         Icon(
-                              //   //           Icons.access_time_filled_outlined,
-                              //   //           color: themeProvide.isDarkMode
-                              //   //               ? Colors.black
-                              //   //               : Colors.grey,
-                              //   //         ),
-                              //   //         const SizedBox(width: 5),
-                              //   //         Text(
-                              //   //           '${workout.exercise.map((e) => e.timer).reduce((a, b) => a + b)} min',
-                              //   //           style: TextStyle(
-                              //   //             color: themeProvide.isDarkMode
-                              //   //                 ? Colors.black
-                              //   //                 : Colors.grey,
-                              //   //           ),
-                              //   //         ),
-                              //   //       ],
-                              //   //     ),
-                              //   //   ),
-                              //   // ),
-                              // ),
-                            ],
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+                Positioned(
+                  left: 30,
+                  top: 50,
+                  child: Text(
+                    'Workout',
+                    style: GoogleFonts.roboto(
+                        fontSize: 30, fontWeight: FontWeight.bold),
+                  ),
+                )
+              ],
             ),
           ),
           Positioned(
-            top: 22,
+            top: 50,
             right: 20,
             child: IconButton(
               onPressed: () {

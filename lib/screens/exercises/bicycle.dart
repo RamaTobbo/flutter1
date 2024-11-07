@@ -294,6 +294,8 @@ class _BicycleState extends State<Bicycle> {
         ),
       ),
       Positioned(
+          top: 30,
+          left: 10,
           child: IconButton(
               onPressed: () {
                 Navigator.pushAndRemoveUntil(

@@ -162,7 +162,10 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
                     isContinueWithoutSmartWatch = true;
                   });
                 },
-                child: Text('Continue Without trackPro smartwatch'),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text('Continue Without trackPro smartwatch'),
+                ),
               ),
             ),
             Positioned(

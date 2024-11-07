@@ -177,7 +177,7 @@ class _BurpeesState extends State<Burpees> {
               isAnimationDisplayed
                   ? SizedBox(
                       width: 250,
-                      height: 180,
+                      height: 168,
                       child: Image.asset(
                         'assets/images/burpee.gif',
                         fit: BoxFit.cover,

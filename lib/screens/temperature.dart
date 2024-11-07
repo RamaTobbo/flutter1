@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
@@ -6,8 +7,11 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import 'package:track_pro/models/location.dart';
+import 'package:track_pro/models/weather.dart';
+import 'package:track_pro/provider/location.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/map.dart';
+import 'package:track_pro/services/weather.dart';
 
 class Temperature extends StatefulWidget {
   const Temperature({super.key, required this.place});
@@ -19,6 +23,7 @@ class Temperature extends StatefulWidget {
 
 class _TemperatureState extends State<Temperature> {
   PlaceLocation? pickedPlace;
+
   @override
   var isGettingLocation = false;
   void getCurrentLocation() async {
@@ -48,8 +53,11 @@ class _TemperatureState extends State<Temperature> {
       isGettingLocation = true;
     });
     locationData = await location.getLocation();
-    final longitude = locationData.longitude;
-    final latitude = locationData.latitude;
+    double longitude = locationData.longitude!.toDouble();
+    double latitude = locationData.latitude!.toDouble();
+
+    Provider.of<location1>(context, listen: false).setLatitude(latitude);
+    Provider.of<location1>(context, listen: false).setLatitude(longitude);
     if (longitude == null || latitude == null) {
       return;
     }
@@ -65,6 +73,45 @@ class _TemperatureState extends State<Temperature> {
     });
   }
 
+  DateTime? _lastPressed;
+  Future<bool> _onWillPop() async {
+    DateTime now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > Duration(seconds: 2)) {
+      _lastPressed = now;
+      return false;
+    } else {
+      return await _showExitDialog() ?? false;
+    }
+  }
+
+  Future<bool?> _showExitDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit'),
+          content: const Text('Do you want to exit trackPro app?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                SystemNavigator.pop();
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   final textstyle =
       GoogleFonts.roboto(fontSize: 20, color: const Color(0xff575757));
   final resultstyle =
@@ -72,8 +119,8 @@ class _TemperatureState extends State<Temperature> {
   @override
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
-    return PopScope(
-      canPop: false,
+    return WillPopScope(
+      onWillPop: _onWillPop,
       child: Scaffold(
         body: Stack(
           children: [

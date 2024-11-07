@@ -170,7 +170,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
               isAnimationDisplayed
                   ? SizedBox(
                       width: 250,
-                      height: 200,
+                      height: 181,
                       child: Image.asset(
                         'assets/images/jackss.gif',
                         fit: BoxFit.cover,
