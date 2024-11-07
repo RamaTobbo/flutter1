@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,23 +10,30 @@ import 'dart:math';
 
 import 'package:track_pro/provider/userdata.dart';
 
-var userProviderHeight;
+var userProviderHeight1;
 
-class Calories extends StatefulWidget {
-  const Calories({super.key});
+class StepsCalories extends StatefulWidget {
+  const StepsCalories({super.key});
 
   @override
-  State<Calories> createState() => _CaloriesState();
+  State<StepsCalories> createState() => _StepsCaloriesState();
 }
 
-class _CaloriesState extends State<Calories> {
-  @override
+class _StepsCaloriesState extends State<StepsCalories> {
   int _steps = 0;
   double _previousMagnitude = 0.0;
   double _burnedCalories = 0;
   double _distance = 0;
   double _strideLength = 0;
   final double _threshold = 1.9;
+  void restartCounter() {
+    setState(() {
+      _steps = 0;
+      _previousMagnitude = 0.0;
+      _burnedCalories = 0;
+      _distance = 0;
+    });
+  }
 
   @override
   void initState() {
@@ -47,8 +55,8 @@ class _CaloriesState extends State<Calories> {
 
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
-    userProviderHeight = Provider.of<UserData>(context).height ?? 170;
-    _strideLength = (userProviderHeight * 0.415) / 100;
+    userProviderHeight1 = Provider.of<UserData>(context).height;
+    _strideLength = (userProviderHeight1! * 0.415) / 100;
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -186,7 +194,8 @@ class _CaloriesState extends State<Calories> {
                                       const SizedBox(
                                         height: 3,
                                       ),
-                                      Text('${_strideLength}',
+                                      Text(
+                                          '${_strideLength.toStringAsFixed(2)}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold)),
                                     ],
@@ -255,6 +264,20 @@ class _CaloriesState extends State<Calories> {
                 ),
               ),
             ),
+            Positioned(
+                top: 30,
+                right: 20,
+                child: Column(
+                  children: [
+                    IconButton(
+                        onPressed: restartCounter,
+                        icon: Icon(Icons.restart_alt)),
+                    Text(
+                      'Restart Counter',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                  ],
+                ))
           ],
         ),
       ),

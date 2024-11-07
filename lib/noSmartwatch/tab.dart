@@ -6,13 +6,10 @@ import 'package:track_pro/models/location.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/scan.dart';
 import 'package:track_pro/noSmartwatch/settings.dart';
+import 'package:track_pro/noSmartwatch/steps.dart';
 import 'package:track_pro/noSmartwatch/temp.dart';
 import 'package:track_pro/provider/themeprovider.dart';
-import 'package:track_pro/screens/HomePage.dart';
-import 'package:track_pro/screens/calories.dart';
-import 'package:track_pro/screens/heartRate.dart';
-import 'package:track_pro/screens/settings.dart';
-import 'package:track_pro/screens/temperature.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -123,7 +120,7 @@ class _TabNav1State extends State<TabNav1> {
         activeScreen = const ConnectingTotrackPro();
         break;
       case 2:
-        activeScreen = const Calories();
+        activeScreen = const StepsCalories();
         break;
       case 4:
         activeScreen = Temperature1(
