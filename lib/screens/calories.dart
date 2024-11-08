@@ -241,7 +241,7 @@ class _CaloriesState extends State<Calories> {
                             child: const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 30.0),
                               child: Text(
-                                'Set Goal',
+                                'Start',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),

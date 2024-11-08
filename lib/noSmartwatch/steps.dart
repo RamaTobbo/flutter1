@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -22,20 +24,23 @@ class StepsCalories extends StatefulWidget {
 }
 
 class _StepsCaloriesState extends State<StepsCalories> {
+  StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
   double _steps = 0;
   double _previousMagnitude = 0.0;
   double _burnedCalories = 0;
   double _distance = 0;
   double _strideLength = 0;
   final double _threshold = 1.9;
-  void restartCounter() {
-    setState(() {
-      _steps = 0;
-      _previousMagnitude = 0.0;
-      _burnedCalories = 0;
-      _distance = 0;
-    });
-  }
+  bool isStartPressed = false;
+  // void restartCounter() {
+  //   setState(() {
+  //     _steps = 0;
+  //     _previousMagnitude = 0.0;
+  //     _burnedCalories = 0;
+  //     _strideLength = 0;
+  //     _distance = 0;
+  //   });
+  // }
 
   DateTime? _lastPressed;
   Future<bool> _onWillPop() async {
@@ -79,24 +84,40 @@ class _StepsCaloriesState extends State<StepsCalories> {
   @override
   void initState() {
     super.initState();
-    accelerometerEventStream().listen((AccelerometerEvent event) {
-      double magnitude =
-          sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2));
+  }
 
-      if ((_previousMagnitude - magnitude).abs() > _threshold) {
-        setState(() {
-          _steps++;
-          Provider.of<Steps>(context, listen: false).setSteps(_steps);
-          _burnedCalories = _steps * 0.04;
-          _strideLength = _steps * 0.64;
-        });
-      }
-      _previousMagnitude = magnitude;
+  void stopTheCounter(Steps stepsProvider) {
+    _accelerometerSubscription?.cancel();
+    stepsProvider.stopCounting();
+    _accelerometerSubscription = null;
+    stepsProvider.stopCounting();
+    setState(() {
+      isStartPressed = false;
     });
   }
 
+  // void beginTheCounter(Steps stepsProvider) {
+  //   accelerometerEventStream().listen((AccelerometerEvent event) {
+  //     double magnitude =
+  //         sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2));
+
+  //     if ((_previousMagnitude - magnitude).abs() > _threshold) {
+  //       setState(() {
+  //         _steps++;
+
+  //       //  stepsProvider.incrementStep();
+  //        // Provider.of<Steps>(context, listen: false).setSteps(_steps);
+  //         _burnedCalories = _steps * 0.04;
+  //         _strideLength = _steps * 0.64;
+  //       });
+  //     }
+  //     _previousMagnitude = magnitude;
+  //   });
+  // }
+
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
+    final stepsProvider = Provider.of<Steps>(context);
 
     userProviderHeight1 = Provider.of<UserData>(context).height;
     _strideLength = (userProviderHeight1! * 0.415) / 100;
@@ -168,7 +189,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                               width: 60,
                             ),
                             Text(
-                              '${_steps}',
+                              '${stepsProvider.steps}',
                               style: themeProvider1.isDarkMode
                                   ? GoogleFonts.roboto(
                                       color: Colors.black,
@@ -212,7 +233,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                               width: 30,
                             ),
                             Text(
-                              '$_burnedCalories',
+                              '${stepsProvider.burnedCalories.round()}',
                               style: themeProvider1.isDarkMode
                                   ? GoogleFonts.roboto(
                                       color: Colors.black,
@@ -258,7 +279,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                                         height: 3,
                                       ),
                                       Text(
-                                          '${_strideLength.toStringAsFixed(2)}',
+                                          '${stepsProvider.stirdeLength.toStringAsFixed(2)}',
                                           style: themeProvider1.isDarkMode
                                               ? GoogleFonts.roboto(
                                                   color: Colors.black,
@@ -276,7 +297,8 @@ class _StepsCaloriesState extends State<StepsCalories> {
                                 child: Column(
                                   children: [
                                     Image.asset('assets/images/fire.png'),
-                                    Text('$_burnedCalories',
+                                    Text(
+                                        '${stepsProvider.burnedCalories.round()}',
                                         style: themeProvider1.isDarkMode
                                             ? GoogleFonts.roboto(
                                                 color: Colors.black,
@@ -316,22 +338,46 @@ class _StepsCaloriesState extends State<StepsCalories> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 22.0),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: themeProvider1.isDarkMode
-                                    ? Color(0xffffce48)
-                                    : const Color(0xFF4a4d7a)),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 30.0),
-                              child: Text(
-                                'Set Goal',
-                                style: TextStyle(
-                                  color: Colors.white,
+                          child: stepsProvider.isCounting
+                              ? ElevatedButton(
+                                  onPressed: () {
+                                    stopTheCounter(stepsProvider);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: themeProvider1.isDarkMode
+                                          ? Color(0xffffce48)
+                                          : const Color(0xFF4a4d7a)),
+                                  child: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30.0),
+                                    child: Text(
+                                      'Stop',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    stepsProvider.startCounting();
+                                    // beginTheCounter(stepsProvider);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: themeProvider1.isDarkMode
+                                          ? Color(0xffffce48)
+                                          : const Color(0xFF4a4d7a)),
+                                  child: const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 30.0),
+                                    child: Text(
+                                      'Start',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
                         ),
                       ],
                     ),
@@ -345,7 +391,11 @@ class _StepsCaloriesState extends State<StepsCalories> {
                 child: Column(
                   children: [
                     IconButton(
-                        onPressed: restartCounter,
+                        onPressed: () {
+                          setState(() {
+                            stepsProvider.resetSteps();
+                          });
+                        },
                         icon: themeProvider1.isDarkMode
                             ? Icon(
                                 Icons.restart_alt,
