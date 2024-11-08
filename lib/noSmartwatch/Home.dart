@@ -101,6 +101,16 @@ class _HomeState extends State<Home> {
     final userWeight = Provider.of<UserData>(context).weight;
     final tempProvider = Provider.of<temp>(context).temp1;
     final bmi = userWeight / (userHeight * userHeight);
+    String bmiCategory;
+    if (bmi < 18.5) {
+      bmiCategory = 'UnderWeight';
+    } else if (bmi > 18.5 && bmi <= 24.9) {
+      bmiCategory = 'Normal';
+    } else if (bmi > 15 && bmi <= 29.9) {
+      bmiCategory = 'OverWeight';
+    } else {
+      bmiCategory = 'Obese';
+    }
     return PopScope(
       child: Stack(
         children: [
@@ -260,6 +270,12 @@ class _HomeState extends State<Home> {
                                                   fontSize: 24,
                                                   fontWeight: FontWeight.bold),
                                         ),
+                                        SizedBox(width: 60),
+                                        Text('${bmiCategory}',
+                                            style: GoogleFonts.roboto(
+                                                color: const Color(0xFF3e4445),
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold)),
                                       ],
                                     ),
                                     Padding(
