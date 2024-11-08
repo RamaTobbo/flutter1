@@ -65,6 +65,22 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     }
   }
 
+  Widget sizedbox(int index) {
+    if (index == 0) {
+      return const SizedBox(
+        width: 90,
+      );
+    } else if (index == 1) {
+      return const SizedBox(
+        width: 150,
+      );
+    } else {
+      return const SizedBox(
+        width: 130,
+      );
+    }
+  }
+
   _getIcons(int index) {
     switch (index) {
       case 0:
@@ -276,56 +292,72 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                                         child: Padding(
                                           padding: const EdgeInsets.only(
                                               top: 8.0, left: 20),
-                                          child: Text(
-                                            workout.name,
-                                            style: themeProvide.isDarkMode
-                                                ? GoogleFonts.robotoFlex(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black)
-                                                : GoogleFonts.robotoFlex(
-                                                    fontSize: 20,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    workout.name,
+                                                    style: themeProvide
+                                                            .isDarkMode
+                                                        ? GoogleFonts
+                                                            .robotoFlex(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black)
+                                                        : GoogleFonts
+                                                            .robotoFlex(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                  ),
+                                                  sizedbox(index),
+                                                  Text(
+                                                    '${value.getExercisesForWorkout(selectedWorkoutName).length} exercises',
+                                                    style: const TextStyle(
+                                                        color: Colors.black),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 19,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Image.asset(
+                                                    value.workoutList[index]
+                                                        .image,
+                                                    width: 90,
+                                                    height: 90,
+                                                  ),
+                                                  SizedBox(width: 130),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      // Navigator.push(
+                                                      //     context,
+                                                      //     MaterialPageRoute(
+                                                      //         builder: (ctx) => Workout()));
+                                                      _gotToExercises(index);
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      color: themeProvide
+                                                              .isDarkMode
+                                                          ? Colors.black
+                                                          : Colors.grey,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
                                           ),
                                         ),
                                       ),
                                     ),
-                                    Positioned(
-                                      top: 90,
-                                      left: 260,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          // Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //         builder: (ctx) => Workout()));
-                                          _gotToExercises(index);
-                                        },
-                                        icon: Icon(
-                                          Icons.arrow_forward_ios,
-                                          color: themeProvide.isDarkMode
-                                              ? Colors.black
-                                              : Colors.grey,
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                        top: 50,
-                                        left: 30,
-                                        child: Image.asset(
-                                          value.workoutList[index].image,
-                                          width: 90,
-                                          height: 90,
-                                        )),
-                                    Positioned(
-                                        top: 10,
-                                        right: 30,
-                                        child: Text(
-                                          '${value.getExercisesForWorkout(selectedWorkoutName).length} exercises',
-                                          style: const TextStyle(
-                                              color: Colors.black),
-                                        ))
 
                                     // Positioned(
                                     //   top: 90,
