@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "172594653485",
+    "project_id": "trackpro-f6d1d",
+    "storage_bucket": "trackpro-f6d1d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:172594653485:android:8a8e83f2dadfba9561cba4",
+        "android_client_info": {
+          "package_name": "com.example.track_pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqJimjIOBDadUORCQm73ttFvVSIvDuVog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

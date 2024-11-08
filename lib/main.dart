@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
@@ -12,7 +13,16 @@ import 'package:track_pro/screens/splash1Screen.dart';
 import 'package:track_pro/provider/temp.dart';
 import 'package:track_pro/screens/trainingExercises.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  // await Firebase.in itializeApp(
+  //   options: const FirebaseOptions(
+  //       apiKey: "AIzaSyCnSMpxF1MED57KpXEXi8BvIvEsbv04PyI",
+  //       appId: '1:172594653485:android:8a8e83f2dadfba9561cba4',
+  //       messagingSenderId: '172594653485',
+  //       projectId: 'trackpro-f6d1d'),
+  // );
   runApp(
     MultiProvider(
       providers: [

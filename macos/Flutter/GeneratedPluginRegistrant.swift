@@ -6,6 +6,7 @@ import FlutterMacOS
 import Foundation
 
 import audioplayers_darwin
+import firebase_core
 import flutter_blue_plus
 import flutter_inappwebview_macos
 import geolocator_apple
@@ -16,6 +17,7 @@ import shared_preferences_foundation
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   AudioplayersDarwinPlugin.register(with: registry.registrar(forPlugin: "AudioplayersDarwinPlugin"))
+  FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
   FlutterBluePlusPlugin.register(with: registry.registrar(forPlugin: "FlutterBluePlusPlugin"))
   InAppWebViewFlutterPlugin.register(with: registry.registrar(forPlugin: "InAppWebViewFlutterPlugin"))
   GeolocatorPlugin.register(with: registry.registrar(forPlugin: "GeolocatorPlugin"))
