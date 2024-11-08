@@ -144,159 +144,164 @@ class _WorkoutCoreState extends State<WorkoutCore> {
     String selectedWorkoutName = workoutData.getWorkoutNames()[1];
     return Stack(
       children: [
-        Scaffold(
-          appBar: AppBar(
-            title: Padding(
-              padding: const EdgeInsets.only(left: 48.0),
-              child: Text(
-                'Core',
-                style: GoogleFonts.roboto(
-                    color:
-                        themeProvide.isDarkMode ? Colors.white : Colors.black),
+        PopScope(
+          canPop: false,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Padding(
+                padding: const EdgeInsets.only(left: 48.0),
+                child: Text(
+                  'Core',
+                  style: GoogleFonts.roboto(
+                      color: themeProvide.isDarkMode
+                          ? Colors.white
+                          : Colors.black),
+                ),
               ),
             ),
-          ),
-          body: Column(
-            children: [
-              ListTile(
-                title: Stack(
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        width: 350,
-                        height: 107,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: const Color(0xff8082a2),
+            body: Column(
+              children: [
+                ListTile(
+                  title: Stack(
+                    children: [
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          width: 350,
+                          height: 107,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color(0xff8082a2),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 20),
-                      child: Text(
-                        exercise1.name,
-                        style: GoogleFonts.robotoFlex(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 50,
-                      right: 30,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (ctx) => Plank()),
-                          );
-                        },
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 20),
                         child: Text(
-                          'Begin',
-                          style: style,
+                          exercise1.name,
+                          style: GoogleFonts.robotoFlex(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white),
                       ),
-                    ),
-                    Positioned(
-                      top: 60,
-                      left: 30,
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5),
-                            ),
-                            color: Colors.white),
-                        child: Image.asset(exerciseImage),
+                      Positioned(
+                        top: 50,
+                        right: 30,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (ctx) => Plank()),
+                            );
+                          },
+                          child: Text(
+                            'Begin',
+                            style: style,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white),
+                        ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        top: 60,
+                        left: 30,
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                              color: Colors.white),
+                          child: Image.asset(exerciseImage),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              ListTile(
-                title: Stack(
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        width: 350,
-                        height: 107,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: const Color(0xff8082a2),
+                ListTile(
+                  title: Stack(
+                    children: [
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          width: 350,
+                          height: 107,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color(0xff8082a2),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 20),
-                      child: Text(
-                        exercise2.name,
-                        style: GoogleFonts.robotoFlex(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 50,
-                      right: 30,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (ctx) => RussianTwist()),
-                          );
-                        },
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, left: 20),
                         child: Text(
-                          'Begin',
-                          style: style,
+                          exercise2.name,
+                          style: GoogleFonts.robotoFlex(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white),
                       ),
+                      Positioned(
+                        top: 50,
+                        right: 30,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) => RussianTwist()),
+                            );
+                          },
+                          child: Text(
+                            'Begin',
+                            style: style,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white),
+                        ),
 
-                      // child: Center(
-                      //   child: Row(
-                      //     mainAxisSize: MainAxisSize.min,
-                      //     children: [
-                      //       IconButton(
-                      //           onPressed: showTimerDialog1,
-                      //           icon: const Icon(
-                      //               Icons.access_time_filled_outlined),
-                      //           color: Colors.black),
-                      //       const SizedBox(width: 5),
-                      //       Text(
-                      //         '$_selectedMinutes1 min',
-                      //         style: const TextStyle(color: Colors.black),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ),
-                    Positioned(
-                      top: 60,
-                      left: 30,
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5),
-                            ),
-                            color: Colors.white),
-                        child: Image.asset(exerciseImage1),
+                        // child: Center(
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       IconButton(
+                        //           onPressed: showTimerDialog1,
+                        //           icon: const Icon(
+                        //               Icons.access_time_filled_outlined),
+                        //           color: Colors.black),
+                        //       const SizedBox(width: 5),
+                        //       Text(
+                        //         '$_selectedMinutes1 min',
+                        //         style: const TextStyle(color: Colors.black),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        top: 60,
+                        left: 30,
+                        child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                              color: Colors.white),
+                          child: Image.asset(exerciseImage1),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Positioned(

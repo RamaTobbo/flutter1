@@ -68,14 +68,55 @@ class _TrainingexercisesState extends State<Trainingexercises> {
   _getIcons(int index) {
     switch (index) {
       case 0:
-        return Image.asset('assets/images/dumble.png');
+        return Column(
+          children: [
+            Image.asset(
+              'assets/images/dumble.png',
+              width: 60,
+            ),
+            Text(
+              'Muscle Building',
+              style: GoogleFonts.robotoFlex(
+                  fontSize: 10, fontWeight: FontWeight.bold),
+            )
+          ],
+        );
 
       case 1:
-        return Image.asset('assets/images/training.png');
+        return Column(
+          children: [
+            Image.asset('assets/images/sport.png', width: 60),
+            Text(
+              'Exercises History',
+              style: GoogleFonts.robotoFlex(
+                  fontSize: 10, fontWeight: FontWeight.bold),
+            )
+          ],
+        );
       case 2:
-        return Image.asset('assets/images/sport.png');
+        return Column(
+          children: [
+            Image.asset('assets/images/Calendar.png', width: 60),
+            Text(
+              'Exercises History',
+              style: GoogleFonts.robotoFlex(
+                  fontSize: 10, fontWeight: FontWeight.bold),
+            )
+          ],
+        );
+      // return Image.asset('assets/images/sport.png');
       case 3:
-        return Image.asset('assets/images/walk.png');
+        //return Image.asset('assets/images/walk.png');
+        return Column(
+          children: [
+            Image.asset('assets/images/Graph.png', width: 60),
+            Text(
+              'CalorieBurn Chart',
+              style: GoogleFonts.robotoFlex(
+                  fontSize: 10, fontWeight: FontWeight.bold),
+            )
+          ],
+        );
       default:
         return Image.asset('assets/images/dumble.png');
     }
@@ -188,7 +229,7 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                                       ]),
                                   child: InkWell(
                                     onTap: () {
-                                      _goToexerciseForIndex(index1);
+                                      //_goToexerciseForIndex(index1);
                                     },
                                     child: Center(
                                       child: _getIcons(index1),
