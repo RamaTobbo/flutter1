@@ -227,108 +227,107 @@ class _SetupscreensState extends State<Setupscreens> {
 
     return WillPopScope(
       onWillPop: _onWillPop,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 45.0),
-          child: Stack(
-            children: [
-              Center(
-                child: Column(
-                  children: [
-                    Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(top: 30, left: 15),
-                        child: Indicator),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 50),
-                      child: Text(
-                        title,
-                        style: titelFont(
-                            color: titlecolor,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
+      child: Stack(children: [
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.white,
+          body: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 45.0),
+            child: Stack(
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      Container(
+                          width: 150,
+                          padding: const EdgeInsets.only(top: 30, left: 15),
+                          child: Indicator),
+                      const SizedBox(
+                        height: 40,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Text(
-                        subtitle,
-                        style: subtitleFont(
-                            color: subtitlecolor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    //////
-
-                    screen,
-                    ElevatedButton(
-                      onPressed: () {
-                        if (pageindex == setupItems.length - 1) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (ctx) => congratulationscreen(
-                                enteredName: EnteredUserName,
-                                isContinueWithoutSmartwatch:
-                                    widget.isContinueWithoutSmartWatch,
-                              ),
-                            ),
-                          );
-                        } else if (pageindex == 1 && EnteredUserName.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'UserName is missing, please enter a UserName'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        } else {
-                          nextSetup();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4a4d7a)),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 30.0),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 50),
                         child: Text(
-                          'Next',
-                          style: TextStyle(
-                            color: Colors.white,
+                          title,
+                          style: titelFont(
+                              color: titlecolor,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Text(
+                          subtitle,
+                          style: subtitleFont(
+                              color: subtitlecolor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      //////
+
+                      screen,
+                      ElevatedButton(
+                        onPressed: () {
+                          if (pageindex == setupItems.length - 1) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (ctx) => congratulationscreen(
+                                  enteredName: EnteredUserName,
+                                  isContinueWithoutSmartwatch:
+                                      widget.isContinueWithoutSmartWatch,
+                                ),
+                              ),
+                            );
+                          } else if (pageindex == 1 &&
+                              EnteredUserName.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'UserName is missing, please enter a UserName'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          } else {
+                            nextSetup();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF4a4d7a)),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.0),
+                          child: Text(
+                            'Next',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: 20,
-                right: 10,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.grey,
+                    ],
                   ),
                 ),
-              ),
-            ],
+                Positioned(
+                  top: 20,
+                  right: 60,
+                  child: Text(
+                    '${pageindex + 1}/5',
+                    style: GoogleFonts.robotoSlab(
+                        color: const Color(0xFFFFCE48), fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      ]),
     );
   }
 }
