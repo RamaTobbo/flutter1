@@ -26,28 +26,26 @@ class Trainingexercises extends StatefulWidget {
 }
 
 class _TrainingexercisesState extends State<Trainingexercises> {
-  double _swipeValue = 0.0; // To track swipe progress
+  double _swipeValue = 0.0;
   bool _isRevealed = false;
-  // Function to handle swipe update (Horizontal swipe)
+
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     setState(() {
       _swipeValue += details.primaryDelta!;
       if (_swipeValue < 0) {
-        _swipeValue = 0; // Prevent swipe value from going left beyond 0
+        _swipeValue = 0;
       }
     });
   }
 
-  // Function to handle swipe end action
   void _onHorizontalDragEnd(DragEndDetails details) {
     setState(() {
-      // If swiped more than 100 pixels, reveal new container
       if (_swipeValue > 100) {
         _isRevealed = true;
       } else {
         _isRevealed = false;
       }
-      _swipeValue = 0; // Reset the swipe value after swipe ends
+      _swipeValue = 0;
     });
   }
 
