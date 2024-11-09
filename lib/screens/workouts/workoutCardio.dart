@@ -214,7 +214,7 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
   @override
   Widget build(BuildContext context) {
     UserWithSmartWatch =
-        Provider.of<Isasmartwatchuser>(context).isUsingSmartwatch;
+        Provider.of<Isasmartwatchuser>(context).isNotUsingSmartwatch;
 
     final workoutData = Provider.of<WorkoutData>(context);
     final themeProvide = Provider.of<ThemeProvider>(context);

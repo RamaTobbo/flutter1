@@ -129,7 +129,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
   Widget build(BuildContext context) {
     final workoutData = Provider.of<WorkoutData>(context);
     UserWithSmartWatch =
-        Provider.of<Isasmartwatchuser>(context).isUsingSmartwatch;
+        Provider.of<Isasmartwatchuser>(context).isNotUsingSmartwatch;
     final themeProvide = Provider.of<ThemeProvider>(context);
     final exercise1 =
         workoutData.getExercisesForWorkout(workoutData.getWorkoutNames()[0])[0];

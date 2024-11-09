@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 import 'package:track_pro/data/setup.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/screens/SetupScreens.dart';
-
 import 'package:track_pro/screens/bluetoothpairingScreen1.dart';
 import 'package:track_pro/screens/scanning.dart';
 
@@ -24,6 +24,38 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
   var selectedPairingMethod = 'ScanQr Code';
   String? _result;
   bool isContinueWithoutSmartWatch = false;
+
+  bool hasCompletedSetup = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfSetupCompleted();
+  }
+
+  Future<void> _checkIfSetupCompleted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool setupCompleted = prefs.getBool('isSetupCompleted') ?? false;
+
+    if (setupCompleted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) => Setupscreens(
+                  isContinueWithoutSmartWatch: isContinueWithoutSmartWatch,
+                )),
+      );
+    } else {
+      setState(() {
+        hasCompletedSetup = false;
+      });
+    }
+  }
+
+  Future<void> _markSetupAsCompleted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isSetupCompleted', true);
+  }
 
   void setResult(String result) {
     setState(() => _result = result);
@@ -47,7 +79,7 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
 
   @override
   Widget build(BuildContext context) {
-    final UserUsingSmartWatch = Provider.of<Isasmartwatchuser>(context);
+    final UserNotUsingSmartWatch = Provider.of<Isasmartwatchuser>(context);
     final Indicator = setupItems[0].progressIndicator;
     final title = setupItems[0].title;
     final subtitle = setupItems[0].subtitle;
@@ -78,11 +110,11 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
                 });
               }),
         );
-
         break;
 
       default:
     }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -157,10 +189,12 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
                                 isContinueWithoutSmartWatch:
                                     isContinueWithoutSmartWatch,
                               )));
+
                   setState(() {
-                    UserUsingSmartWatch.setUserMode(false);
+                    UserNotUsingSmartWatch.setUserMode(true);
                     isContinueWithoutSmartWatch = true;
                   });
+                  _markSetupAsCompleted();
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -181,5 +215,10 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

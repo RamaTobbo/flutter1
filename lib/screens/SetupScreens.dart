@@ -5,6 +5,7 @@ import 'package:track_pro/data/setup.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/congratulations.dart';
+import 'package:track_pro/services/firebase.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
 
 class Setupscreens extends StatefulWidget {
@@ -24,6 +25,22 @@ class _SetupscreensState extends State<Setupscreens> {
   final subtitleFont = GoogleFonts.robotoSlab;
   final userNameController = TextEditingController();
   var EnteredUserName;
+  uploadData() async {
+    try {
+      Map<String, dynamic> uploaddata = {
+        'username': Provider.of<UserData>(context, listen: false).userName,
+        'age': Provider.of<UserData>(context, listen: false).age,
+        'height': Provider.of<UserData>(context, listen: false).height,
+        'weight': Provider.of<UserData>(context, listen: false).weight,
+        'bmi': Provider.of<UserData>(context, listen: false).bmi,
+      };
+      await FirebaseService().addUserDetails(uploaddata);
+      print('Data uploaded successfully');
+    } catch (e) {
+      print('Error uploading data: $e');
+    }
+    ;
+  }
 
   @override
   void dispose() {
@@ -44,6 +61,7 @@ class _SetupscreensState extends State<Setupscreens> {
 
   void savedUserName(String input) {
     EnteredUserName = input;
+    Provider.of<UserData>(context, listen: false).setusername(EnteredUserName);
   }
 
   Future<bool> _onWillPop() async {
@@ -63,6 +81,11 @@ class _SetupscreensState extends State<Setupscreens> {
     final subtitle = setupItems[pageindex].subtitle;
     final subtitlecolor = setupItems[pageindex].subtitleColor;
     final titlecolor = setupItems[pageindex].titleColor;
+    final userHeight = Provider.of<UserData>(context).height / 100;
+    final userWeight = Provider.of<UserData>(context).weight;
+
+    final bmi = userWeight / (userHeight * userHeight);
+    Provider.of<UserData>(context, listen: false).setbmi(bmi.roundToDouble());
 
     switch (pageindex) {
       case 1:
@@ -276,6 +299,7 @@ class _SetupscreensState extends State<Setupscreens> {
                       ElevatedButton(
                         onPressed: () {
                           if (pageindex == setupItems.length - 1) {
+                            uploadData();
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

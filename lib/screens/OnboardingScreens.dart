@@ -1,11 +1,10 @@
-import 'dart:ffi';
-
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/data/Onboarding.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:track_pro/screens/SetupScreens.dart';
+
 import 'package:track_pro/screens/bluetoothSetup.dart';
 
 class Onboardingscreens extends StatefulWidget {
@@ -20,13 +19,42 @@ class _OnboardingscreensState extends State<Onboardingscreens> {
   final PageController _pageController = PageController();
   int pageindex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    _checkIfOnboardingCompleted();
+    _pageController.addListener(() {
+      setState(() {
+        pageindex = _pageController.page?.round() ?? 0;
+      });
+    });
+  }
+
+  Future<void> _checkIfOnboardingCompleted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isOnboardingCompleted =
+        prefs.getBool('isOnboardingCompleted') ?? false;
+
+    if (isOnboardingCompleted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (ctx) => const BluetoothSetupscreens()),
+      );
+    }
+  }
+
+  // Mark onboarding as completed
+  Future<void> _markOnboardingAsCompleted() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isOnboardingCompleted', true);
+  }
+
   void nextOnboarding() {
     if (pageindex < onboardingItems.length - 1) {
-      _pageController.jumpToPage(
-        pageindex + 1,
-      );
-      const Duration(seconds: 1);
+      _pageController.jumpToPage(pageindex + 1);
     } else {
+      // Mark onboarding as completed when the user finishes
+      _markOnboardingAsCompleted();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (ctx) => const BluetoothSetupscreens()),
@@ -35,18 +63,9 @@ class _OnboardingscreensState extends State<Onboardingscreens> {
   }
 
   void skipOnboarding() {
+    _markOnboardingAsCompleted();
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (ctx) => const BluetoothSetupscreens()));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController.addListener(() {
-      setState(() {
-        pageindex = _pageController.page?.round() ?? 0;
-      });
-    });
   }
 
   @override
@@ -59,6 +78,7 @@ class _OnboardingscreensState extends State<Onboardingscreens> {
     final Color titleColor;
     final Color subtitleColor;
     final Color buttonColor;
+
     if (pageindex % 2 == 0) {
       titleColor = Colors.white;
       subtitleColor = const Color(0xFFfffefd);

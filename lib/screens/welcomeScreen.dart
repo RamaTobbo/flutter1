@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/screens/HomePage.dart';
 import 'package:track_pro/screens/calories.dart';
 
@@ -59,9 +61,12 @@ class Welcomescreen extends StatelessWidget {
                 height: 79,
               ),
               ElevatedButton(
-                onPressed: isContinueWithoutSmartwatc
-                    ? nextPageWithoutSmartWatch
-                    : nextPageSmartWatch,
+                onPressed: () {
+                  Provider.of<Isasmartwatchuser>(context, listen: false)
+                          .isNotUsingSmartwatch
+                      ? nextPageWithoutSmartWatch()
+                      : nextPageSmartWatch();
+                },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4a4d7a)),
                 child: const Padding(

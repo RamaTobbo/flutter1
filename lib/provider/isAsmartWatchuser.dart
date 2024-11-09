@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class Isasmartwatchuser with ChangeNotifier {
-  bool _isUserSmartWatch = true;
+  bool _iSNotaSmartWatchUser = false;
 
-  bool get isUsingSmartwatch => _isUserSmartWatch;
+  bool get isNotUsingSmartwatch => _iSNotaSmartWatchUser;
 
   void setUserMode(bool value) {
-    _isUserSmartWatch = value;
+    _iSNotaSmartWatchUser = value;
     notifyListeners();
   }
 }

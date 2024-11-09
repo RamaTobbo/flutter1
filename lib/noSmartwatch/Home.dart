@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +12,7 @@ import 'package:track_pro/provider/temp.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/heartRate.dart';
+import 'package:track_pro/services/firebase.dart';
 import 'package:track_pro/services/weather.dart';
 import 'package:track_pro/widgets/chatbot.dart';
 
@@ -24,6 +26,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _weatherService = WeatherService('f8f10eafbcae3f86eabf5628da94f88a');
   Weather _weather = Weather();
+  double? userBmi;
   DateTime? _lastPressed;
   Future<bool> _onWillPop() async {
     DateTime now = DateTime.now();
@@ -97,10 +100,11 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
     final stepProvider = Provider.of<Steps>(context);
-    final userHeight = Provider.of<UserData>(context).height / 100;
-    final userWeight = Provider.of<UserData>(context).weight;
+
     final tempProvider = Provider.of<temp>(context).temp1;
-    final bmi = userWeight / (userHeight * userHeight);
+
+    final bmi = Provider.of<UserData>(context, listen: false).bmi;
+
     String bmiCategory;
     if (bmi < 18.5) {
       bmiCategory = 'UnderWeight';
@@ -270,11 +274,11 @@ class _HomeState extends State<Home> {
                                                   fontSize: 24,
                                                   fontWeight: FontWeight.bold),
                                         ),
-                                        SizedBox(width: 60),
+                                        SizedBox(width: 49),
                                         Text('${bmiCategory}',
                                             style: GoogleFonts.roboto(
                                                 color: const Color(0xFF3e4445),
-                                                fontSize: 20,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.bold)),
                                       ],
                                     ),
@@ -283,7 +287,8 @@ class _HomeState extends State<Home> {
                                           left: 90.0, top: 20),
                                       child: Row(
                                         children: [
-                                          Text('${bmi.toStringAsFixed(2)}',
+                                          Text(
+                                              '${Provider.of<UserData>(context, listen: false).bmi}',
                                               style: themeProvider1.isDarkMode
                                                   ? GoogleFonts.roboto(
                                                       color: Colors.black,
@@ -364,7 +369,7 @@ class _HomeState extends State<Home> {
                                     Text('${_weather!.mainCondition}',
                                         style: GoogleFonts.roboto(
                                             color: const Color(0xFF3e4445),
-                                            fontSize: 20,
+                                            fontSize: 15,
                                             fontWeight: FontWeight.bold)),
                                   ],
                                 ),

@@ -129,7 +129,7 @@ class _WorkoutCoreState extends State<WorkoutCore> {
     final workoutData = Provider.of<WorkoutData>(context);
     final themeProvide = Provider.of<ThemeProvider>(context);
     UserWithSmartWatch =
-        Provider.of<Isasmartwatchuser>(context).isUsingSmartwatch;
+        Provider.of<Isasmartwatchuser>(context).isNotUsingSmartwatch;
     final exercise1 =
         workoutData.getExercisesForWorkout(workoutData.getWorkoutNames()[1])[0];
     final exercise2 =
