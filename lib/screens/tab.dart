@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:track_pro/models/location.dart';
+import 'package:track_pro/noSmartwatch/steps.dart';
 import 'package:track_pro/screens/HomePage.dart';
 import 'package:track_pro/screens/calories.dart';
 import 'package:track_pro/screens/heartRate.dart';
@@ -123,7 +124,7 @@ class _TabNavState extends State<TabNav> {
         activeScreen = const Heartrate();
         break;
       case 2:
-        activeScreen = const Calories();
+        activeScreen = const StepsCalories();
         break;
       case 4:
         activeScreen = Temperature(

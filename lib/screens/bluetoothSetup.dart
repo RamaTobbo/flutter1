@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 import 'package:track_pro/data/setup.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
+import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/SetupScreens.dart';
 import 'package:track_pro/screens/bluetoothpairingScreen1.dart';
+import 'package:track_pro/screens/congratulations.dart';
 import 'package:track_pro/screens/scanning.dart';
 
 class BluetoothSetupscreens extends StatefulWidget {
@@ -40,10 +42,7 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
     if (setupCompleted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (ctx) => Setupscreens(
-                  isContinueWithoutSmartWatch: isContinueWithoutSmartWatch,
-                )),
+        MaterialPageRoute(builder: (ctx) => Setupscreens()),
       );
     } else {
       setState(() {
@@ -62,18 +61,43 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
   }
 
   Widget screen = const Text('');
+  // void nextSetup() {
+  //   if (selectedPairingMethod == 'Bluetooth') {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (ctx) => const Bluetoothpairingscreen1()),
+  //     );
+  //   } else {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (ctx) => QrCodeScanner(setResult: setResult)),
+  //     );
+  //   }
+  // }
   void nextSetup() {
-    if (selectedPairingMethod == 'Bluetooth') {
+    if (pageindex == 4) {
+      _markSetupAsCompleted();
       Navigator.push(
-        context,
-        MaterialPageRoute(builder: (ctx) => const Bluetoothpairingscreen1()),
-      );
+          context,
+          MaterialPageRoute(
+              builder: (ctx) => congratulationscreen(
+                    enteredName:
+                        Provider.of<UserData>(context, listen: false).userName,
+                  )));
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (ctx) => QrCodeScanner(setResult: setResult)),
-      );
+      if (selectedPairingMethod == 'Bluetooth') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (ctx) => const Bluetoothpairingscreen1()),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (ctx) => QrCodeScanner(setResult: setResult)),
+        );
+      }
     }
   }
 
@@ -182,13 +206,8 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
                   foregroundColor: Colors.amber,
                 ),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (ctx) => Setupscreens(
-                                isContinueWithoutSmartWatch:
-                                    isContinueWithoutSmartWatch,
-                              )));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (ctx) => Setupscreens()));
 
                   setState(() {
                     UserNotUsingSmartWatch.setUserMode(true);

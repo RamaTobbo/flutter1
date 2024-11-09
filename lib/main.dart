@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/location.dart';
@@ -17,6 +18,8 @@ import 'package:track_pro/screens/trainingExercises.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool notUsingSmartwatch = prefs.getBool('isNotUsingSmartwatch') ?? false;
   // FirebaseMessaging.instance.getToken().then((token) {
   //   print("Firebase Token: $token");
   // });
@@ -33,7 +36,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => WorkoutData()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => UserData()),
-        ChangeNotifierProvider(create: (_) => Isasmartwatchuser()),
+        ChangeNotifierProvider(
+          create: (_) => Isasmartwatchuser(),
+        ),
         ChangeNotifierProvider(create: (_) => CaloriesBurned()),
         ChangeNotifierProvider(create: (_) => Steps()),
         ChangeNotifierProvider(create: (_) => location1()),

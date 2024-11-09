@@ -3,12 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:track_pro/screens/welcomeScreen.dart';
 
 class congratulationscreen extends StatelessWidget {
-  const congratulationscreen(
-      {super.key,
-      required this.enteredName,
-      required this.isContinueWithoutSmartwatch});
+  const congratulationscreen({
+    super.key,
+    required this.enteredName,
+  });
   final String enteredName;
-  final bool isContinueWithoutSmartwatch;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,6 @@ class congratulationscreen extends StatelessWidget {
           MaterialPageRoute(
               builder: (ctx) => Welcomescreen(
                     enteredName: enteredName,
-                    isContinueWithoutSmartwatc: isContinueWithoutSmartwatch,
                   )));
     }
 

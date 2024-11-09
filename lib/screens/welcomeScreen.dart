@@ -10,12 +10,12 @@ import 'package:track_pro/screens/calories.dart';
 import 'package:track_pro/screens/tab.dart';
 
 class Welcomescreen extends StatelessWidget {
-  const Welcomescreen(
-      {required this.enteredName,
-      super.key,
-      required this.isContinueWithoutSmartwatc});
+  const Welcomescreen({
+    required this.enteredName,
+    super.key,
+  });
   final String enteredName;
-  final bool isContinueWithoutSmartwatc;
+
   @override
   Widget build(BuildContext context) {
     String toUpperCase(String name) {

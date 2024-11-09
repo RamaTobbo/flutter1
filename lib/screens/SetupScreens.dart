@@ -3,14 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:track_pro/data/setup.dart';
 import 'package:provider/provider.dart';
+import 'package:track_pro/noSmartwatch/tab.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/congratulations.dart';
+import 'package:track_pro/screens/tab.dart';
 import 'package:track_pro/services/firebase.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Setupscreens extends StatefulWidget {
-  Setupscreens({super.key, required this.isContinueWithoutSmartWatch});
-  bool isContinueWithoutSmartWatch;
+  Setupscreens({super.key});
 
   @override
   State<Setupscreens> createState() => _SetupscreensState();
@@ -25,6 +28,56 @@ class _SetupscreensState extends State<Setupscreens> {
   final subtitleFont = GoogleFonts.robotoSlab;
   final userNameController = TextEditingController();
   var EnteredUserName;
+
+  void nextPageSmartWatch() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (ctx) => TabNav(index: 0)));
+  }
+
+  void nextPageWithoutSmartWatch() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) => TabNav1(
+                  index: 0,
+                )));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkSetupCompletion();
+  }
+
+  Widget screen = const Text('');
+
+  Future<void> _checkSetupCompletion() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isSetupComplete = prefs.getBool('isSetupComplete') ?? false;
+    final isnotusingsmartwatch = prefs.getBool('isNotUsingSmartwatch') ?? false;
+
+    bool notUsingSmartwatch =
+        Provider.of<Isasmartwatchuser>(context, listen: false)
+            .isNotUsingSmartwatch;
+
+    if (isSetupComplete) {
+      if (isnotusingsmartwatch) {
+        nextPageWithoutSmartWatch();
+      } else {
+        nextPageSmartWatch();
+      }
+    }
+  }
+
+  Future<void> _setSetupComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isSetupComplete', true);
+    prefs.setBool(
+        'isNotUsingSmartwatch',
+        Provider.of<Isasmartwatchuser>(context, listen: false)
+            .isNotUsingSmartwatch);
+  }
+
   uploadData() async {
     try {
       Map<String, dynamic> uploaddata = {
@@ -39,19 +92,12 @@ class _SetupscreensState extends State<Setupscreens> {
     } catch (e) {
       print('Error uploading data: $e');
     }
-    ;
   }
 
-  @override
   void dispose() {
+    userNameController.dispose();
     super.dispose();
-    userNameController;
   }
-
-  final pairingChoices = ['Bluetooth', 'Scan Qr code'];
-  var selectedPairingMethod = 'Bluetooth';
-
-  Widget screen = const Text('');
 
   void nextSetup() {
     setState(() {
@@ -83,10 +129,10 @@ class _SetupscreensState extends State<Setupscreens> {
     final titlecolor = setupItems[pageindex].titleColor;
     final userHeight = Provider.of<UserData>(context).height / 100;
     final userWeight = Provider.of<UserData>(context).weight;
-
     final bmi = userWeight / (userHeight * userHeight);
     Provider.of<UserData>(context, listen: false).setbmi(bmi.roundToDouble());
 
+    // Widget screen setup based on pageindex (as shown previously)
     switch (pageindex) {
       case 1:
         screen = Center(
@@ -265,9 +311,7 @@ class _SetupscreensState extends State<Setupscreens> {
                           width: 150,
                           padding: const EdgeInsets.only(top: 30, left: 15),
                           child: Indicator),
-                      const SizedBox(
-                        height: 40,
-                      ),
+                      const SizedBox(height: 40),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50),
                         child: Text(
@@ -279,9 +323,7 @@ class _SetupscreensState extends State<Setupscreens> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12.0),
                         child: Text(
@@ -293,25 +335,22 @@ class _SetupscreensState extends State<Setupscreens> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      //////
-
                       screen,
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (pageindex == setupItems.length - 1) {
-                            uploadData();
+                            await uploadData();
+                            await _setSetupComplete();
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (ctx) => congratulationscreen(
                                   enteredName: EnteredUserName,
-                                  isContinueWithoutSmartwatch:
-                                      widget.isContinueWithoutSmartWatch,
                                 ),
                               ),
                             );
                           } else if (pageindex == 1 &&
-                              EnteredUserName.isEmpty) {
+                              (EnteredUserName?.isEmpty ?? true)) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(
@@ -329,9 +368,7 @@ class _SetupscreensState extends State<Setupscreens> {
                           padding: EdgeInsets.symmetric(horizontal: 30.0),
                           child: Text(
                             'Next',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
