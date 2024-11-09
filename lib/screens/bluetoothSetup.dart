@@ -183,7 +183,10 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
 
                 screen,
                 ElevatedButton(
-                  onPressed: nextSetup,
+                  onPressed: () {
+                    nextSetup();
+                    _markSetupAsCompleted();
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4a4d7a)),
                   child: const Padding(
@@ -212,8 +215,8 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
                   setState(() {
                     UserNotUsingSmartWatch.setUserMode(true);
                     isContinueWithoutSmartWatch = true;
+                    _markSetupAsCompleted();
                   });
-                  _markSetupAsCompleted();
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8.0),
