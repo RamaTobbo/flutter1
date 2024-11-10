@@ -307,13 +307,15 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (ctx) => UserWithSmartWatch
-                              ? TabNav(
-                                  index: 3,
-                                )
-                              : TabNav1(
-                                  index: 3,
-                                )),
+                          builder: (ctx) =>
+                              Provider.of<Isasmartwatchuser>(context)
+                                      .isNotUsingSmartwatch
+                                  ? TabNav1(
+                                      index: 3,
+                                    )
+                                  : TabNav(
+                                      index: 3,
+                                    )),
                       // UserWithSmartWatch ? TabNav() : TabNav1()),
                       (Route) => true);
                 },

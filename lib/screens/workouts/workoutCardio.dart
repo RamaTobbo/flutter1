@@ -78,11 +78,12 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
               onPressed: () {
                 startTimer(_selectedMinutes);
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => UserWithSmartWatch
-                        ? TabNav(
+                    builder: (ctx) => Provider.of<Isasmartwatchuser>(context)
+                            .isNotUsingSmartwatch
+                        ? TabNav1(
                             index: 3,
                           )
-                        : TabNav1(
+                        : TabNav(
                             index: 3,
                           )));
               },
