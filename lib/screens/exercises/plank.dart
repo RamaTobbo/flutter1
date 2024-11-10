@@ -23,10 +23,12 @@ class Plank extends StatefulWidget {
 class _PlankState extends State<Plank> {
   final audioPlayer = AudioPlayer();
   double caloriesBurned = 0.0;
+  bool isRunning = false;
   bool isWorkoutFinished = false;
   bool isAnimationDisplayed = true;
   int selectedDuration = 25;
   int countdownTimer = 25;
+  int actualElapsedTime = 0;
   final int maxTimer = 3600;
   Timer? timer;
   void playTestSound() async {
@@ -35,6 +37,16 @@ class _PlankState extends State<Plank> {
     } catch (e) {
       print('Error playing audio: $e');
     }
+  }
+
+  void EndExerciseCalculatedCalories() {
+    pauseTimer();
+    caloriesBurned = metValue * userWeight * (actualElapsedTime / 3600);
+    if (caloriesBurned != 0)
+      Provider.of<CaloriesBurned>(context, listen: false)
+          .addExercise('Plank', caloriesBurned);
+    playTestSound();
+    showCaloriesBurnedDialog();
   }
 
   void nextExercise() {
@@ -47,13 +59,30 @@ class _PlankState extends State<Plank> {
   void showCaloriesBurnedDialog() {
     showModalBottomSheet(
         context: context,
+        isDismissible: false,
+        enableDrag: false,
         builder: (ctx) {
           return SizedBox(
             width: 700,
             height: 300,
             child: Column(
               children: [
-                Image.asset('assets/images/fire.gif'),
+                Padding(
+                  padding: const EdgeInsets.only(left: 98.0),
+                  child: Row(
+                    children: [
+                      Image.asset('assets/images/fire.gif'),
+                      IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (ctx) => Plank()),
+                            );
+                          },
+                          icon: Icon(Icons.restart_alt))
+                    ],
+                  ),
+                ),
                 Text(
                   "You burned ${caloriesBurned.toStringAsFixed(2)} calories!",
                   style: GoogleFonts.roboto(
@@ -103,7 +132,7 @@ class _PlankState extends State<Plank> {
 
   double metValue = 8;
   void calculateCaloriesBurned() {
-    caloriesBurned = metValue * userWeight * (selectedDuration / 3600);
+    caloriesBurned = metValue * userWeight * (actualElapsedTime / 3600);
     showCaloriesBurnedDialog();
   }
 
@@ -133,17 +162,15 @@ class _PlankState extends State<Plank> {
   Widget build(BuildContext context) {
     final isRunning = timer != null && timer!.isActive;
     userWeight = Provider.of<UserData>(context).weight;
-    if (isWorkoutFinished)
-      final BurnedCaloriesPerExerciseburpee =
-          Provider.of<CaloriesBurned>(context)
-              .addExercise('Plank', caloriesBurned);
+    if (caloriesBurned != 0)
+      Provider.of<CaloriesBurned>(context).addExercise('Plank', caloriesBurned);
 
     return Stack(
       children: [
         Scaffold(
           appBar: AppBar(
             title: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.only(left: 48.0),
               child: Text('Plank Exercise'),
             ),
           ),
@@ -192,15 +219,17 @@ class _PlankState extends State<Plank> {
                   ),
                   SizedBox(width: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      if (selectedDuration > 1) {
-                        setState(() {
-                          selectedDuration--;
-                          countdownTimer =
-                              selectedDuration; // reset countdown timer
-                        });
-                      }
-                    },
+                    onPressed: isRunning
+                        ? null
+                        : () {
+                            if (selectedDuration > 5) {
+                              setState(() {
+                                selectedDuration -= 10;
+                                countdownTimer =
+                                    selectedDuration; // reset countdown timer
+                              });
+                            }
+                          },
                     child: Text('-'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xffffce48),
@@ -213,14 +242,16 @@ class _PlankState extends State<Plank> {
                   ),
                   SizedBox(width: 10),
                   ElevatedButton(
-                    onPressed: () {
-                      if (selectedDuration < maxTimer) {
-                        setState(() {
-                          selectedDuration++;
-                          countdownTimer = selectedDuration;
-                        });
-                      }
-                    },
+                    onPressed: isRunning
+                        ? null
+                        : () {
+                            if (selectedDuration < maxTimer) {
+                              setState(() {
+                                selectedDuration += 10;
+                                countdownTimer = selectedDuration;
+                              });
+                            }
+                          },
                     child: Text('+'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xffffce48),
@@ -253,28 +284,33 @@ class _PlankState extends State<Plank> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
-                child: IconButton(
-                  iconSize: 100,
-                  onPressed: isRunning ? pauseTimer : resumeTimer,
-                  icon: Icon(
-                    isRunning ? Icons.pause : Icons.play_arrow_rounded,
-                    size: 100,
-                  ),
-                ),
+                child: isRunning
+                    ? ElevatedButton(
+                        onPressed: EndExerciseCalculatedCalories,
+                        child: Text('End Exercise'),
+                      )
+                    : IconButton(
+                        iconSize: 100,
+                        onPressed: isRunning ? pauseTimer : resumeTimer,
+                        icon: Icon(
+                          isRunning ? Icons.pause : Icons.play_arrow_rounded,
+                          size: 100,
+                        ),
+                      ),
               ),
             ],
           ),
         ),
-        // Positioned(
-        //     top: 30,
-        //     child: IconButton(
-        //         onPressed: () {
-        //           Navigator.pushAndRemoveUntil(
-        //               context,
-        //               MaterialPageRoute(builder: (ctx) => WorkoutCore()),
-        //               (Route) => false);
-        //         },
-        //         icon: Icon(Icons.arrow_back)))
+        Positioned(
+            top: 30,
+            child: IconButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (ctx) => WorkoutCore()),
+                      (Route) => false);
+                },
+                icon: Icon(Icons.arrow_back)))
       ],
     );
   }

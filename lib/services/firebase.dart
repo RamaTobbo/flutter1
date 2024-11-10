@@ -8,13 +8,10 @@ class FirebaseService {
         .set(userInfoMap);
   }
 
-  Future<double?> getUserBmiInfo(String userId) async {
-    final docSnapshot =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-
-    if (docSnapshot.exists) {
-      return docSnapshot.data()?['bmi'] as double?;
-    }
-    return null;
+  Future addExercisesDetails(Map<String, dynamic> exercisesInfoMap) async {
+    return await FirebaseFirestore.instance
+        .collection('workouts')
+        .doc()
+        .set(exercisesInfoMap);
   }
 }

@@ -11,6 +11,7 @@ import 'package:track_pro/screens/tab.dart';
 import 'package:track_pro/services/firebase.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class Setupscreens extends StatefulWidget {
   Setupscreens({super.key});
@@ -80,7 +81,9 @@ class _SetupscreensState extends State<Setupscreens> {
 
   uploadData() async {
     try {
+      String userid = Uuid().v4();
       Map<String, dynamic> uploaddata = {
+        // 'userID': userid,
         'username': Provider.of<UserData>(context, listen: false).userName,
         'age': Provider.of<UserData>(context, listen: false).age,
         'height': Provider.of<UserData>(context, listen: false).height,

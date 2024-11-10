@@ -103,7 +103,8 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
 
   @override
   Widget build(BuildContext context) {
-    final UserNotUsingSmartWatch = Provider.of<Isasmartwatchuser>(context);
+    final UserNotUsingSmartWatch =
+        Provider.of<Isasmartwatchuser>(context, listen: false);
     final Indicator = setupItems[0].progressIndicator;
     final title = setupItems[0].title;
     final subtitle = setupItems[0].subtitle;

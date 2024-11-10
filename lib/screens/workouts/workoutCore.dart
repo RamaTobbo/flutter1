@@ -191,10 +191,10 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                         right: 30,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (ctx) => Plank()),
-                            );
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (ctx) => Plank()),
+                                (Route) => false);
                           },
                           child: Text(
                             'Begin',
@@ -251,11 +251,11 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                         right: 30,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) => RussianTwist()),
-                            );
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (ctx) => RussianTwist()),
+                                (Route) => false);
                           },
                           child: Text(
                             'Begin',
