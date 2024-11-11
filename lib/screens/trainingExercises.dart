@@ -8,12 +8,10 @@ import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/CaloriesBurnedPerExercise.dart';
 import 'package:track_pro/screens/exercises/burpees.dart';
 import 'package:track_pro/screens/exercises/jumpingJacks.dart';
-import 'package:track_pro/screens/exercises/lunge.dart';
+
 import 'package:track_pro/screens/exercises/plank.dart';
 import 'package:track_pro/screens/exercises/russian_twist.dart';
-import 'package:track_pro/screens/workout.dart';
-import 'package:track_pro/screens/workout2.dart';
-import 'package:track_pro/screens/workout3.dart';
+
 import 'package:track_pro/screens/workouts/workout1.dart';
 import 'package:track_pro/screens/workouts/workoutCardio.dart';
 import 'package:track_pro/screens/workouts/workoutCore.dart';

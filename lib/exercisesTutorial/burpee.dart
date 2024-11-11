@@ -21,10 +21,11 @@ class _BurpeeExerciseState extends State<BurpeeExercise> {
     // TODO: implement initState
     super.initState();
     final videoID = YoutubePlayer.convertUrlToId(videoURL);
-    _controller = YoutubePlayerController(initialVideoId: videoID!);
-    flags:
-    const YoutubePlayerFlags(
-      autoPlay: false,
+    _controller = YoutubePlayerController(
+      initialVideoId: videoID!,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+      ),
     );
   }
 

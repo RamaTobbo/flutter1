@@ -101,8 +101,6 @@ class _HomeState extends State<Home> {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
     final stepProvider = Provider.of<Steps>(context);
 
-    final tempProvider = Provider.of<temp>(context).temp1;
-
     final bmi = Provider.of<UserData>(context, listen: false).bmi;
 
     String bmiCategory;

@@ -31,13 +31,11 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _startLocationTracking() async {
-    // Request permissions
     var permissionStatus = await _location.requestPermission();
     if (permissionStatus != PermissionStatus.granted) {
       return;
     }
 
-    // Start tracking location
     _location.onLocationChanged.listen((LocationData currentLocation) {
       _updateLocation(
           LatLng(currentLocation.latitude!, currentLocation.longitude!));

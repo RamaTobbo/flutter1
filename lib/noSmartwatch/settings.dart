@@ -31,7 +31,7 @@ class _Settings1State extends State<Settings1> {
     super.initState();
     isSwitchedDark = widget.isSwitchedDark;
 
-    _loadSwitchState();
+    // _loadSwitchState();
   }
 
   DateTime? _lastPressed;
@@ -73,17 +73,17 @@ class _Settings1State extends State<Settings1> {
     );
   }
 
-  _loadSwitchState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      isSwitchedDark = prefs.getBool('switch_state') ?? false;
-    });
-  }
+  // _loadSwitchState() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     isSwitchedDark = prefs.getBool('switch_state') ?? false;
+  //   });
+  // }
 
-  _saveSwitchState(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('switch_state', value);
-  }
+  // _saveSwitchState(bool value) async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setBool('switch_state', value);
+  // }
 
   @override
   Widget build(BuildContext context) {
