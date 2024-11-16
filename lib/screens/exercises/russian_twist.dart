@@ -11,6 +11,8 @@ import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/exercises/plank.dart';
 import 'package:track_pro/screens/workouts/workoutCore.dart';
 import 'package:track_pro/widgets/finishedWorkouts.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 var userWeight;
 
@@ -42,11 +44,36 @@ class _RussianTwistState extends State<RussianTwist> {
     showCaloriesBurnedDialog();
   }
 
+  void saveExerciseToFirestore(String userId, String exerciseName,
+      String calories, DateTime date) async {
+    final String formattedDate = DateFormat('MM/dd/yyyy').format(date);
+
+    try {
+      final exerciseData = {
+        'exerciseName': exerciseName,
+        'caloriesBurned': calories,
+        'date': formattedDate,
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('exercises')
+          .add(exerciseData);
+
+      print('Exercise saved successfully!');
+    } catch (e) {
+      print('Failed to save exercise: $e');
+    }
+  }
+
   void startTimer() {
     setState(() {
       if (timer == null || !timer!.isActive) {
         timer = Timer.periodic(Duration(seconds: 1), (_) {
           setState(() {
+            isRunning = true;
+            actualElapsedTime++;
             if (countdownTimer > 0) {
               countdownTimer--;
             } else {
@@ -88,6 +115,13 @@ class _RussianTwistState extends State<RussianTwist> {
   }
 
   void showCaloriesBurnedDialog() {
+    final DateTime currentDate = DateTime.now();
+    final userId = Provider.of<UserData>(context, listen: false).userId;
+    if (caloriesBurned != 0) {
+      saveExerciseToFirestore(
+          userId, 'Russian', caloriesBurned.toStringAsFixed(2), currentDate);
+    }
+    ;
     showModalBottomSheet(
         context: context,
         isDismissible: false,

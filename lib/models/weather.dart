@@ -2,7 +2,7 @@ class Weather {
   Weather({
     this.temperature = 20,
     this.Humidity = 60,
-    this.mainCondition = 'clear',
+    this.mainCondition = 'loading...',
   });
   final double temperature;
   final double Humidity;

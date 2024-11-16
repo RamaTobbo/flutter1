@@ -3,13 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+
 import 'dart:convert';
 
 import 'package:track_pro/models/location.dart';
 import 'package:track_pro/models/weather.dart';
 import 'package:track_pro/provider/location.dart';
 import 'package:track_pro/provider/temp.dart';
+import 'package:provider/provider.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/map.dart';
 import 'package:track_pro/services/weather.dart';
@@ -77,12 +78,12 @@ class _TemperatureState extends State<Temperature1> {
       setState(() {
         _weather = weather;
       });
-      Provider.of<temp>(context, listen: false)
-          .setHumidity(weather.Humidity.round());
-      Provider.of<temp>(context, listen: false)
-          .setHumidity(weather.temperature.round());
-      Provider.of<temp>(context, listen: false)
-          .setCondition(weather.mainCondition);
+      // Provider.of<temp>(context, listen: false)
+      //     .setHumidity(weather.Humidity.round());
+      // Provider.of<temp>(context, listen: false)
+      //     .setHumidity(weather.temperature.round());
+      // Provider.of<temp>(context, listen: false)
+      //     .setCondition(weather.mainCondition);
     } catch (e) {
       print('Error fetching weather data: $e');
     }

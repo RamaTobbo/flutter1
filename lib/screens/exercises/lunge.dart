@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,7 @@ import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/squats.dart';
 import 'package:track_pro/screens/workouts/workout1.dart';
+import 'package:intl/intl.dart';
 
 var userWeight;
 var BurnedCaloriesPerExercise;
@@ -41,6 +43,7 @@ class _LungeState extends State<Lunge> {
 
   void EndExerciseCalculatedCalories() {
     pauseTimer();
+
     caloriesBurned = metValue * userWeight * (actualElapsedTime / 3600);
     if (caloriesBurned != 0) {
       Provider.of<CaloriesBurned>(context, listen: false)
@@ -50,6 +53,29 @@ class _LungeState extends State<Lunge> {
 
     playTestSound();
     showCaloriesBurnedDialog();
+  }
+
+  void saveExerciseToFirestore(String userId, String exerciseName,
+      String calories, DateTime date) async {
+    final String formattedDate = DateFormat('MM/dd/yyyy').format(date);
+
+    try {
+      final exerciseData = {
+        'exerciseName': exerciseName,
+        'caloriesBurned': calories,
+        'date': formattedDate,
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('exercises')
+          .add(exerciseData);
+
+      print('Exercise saved successfully!');
+    } catch (e) {
+      print('Failed to save exercise: $e');
+    }
   }
 
   void startTimer() {
@@ -106,6 +132,11 @@ class _LungeState extends State<Lunge> {
   }
 
   void showCaloriesBurnedDialog() {
+    final DateTime currentDate = DateTime.now();
+    final userId = Provider.of<UserData>(context, listen: false).userId;
+    if (caloriesBurned != 0)
+      saveExerciseToFirestore(
+          userId, 'Lunge', caloriesBurned.toStringAsFixed(2), currentDate);
     showModalBottomSheet(
         context: context,
         isDismissible: false,

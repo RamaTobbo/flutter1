@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:provider/provider.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
-import 'package:track_pro/provider/isAsmartWatchuser.dart';
+
 import 'package:track_pro/screens/OnboardingScreens.dart';
 import 'package:track_pro/screens/tab.dart';
 
@@ -24,7 +24,6 @@ class _Splash1screenState extends State<Splash1screen> {
   }
 
   Future<void> hideScreen() async {
-    // Check if setup is completed
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool setupCompleted = prefs.getBool('isSetupCompleted') ?? false;
     final isnotusingsmartwatch = prefs.getBool('isNotUsingSmartwatch') ?? false;

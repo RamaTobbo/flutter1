@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -82,15 +83,17 @@ class _SetupscreensState extends State<Setupscreens> {
   uploadData() async {
     try {
       String userid = Uuid().v4();
-      Map<String, dynamic> uploaddata = {
+      final firestore = FirebaseFirestore.instance;
+      // Map<String, dynamic> uploaddata
+      final userRef = await firestore.collection('users').add({
         // 'userID': userid,
         'username': Provider.of<UserData>(context, listen: false).userName,
         'age': Provider.of<UserData>(context, listen: false).age,
         'height': Provider.of<UserData>(context, listen: false).height,
         'weight': Provider.of<UserData>(context, listen: false).weight,
-        'bmi': Provider.of<UserData>(context, listen: false).bmi,
-      };
-      await FirebaseService().addUserDetails(uploaddata);
+        // 'bmi': Provider.of<UserData>(context, listen: false).bmi,
+      });
+      Provider.of<UserData>(context, listen: false).setUserId(userRef.id);
       print('Data uploaded successfully');
     } catch (e) {
       print('Error uploading data: $e');
@@ -135,7 +138,6 @@ class _SetupscreensState extends State<Setupscreens> {
     final bmi = userWeight / (userHeight * userHeight);
     Provider.of<UserData>(context, listen: false).setbmi(bmi.roundToDouble());
 
-    // Widget screen setup based on pageindex (as shown previously)
     switch (pageindex) {
       case 1:
         screen = Center(

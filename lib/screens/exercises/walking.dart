@@ -11,6 +11,8 @@ import 'package:track_pro/screens/calories.dart';
 import 'package:track_pro/screens/exercises/bicycle.dart';
 import 'package:track_pro/screens/exercises/burpees.dart';
 import 'package:track_pro/screens/workouts/workoutCardio.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 var userWeight;
 
@@ -50,11 +52,36 @@ class _WalkingState extends State<Walking> {
     }
   }
 
+  void saveExerciseToFirestore(String userId, String exerciseName,
+      String calories, DateTime date) async {
+    final String formattedDate = DateFormat('MM/dd/yyyy').format(date);
+
+    try {
+      final exerciseData = {
+        'exerciseName': exerciseName,
+        'caloriesBurned': calories,
+        'date': formattedDate,
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('exercises')
+          .add(exerciseData);
+
+      print('Exercise saved successfully!');
+    } catch (e) {
+      print('Failed to save exercise: $e');
+    }
+  }
+
   void startTimer() {
     setState(() {
       if (timer == null || !timer!.isActive) {
         timer = Timer.periodic(Duration(seconds: 1), (_) {
           setState(() {
+            isRunning = true;
+            actualElapsedTime++;
             if (countdownTimer > 0) {
               countdownTimer--;
             } else {
@@ -108,6 +135,13 @@ class _WalkingState extends State<Walking> {
   }
 
   void showCaloriesBurnedDialog() {
+    final DateTime currentDate = DateTime.now();
+    final userId = Provider.of<UserData>(context, listen: false).userId;
+    if (caloriesBurned != 0) {
+      saveExerciseToFirestore(
+          userId, 'Walking', caloriesBurned.toStringAsFixed(2), currentDate);
+    }
+    ;
     showModalBottomSheet(
         context: context,
         isDismissible: false,

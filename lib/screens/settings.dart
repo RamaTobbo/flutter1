@@ -118,7 +118,7 @@ class _SettingsState extends State<Settings> {
               child: Transform.scale(
                 scale: 1.2,
                 child: Switch(
-                  activeColor: isSwitchedDark ? Colors.amber : Colors.black,
+                  activeColor: isSwitchedDark ? Colors.white : Colors.black,
                   value: themeProvider.isDarkMode,
                   onChanged: (value) {
                     setState(() {

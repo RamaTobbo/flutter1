@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/russian_twist.dart';
 import 'package:track_pro/screens/workouts/workoutCore.dart';
+import 'package:intl/intl.dart';
 
 var userWeight;
 
@@ -39,6 +41,29 @@ class _PlankState extends State<Plank> {
     }
   }
 
+  void saveExerciseToFirestore(String userId, String exerciseName,
+      String calories, DateTime date) async {
+    final String formattedDate = DateFormat('MM/dd/yyyy').format(date);
+
+    try {
+      final exerciseData = {
+        'exerciseName': exerciseName,
+        'caloriesBurned': calories,
+        'date': formattedDate,
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('exercises')
+          .add(exerciseData);
+
+      print('Exercise saved successfully!');
+    } catch (e) {
+      print('Failed to save exercise: $e');
+    }
+  }
+
   void EndExerciseCalculatedCalories() {
     pauseTimer();
     caloriesBurned = metValue * userWeight * (actualElapsedTime / 3600);
@@ -57,6 +82,13 @@ class _PlankState extends State<Plank> {
   }
 
   void showCaloriesBurnedDialog() {
+    final DateTime currentDate = DateTime.now();
+    final userId = Provider.of<UserData>(context, listen: false).userId;
+    if (caloriesBurned != 0) {
+      saveExerciseToFirestore(
+          userId, 'Plank', caloriesBurned.toStringAsFixed(2), currentDate);
+    }
+    ;
     showModalBottomSheet(
         context: context,
         isDismissible: false,
@@ -74,9 +106,10 @@ class _PlankState extends State<Plank> {
                       Image.asset('assets/images/fire.gif'),
                       IconButton(
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(builder: (ctx) => Plank()),
+                              (Route) => false,
                             );
                           },
                           icon: Icon(Icons.restart_alt))
@@ -115,12 +148,13 @@ class _PlankState extends State<Plank> {
       if (timer == null || !timer!.isActive) {
         timer = Timer.periodic(Duration(seconds: 1), (_) {
           setState(() {
+            isRunning = true;
+            actualElapsedTime++;
             if (countdownTimer > 0) {
               countdownTimer--;
             } else {
               pauseTimer();
               playTestSound();
-
               calculateCaloriesBurned();
               isWorkoutFinished = true;
             }

@@ -91,11 +91,9 @@ class _ChatbotState extends State<Chatbot> {
                         conversations.add(Conversation(question!, ""));
                         setState(() {});
 
-                        // Check against keywords and provide response
                         int index = keywords.indexWhere((keyword) =>
                             question.toLowerCase().contains(keyword));
                         if (index != -1) {
-                          // Found a matching keyword
                           conversations.last = Conversation(
                               conversations.last.question, responses[index]);
                         } else {}

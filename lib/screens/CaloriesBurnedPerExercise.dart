@@ -16,6 +16,13 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
   DateTime now = DateTime.now();
 
   @override
+  void initState() {
+    super.initState();
+    // Fetch exercises from Firestore when the widget is first created
+    Provider.of<CaloriesBurned>(context, listen: false).fetchExercises();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('EEEE, M/d/y').format(now);
     final exercises = Provider.of<CaloriesBurned>(context).exercises;
@@ -73,11 +80,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                               ),
                             ),
                           ),
-                          onDismissed: (direction) {
-                            Provider.of<CaloriesBurned>(context, listen: false)
-                                .exercises
-                                .removeAt(index);
-                          },
+                          onDismissed: (direction) {},
                           child: Container(
                             width: 330,
                             height: 100,

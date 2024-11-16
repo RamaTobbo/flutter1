@@ -43,7 +43,6 @@ class _OnboardingscreensState extends State<Onboardingscreens> {
     }
   }
 
-  // Mark onboarding as completed
   Future<void> _markOnboardingAsCompleted() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isOnboardingCompleted', true);
@@ -53,7 +52,6 @@ class _OnboardingscreensState extends State<Onboardingscreens> {
     if (pageindex < onboardingItems.length - 1) {
       _pageController.jumpToPage(pageindex + 1);
     } else {
-      // Mark onboarding as completed when the user finishes
       _markOnboardingAsCompleted();
       Navigator.pushReplacement(
         context,
@@ -95,6 +93,7 @@ class _OnboardingscreensState extends State<Onboardingscreens> {
         children: [
           PageView.builder(
             controller: _pageController,
+            // onPageChanged: ,
             itemCount: onboardingItems.length,
             itemBuilder: (context, index) {
               return Center(

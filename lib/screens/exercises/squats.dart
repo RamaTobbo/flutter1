@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+
 import 'package:track_pro/exercisesTutorial/squatsExercise.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/lunge.dart';
-import 'package:track_pro/screens/exercises/plank.dart';
+
 import 'package:track_pro/widgets/finishedWorkouts.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 var userWeight;
 var BurnedCaloriesPerExerciseSquats;
@@ -43,6 +46,29 @@ class _SquatsState extends State<Squats> {
     showCaloriesBurnedDialog();
   }
 
+  void saveExerciseToFirestore(String userId, String exerciseName,
+      String calories, DateTime date) async {
+    final String formattedDate = DateFormat('MM/dd/yyyy').format(date);
+
+    try {
+      final exerciseData = {
+        'exerciseName': exerciseName,
+        'caloriesBurned': calories,
+        'date': formattedDate,
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('exercises')
+          .add(exerciseData);
+
+      print('Exercise saved successfully!');
+    } catch (e) {
+      print('Failed to save exercise: $e');
+    }
+  }
+
   void nextWorkout() {
     Navigator.push(
         context,
@@ -64,6 +90,11 @@ class _SquatsState extends State<Squats> {
   }
 
   void showCaloriesBurnedDialog() {
+    final DateTime currentDate = DateTime.now();
+    final userId = Provider.of<UserData>(context, listen: false).userId;
+    if (caloriesBurned != 0)
+      saveExerciseToFirestore(
+          userId, 'Squats', caloriesBurned.toStringAsFixed(2), currentDate);
     showModalBottomSheet(
         context: context,
         isDismissible: false,
@@ -140,6 +171,8 @@ class _SquatsState extends State<Squats> {
       if (timer == null || !timer!.isActive) {
         timer = Timer.periodic(Duration(seconds: 1), (_) {
           setState(() {
+            isRunning = true;
+            actualElapsedTime++;
             if (countdownTimer > 0) {
               countdownTimer--;
             } else {
