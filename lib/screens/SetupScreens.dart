@@ -96,7 +96,6 @@ class _SetupscreensState extends State<Setupscreens> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userId', userRef.id);
 
-      // Update provider with the new userId
       Provider.of<UserData>(context, listen: false).setUserId(userRef.id);
       print('Data uploaded successfully');
     } catch (e) {

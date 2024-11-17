@@ -589,10 +589,11 @@ class _TrainingexercisesState extends State<Trainingexercises> {
             right: 20,
             child: IconButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
-                        builder: (ctx) => Caloriesburnedperexercise()));
+                        builder: (ctx) => Caloriesburnedperexercise()),
+                    (Route) => false);
               },
               icon: FaIcon(
                 FontAwesomeIcons.fire,
