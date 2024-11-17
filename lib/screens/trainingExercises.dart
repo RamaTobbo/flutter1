@@ -98,7 +98,9 @@ class _TrainingexercisesState extends State<Trainingexercises> {
             Text(
               'Muscle Building',
               style: GoogleFonts.robotoFlex(
-                  fontSize: 10, fontWeight: FontWeight.bold),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             )
           ],
         );
@@ -110,7 +112,9 @@ class _TrainingexercisesState extends State<Trainingexercises> {
             Text(
               'Exercises History',
               style: GoogleFonts.robotoFlex(
-                  fontSize: 10, fontWeight: FontWeight.bold),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             )
           ],
         );
@@ -121,7 +125,9 @@ class _TrainingexercisesState extends State<Trainingexercises> {
             Text(
               'Exercises History',
               style: GoogleFonts.robotoFlex(
-                  fontSize: 10, fontWeight: FontWeight.bold),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             )
           ],
         );
@@ -134,7 +140,9 @@ class _TrainingexercisesState extends State<Trainingexercises> {
             Text(
               'CalorieBurn Chart',
               style: GoogleFonts.robotoFlex(
-                  fontSize: 10, fontWeight: FontWeight.bold),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             )
           ],
         );

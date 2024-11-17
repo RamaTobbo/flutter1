@@ -111,7 +111,8 @@ class _HomepageState extends State<Homepage> {
                                     Text('Result',
                                         style: GoogleFonts.roboto(
                                             fontSize: 29,
-                                            fontWeight: FontWeight.bold)),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black)),
                                     const SizedBox(
                                       width: 4,
                                     ),
@@ -181,7 +182,8 @@ class _HomepageState extends State<Homepage> {
                                         Text('Result',
                                             style: GoogleFonts.roboto(
                                                 fontSize: 29,
-                                                fontWeight: FontWeight.bold)),
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black)),
                                         const SizedBox(
                                           width: 4,
                                         ),
@@ -253,7 +255,8 @@ class _HomepageState extends State<Homepage> {
                                         Text('Result',
                                             style: GoogleFonts.roboto(
                                                 fontSize: 29,
-                                                fontWeight: FontWeight.bold)),
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black)),
                                         const SizedBox(
                                           width: 4,
                                         ),
@@ -322,7 +325,8 @@ class _HomepageState extends State<Homepage> {
                                     Text('Result',
                                         style: GoogleFonts.roboto(
                                             fontSize: 29,
-                                            fontWeight: FontWeight.bold)),
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black)),
                                     const SizedBox(
                                       width: 4,
                                     ),

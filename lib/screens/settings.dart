@@ -49,6 +49,8 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode =
+        Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
     final ThemeData theme =
         isSwitchedDark ? ThemeData.dark() : ThemeData.light();
     var textStyle = GoogleFonts.poppins(
@@ -118,7 +120,7 @@ class _SettingsState extends State<Settings> {
               child: Transform.scale(
                 scale: 1.2,
                 child: Switch(
-                  activeColor: isSwitchedDark ? Colors.white : Colors.black,
+                  activeColor: isDarkMode ? Colors.white : Colors.black,
                   value: themeProvider.isDarkMode,
                   onChanged: (value) {
                     setState(() {
