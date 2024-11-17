@@ -186,7 +186,8 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
                 ElevatedButton(
                   onPressed: () {
                     nextSetup();
-                    _markSetupAsCompleted();
+                    // _markSetupAsCompleted();
+                    UserNotUsingSmartWatch.setUserMode(false);
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF4a4d7a)),

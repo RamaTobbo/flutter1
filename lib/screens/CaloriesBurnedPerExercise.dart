@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
+import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
+import 'package:track_pro/screens/tab.dart';
 
 class Caloriesburnedperexercise extends StatefulWidget {
   const Caloriesburnedperexercise({super.key});
@@ -31,6 +33,8 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('EEEE, M/d/y').format(now);
     final exercises = Provider.of<CaloriesBurned>(context).exercisesh;
+    final isdarkmode =
+        Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
 
     double totalBurnedCaloriesFromWorkouts =
         exercises.fold(0, (sum, exercise) => sum + exercise.caloriesBurned);
@@ -54,7 +58,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                       style: GoogleFonts.robotoSlab(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: isdarkmode ? Colors.white : Colors.black87,
                       ),
                     ),
                   ),
@@ -83,9 +87,9 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                 child: Text(
                                   '${exercise.exerciseName}',
                                   style: GoogleFonts.robotoSlab(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
                                 ),
                               ),
                             ),
@@ -108,15 +112,16 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                         Text(
                                           formattedDate,
                                           style: GoogleFonts.robotoSlab(
-                                              fontSize: 15),
+                                              fontSize: 15,
+                                              color: Colors.black),
                                         ),
                                         SizedBox(width: 20),
                                         Text(
                                           '${exercise.exerciseName}',
                                           style: GoogleFonts.robotoSlab(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black),
                                         ),
                                       ],
                                     ),
@@ -136,7 +141,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                       Text(
                                         '${exercise.caloriesBurned.toStringAsFixed(2)} cal',
                                         style: GoogleFonts.robotoSlab(
-                                            fontSize: 20),
+                                            fontSize: 20, color: Colors.black),
                                       ),
                                       SizedBox(
                                         width: 20,
@@ -168,7 +173,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                   : () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (ctx) => TabNav1()),
+                          MaterialPageRoute(builder: (ctx) => TabNav()),
                           (Route) => false);
                     },
               icon: Icon(Icons.arrow_back)))

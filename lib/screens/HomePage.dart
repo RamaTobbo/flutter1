@@ -17,25 +17,25 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   _loadUserId();
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadUserId();
+  }
 
-  // Future<void> _loadUserId() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final storedUserId = prefs.getString('userId');
+  Future<void> _loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedUserId = prefs.getString('userId');
 
-  //   if (storedUserId != null) {
-  //     // Set the userId in the UserData provider
-  //     Provider.of<UserData>(context, listen: false).setUserId(storedUserId);
-  //     print("UserId loaded from SharedPreferences: $storedUserId");
-  //   } else {
-  //     print("No userId found in SharedPreferences");
-  //   }
-  // }
+    if (storedUserId != null) {
+      // Set the userId in the UserData provider
+      Provider.of<UserData>(context, listen: false).setUserId(storedUserId);
+      print("UserId loaded from SharedPreferences: $storedUserId");
+    } else {
+      print("No userId found in SharedPreferences");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
