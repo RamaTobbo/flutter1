@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:track_pro/models/Exercises.dart';
 import 'package:track_pro/models/exercise.dart';
 import 'package:track_pro/models/exercisesHistory.dart';
+import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/services/firebase.dart';
 
 // class CaloriesBurned with ChangeNotifier {
@@ -32,10 +35,29 @@ class CaloriesBurned with ChangeNotifier {
 
   final FirestoreService _firestoreService = FirestoreService();
 
-  // Fetch exercises from Firestore
-  Future<void> fetchExercises() async {
-    _exercisesh = await _firestoreService.getExercises();
-    notifyListeners();
+  Future<void> fetchExercises(String userId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('exercises')
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        print("No exercises found in Firestore.");
+      } else {
+        print("Found exercises: ${snapshot.docs.length}");
+      }
+
+      _exercisesh = snapshot.docs.map((doc) {
+        return Exerciseshistory.fromFirestore(doc);
+      }).toList();
+
+      print("Exercises fetched: $_exercisesh");
+      notifyListeners();
+    } catch (e) {
+      print("Error fetching exercises from Firestore: $e");
+    }
   }
 
   void addExercise(String name, double caloriesBurned) {
@@ -60,7 +82,7 @@ class CaloriesBurned with ChangeNotifier {
 
   Future<void> removeExercise(String id) async {
     await _firestoreService.deleteExercise(id);
-    await fetchExercises();
+    await fetchExercises(id);
   }
 
   void setExerciseDate(String date) {

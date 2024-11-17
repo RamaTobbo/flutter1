@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/models/weather.dart';
 import 'package:track_pro/provider/steps.dart';
 import 'package:track_pro/provider/temp.dart';
@@ -94,6 +95,20 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     _fetchWeather();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedUserId = prefs.getString('userId');
+
+    if (storedUserId != null) {
+      // Set the userId in the UserData provider
+      Provider.of<UserData>(context, listen: false).setUserId(storedUserId);
+      print("UserId loaded from SharedPreferences: $storedUserId");
+    } else {
+      print("No userId found in SharedPreferences");
+    }
   }
 
   @override

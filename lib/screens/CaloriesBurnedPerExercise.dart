@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
+import 'package:track_pro/provider/userdata.dart';
 
 class Caloriesburnedperexercise extends StatefulWidget {
   const Caloriesburnedperexercise({super.key});
@@ -19,13 +20,15 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
   void initState() {
     super.initState();
     // Fetch exercises from Firestore when the widget is first created
-    Provider.of<CaloriesBurned>(context, listen: false).fetchExercises();
+    print(Provider.of<UserData>(context, listen: false).userId);
+    Provider.of<CaloriesBurned>(context, listen: false)
+        .fetchExercises(Provider.of<UserData>(context, listen: false).userId);
   }
 
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('EEEE, M/d/y').format(now);
-    final exercises = Provider.of<CaloriesBurned>(context).exercises;
+    final exercises = Provider.of<CaloriesBurned>(context).exercisesh;
 
     double totalBurnedCaloriesFromWorkouts =
         exercises.fold(0, (sum, exercise) => sum + exercise.caloriesBurned);
@@ -72,7 +75,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 108.0),
                               child: Text(
-                                '${exercise.name}',
+                                '${exercise.exerciseName}',
                                 style: GoogleFonts.robotoSlab(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -103,7 +106,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                       ),
                                       SizedBox(width: 20),
                                       Text(
-                                        '${exercise.name}',
+                                        '${exercise.exerciseName}',
                                         style: GoogleFonts.robotoSlab(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,

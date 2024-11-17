@@ -45,14 +45,12 @@ class _JumpingjacksState extends State<Jumpingjacks> {
   }
 
   void saveExerciseToFirestore(String userId, String exerciseName,
-      String calories, DateTime date) async {
-    final String formattedDate = DateFormat('MM/dd/yyyy').format(date);
-
+      double caloriesBurned, DateTime date) async {
     try {
       final exerciseData = {
         'exerciseName': exerciseName,
-        'caloriesBurned': calories,
-        'date': formattedDate,
+        'caloriesBurned': caloriesBurned,
+        'date': Timestamp.fromDate(date), // Save as Timestamp
       };
 
       await FirebaseFirestore.instance
@@ -134,8 +132,8 @@ class _JumpingjacksState extends State<Jumpingjacks> {
     final DateTime currentDate = DateTime.now();
     final userId = Provider.of<UserData>(context, listen: false).userId;
     if (caloriesBurned != 0) {
-      saveExerciseToFirestore(userId, 'JumpingJacks',
-          caloriesBurned.toStringAsFixed(2), currentDate);
+      saveExerciseToFirestore(
+          userId, 'JumpingJacks', caloriesBurned, currentDate);
     }
     ;
     showModalBottomSheet(

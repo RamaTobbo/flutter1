@@ -61,14 +61,12 @@ class _BicycleState extends State<Bicycle> {
   }
 
   void saveExerciseToFirestore(String userId, String exerciseName,
-      String calories, DateTime date) async {
-    final String formattedDate = DateFormat('MM/dd/yyyy').format(date);
-
+      double caloriesBurned, DateTime date) async {
     try {
       final exerciseData = {
         'exerciseName': exerciseName,
-        'caloriesBurned': calories,
-        'date': formattedDate,
+        'caloriesBurned': caloriesBurned,
+        'date': Timestamp.fromDate(date), // Save as Timestamp
       };
 
       await FirebaseFirestore.instance
@@ -128,8 +126,7 @@ class _BicycleState extends State<Bicycle> {
     final DateTime currentDate = DateTime.now();
     final userId = Provider.of<UserData>(context, listen: false).userId;
     if (caloriesBurned != 0) {
-      saveExerciseToFirestore(
-          userId, 'Cycling', caloriesBurned.toStringAsFixed(2), currentDate);
+      saveExerciseToFirestore(userId, 'Cycling', caloriesBurned, currentDate);
     }
     ;
 

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/heartRate.dart';
 import 'package:track_pro/widgets/chatbot.dart';
 
@@ -15,6 +17,26 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    final storedUserId = prefs.getString('userId');
+
+    if (storedUserId != null) {
+      // Set the userId in the UserData provider
+      Provider.of<UserData>(context, listen: false).setUserId(storedUserId);
+      print("UserId loaded from SharedPreferences: $storedUserId");
+    } else {
+      print("No userId found in SharedPreferences");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
