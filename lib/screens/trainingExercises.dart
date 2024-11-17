@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:track_pro/DataHistory/caloriesAndDaysChart.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/CaloriesBurnedPerExercise.dart';
@@ -59,6 +60,13 @@ class _TrainingexercisesState extends State<Trainingexercises> {
         return const Color(0xffb6c7ca);
       default:
         return Colors.grey;
+    }
+  }
+
+  _tap(int index) {
+    if (index == 3) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (ctx) => Caloriesanddayschart()));
     }
   }
 
@@ -388,7 +396,7 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                                       ]),
                                   child: InkWell(
                                     onTap: () {
-                                      //_goToexerciseForIndex(index1);
+                                      _tap(index1);
                                     },
                                     child: Center(
                                       child: _getIcons(index1),
