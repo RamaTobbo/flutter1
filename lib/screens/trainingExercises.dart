@@ -66,7 +66,7 @@ class _TrainingexercisesState extends State<Trainingexercises> {
   _tap(int index) {
     if (index == 3) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (ctx) => Caloriesanddayschart()));
+          context, MaterialPageRoute(builder: (ctx) => CaloriesAndDaysChart()));
     }
   }
 

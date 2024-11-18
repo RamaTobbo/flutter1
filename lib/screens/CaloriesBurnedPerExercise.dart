@@ -20,29 +20,12 @@ class Caloriesburnedperexercise extends StatefulWidget {
 
 class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
   DateTime now = DateTime.now();
-  void saveTotalBurnedCalories(
-      String userId, double caloriesBurned, DateTime date) async {
-    try {
-      final exerciseData = {
-        'totalCaloriesBurned': caloriesBurned,
-        'date': Timestamp.fromDate(date), // Save as Timestamp
-      };
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('TotalBurnedCaloriesPerDay')
-          .add(exerciseData);
-
-      print('Exercise saved successfully!');
-    } catch (e) {
-      print('Failed to save exercise: $e');
-    }
-  }
 
   @override
   void initState() {
     super.initState();
+    print(Provider.of<CaloriesBurned>(context, listen: false)
+        .totalBurnedCalories);
 
     print(Provider.of<UserData>(context, listen: false).userId);
 
@@ -61,6 +44,16 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
 
     double totalBurnedCaloriesFromWorkouts =
         exercises.fold(0, (sum, exercise) => sum + exercise.caloriesBurned);
+
+    // if (Provider.of<CaloriesBurned>(context, listen: false)
+    //         .totalBurnedCalories !=
+    //     0) {
+    //   saveTotalBurnedCalories(
+    //       Provider.of<UserData>(context, listen: false).userId,
+    //       Provider.of<CaloriesBurned>(context, listen: false)
+    //           .totalBurnedCalories,
+    //       now);
+    // }
 
     return Stack(children: [
       Scaffold(
@@ -198,18 +191,13 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (ctx) => TabNav1(
-                                    index: 3,
-                                  )),
+                              builder: (ctx) => TabNav1(index: 3)),
                           (Route) => false);
                     }
                   : () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(
-                              builder: (ctx) => TabNav(
-                                    index: 3,
-                                  )),
+                          MaterialPageRoute(builder: (ctx) => TabNav(index: 3)),
                           (Route) => false);
                     },
               icon: Icon(Icons.arrow_back)))
