@@ -25,6 +25,7 @@ class CaloriesBurned with ChangeNotifier {
   String _exerciseName = '';
   String _exerciseDoneDate = '';
   double _caloriesBurnedPerExercise = 0;
+  double _totalBurnedCalories = 0;
 
   List<Exercises> get exercises => _exercises;
   List<Exerciseshistory> get exercisesh => _exercisesh;
@@ -32,6 +33,7 @@ class CaloriesBurned with ChangeNotifier {
   double get caloriesBurnedPerExercise => _caloriesBurnedPerExercise;
   String get exerciseName => _exerciseName;
   String get exerciseDoneDate => _exerciseDoneDate;
+  double get totalBurnedCalories => _totalBurnedCalories;
 
   final FirestoreService _firestoreService = FirestoreService();
 
@@ -67,6 +69,11 @@ class CaloriesBurned with ChangeNotifier {
 
   void setExerciseDuration(int duration) {
     _exerciseDuration = duration;
+    notifyListeners();
+  }
+
+  void settotalBurnedCaloriesPerDay(double burnedCalories) {
+    _totalBurnedCalories = burnedCalories;
     notifyListeners();
   }
 

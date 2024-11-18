@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -19,20 +20,42 @@ class Caloriesburnedperexercise extends StatefulWidget {
 
 class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
   DateTime now = DateTime.now();
+  void saveTotalBurnedCalories(
+      String userId, double caloriesBurned, DateTime date) async {
+    try {
+      final exerciseData = {
+        'totalCaloriesBurned': caloriesBurned,
+        'date': Timestamp.fromDate(date), // Save as Timestamp
+      };
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('TotalBurnedCaloriesPerDay')
+          .add(exerciseData);
+
+      print('Exercise saved successfully!');
+    } catch (e) {
+      print('Failed to save exercise: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // Fetch exercises from Firestore when the widget is first created
+
     print(Provider.of<UserData>(context, listen: false).userId);
+
     Provider.of<CaloriesBurned>(context, listen: false)
         .fetchExercises(Provider.of<UserData>(context, listen: false).userId);
   }
 
   @override
   Widget build(BuildContext context) {
+    double totalBurnedCalories = 0;
     String formattedDate = DateFormat('EEEE, M/d/y').format(now);
     final exercises = Provider.of<CaloriesBurned>(context).exercisesh;
+
     final isdarkmode =
         Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
 
@@ -54,7 +77,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                   Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: Text(
-                      'Total Burned Calories: ${totalBurnedCaloriesFromWorkouts.toStringAsFixed(2)} cal',
+                      'Total Burned Calories: ${Provider.of<CaloriesBurned>(context, listen: false).totalBurnedCalories.toStringAsFixed(2)} cal',
                       style: GoogleFonts.robotoSlab(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -68,6 +91,13 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                       itemCount: exercises.length,
                       itemBuilder: (context, index) {
                         final exercise = exercises[index];
+                        final userId =
+                            Provider.of<UserData>(context, listen: false)
+                                .userId;
+
+                        totalBurnedCalories += exercise.caloriesBurned;
+                        Provider.of<CaloriesBurned>(context, listen: false)
+                            .settotalBurnedCaloriesPerDay(totalBurnedCalories);
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -167,13 +197,19 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                   ? () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (ctx) => TabNav1()),
+                          MaterialPageRoute(
+                              builder: (ctx) => TabNav1(
+                                    index: 3,
+                                  )),
                           (Route) => false);
                     }
                   : () {
                       Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (ctx) => TabNav()),
+                          MaterialPageRoute(
+                              builder: (ctx) => TabNav(
+                                    index: 3,
+                                  )),
                           (Route) => false);
                     },
               icon: Icon(Icons.arrow_back)))

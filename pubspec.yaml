@@ -86,6 +86,8 @@ dependencies:
   firebase_database: ^11.1.5
   uuid: ^4.5.1
   flutter_local_notifications: ^18.0.1
+  fl_chart: ^0.69.0
+  syncfusion_flutter_charts: ^27.2.2
   
 
 
