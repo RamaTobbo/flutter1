@@ -30,6 +30,13 @@ class _SetupscreensState extends State<Setupscreens> {
   final subtitleFont = GoogleFonts.robotoSlab;
   final userNameController = TextEditingController();
   var EnteredUserName;
+  bool _isButtonClicked = false;
+
+  void _onButtonPressed() {
+    setState(() {
+      _isButtonClicked = true;
+    });
+  }
 
   void nextPageSmartWatch() {
     Navigator.push(
@@ -359,6 +366,9 @@ class _SetupscreensState extends State<Setupscreens> {
                             );
                           } else if (pageindex == 1 &&
                               (EnteredUserName?.isEmpty ?? true)) {
+                            setState(() {
+                              _isButtonClicked = false;
+                            });
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text(

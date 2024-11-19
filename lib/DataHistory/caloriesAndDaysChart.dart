@@ -25,45 +25,64 @@ class _CaloriesAndDaysChartState extends State<CaloriesAndDaysChart> {
   void fetchCaloriesData() async {
     final userId = Provider.of<UserData>(context, listen: false).userId;
     final now = DateTime.now();
-    final startOfWeek = now.subtract(
-        Duration(days: now.weekday)); // Start of the current week (Monday)
-    final endOfWeek =
-        startOfWeek.add(Duration(days: 7)); // End of the current week (Sunday)
+    if (Provider.of<CaloriesBurned>(context, listen: false)
+            .totalBurnedCalories !=
+        0) {
+      final userId = Provider.of<UserData>(context, listen: false).userId;
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('TotalBurnedCaloriesPerDay')
+          .add({
+        'totalBurnedCalories':
+            Provider.of<CaloriesBurned>(context, listen: false)
+                .totalBurnedCalories,
+        'date': Timestamp.fromDate(DateTime.now())
+      });
+    }
 
-    // Query the Firestore collection to get the calories burned for the current week
+    // Get the current date and the date of 6 days ago
+    final startOfWeek = now.subtract(Duration(days: 6)); // 6 days ago
+    final endOfWeek = now; // Today
+
+    // Query Firestore for calories burned data for the last 7 days (including today)
     final querySnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .collection('TotalBurnedCaloriesPerDay')
         .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfWeek))
-        .where('date', isLessThan: Timestamp.fromDate(endOfWeek))
+        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endOfWeek))
+        .orderBy('date') // Order by date to get them in order
         .get();
 
-    // Reset the caloriesByDay map to zero for each day of the week
+    // Reset the caloriesByDay map to zero for each day (0 = today, 6 = 6 days ago)
     caloriesByDay = {
-      0: 0.0, // Monday
-      1: 0.0, // Tuesday
-      2: 0.0, // Wednesday
-      3: 0.0, // Thursday
-      4: 0.0, // Friday
-      5: 0.0, // Saturday
-      6: 0.0, // Sunday
+      0: 0.0, // Today (0)
+      1: 0.0, // Yesterday (1)
+      2: 0.0, // 2 days ago (2)
+      3: 0.0, // 3 days ago (3)
+      4: 0.0, // 4 days ago (4)
+      5: 0.0, // 5 days ago (5)
+      6: 0.0, // 6 days ago (6)
     };
 
-    // Aggregate calories burned by day of the week
+    // Aggregate calories burned by day (starting from 6 days ago up to today)
     for (var doc in querySnapshot.docs) {
       final data = doc.data();
       final Timestamp timestamp = data['date'];
       final calories = data['totalCaloriesBurned'];
       final date = timestamp.toDate();
 
-      // Calculate the day of the week (0 = Monday, 6 = Sunday)
-      final dayOfWeek =
-          date.weekday - 1; // Adjust to match Monday = 0, Sunday = 6
-      caloriesByDay[dayOfWeek] = (caloriesByDay[dayOfWeek] ?? 0.0) + calories;
+      // Calculate the difference in days between now and the recorded date
+      final dayDifference = now.difference(date).inDays;
+
+      if (dayDifference >= 0 && dayDifference <= 6) {
+        caloriesByDay[dayDifference] =
+            (caloriesByDay[dayDifference] ?? 0.0) + calories;
+      }
     }
 
-    setState(() {});
+    setState(() {}); // Refresh the chart with the updated data
   }
 
   @override

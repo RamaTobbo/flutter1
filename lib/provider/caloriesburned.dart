@@ -39,16 +39,13 @@ class CaloriesBurned with ChangeNotifier {
 
   Future<void> fetchExercises(String userId) async {
     try {
-      // Get today's date and set the start and end of the day
       DateTime today = DateTime.now().toLocal();
       DateTime startOfDay = DateTime(today.year, today.month, today.day);
       DateTime endOfDay = startOfDay.add(Duration(days: 1));
 
-      // Convert DateTime to Firestore Timestamps
       Timestamp startTimestamp = Timestamp.fromDate(startOfDay);
       Timestamp endTimestamp = Timestamp.fromDate(endOfDay);
 
-      // Query to fetch exercises where the date is today
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
@@ -57,21 +54,17 @@ class CaloriesBurned with ChangeNotifier {
           .where('date', isLessThan: endTimestamp)
           .get();
 
-      if (snapshot.docs.isEmpty) {
-        print("No exercises found for today.");
-      } else {
-        print("Found exercises for today: ${snapshot.docs.length}");
-        // Print the date of each fetched exercise to debug
-        snapshot.docs.forEach((doc) {
-          print("Exercise date: ${doc['date']}");
-        });
-      }
-
       _exercisesh = snapshot.docs.map((doc) {
         return Exerciseshistory.fromFirestore(doc);
       }).toList();
 
-      print("Exercises fetched: $_exercisesh");
+      // Calculate total burned calories
+      _totalBurnedCalories = _exercisesh.fold(
+        0.0,
+        (sum, exercise) => sum + exercise.caloriesBurned,
+      );
+
+      print("Total burned calories: $_totalBurnedCalories");
       notifyListeners();
     } catch (e) {
       print("Error fetching exercises from Firestore: $e");

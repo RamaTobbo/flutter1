@@ -35,22 +35,13 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
 
   @override
   Widget build(BuildContext context) {
-    double totalBurnedCalories = 0;
-    setState(() {
-      Provider.of<CaloriesBurned>(context, listen: false)
-          .settotalBurnedCaloriesPerDay(
-              Provider.of<CaloriesBurned>(context, listen: false)
-                  .totalBurnedCalories);
-    });
-
     String formattedDate = DateFormat('EEEE, M/d/y').format(now);
     final exercises = Provider.of<CaloriesBurned>(context).exercisesh;
+    final totalBurnedCalories =
+        Provider.of<CaloriesBurned>(context).totalBurnedCalories;
 
     final isdarkmode =
         Provider.of<ThemeProvider>(context, listen: false).isDarkMode;
-
-    double totalBurnedCaloriesFromWorkouts =
-        exercises.fold(0, (sum, exercise) => sum + exercise.caloriesBurned);
 
     // if (Provider.of<CaloriesBurned>(context, listen: false)
     //         .totalBurnedCalories !=
@@ -94,11 +85,6 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                         final userId =
                             Provider.of<UserData>(context, listen: false)
                                 .userId;
-
-                        totalBurnedCalories += exercise.caloriesBurned;
-
-                        Provider.of<CaloriesBurned>(context, listen: false)
-                            .settotalBurnedCaloriesPerDay(totalBurnedCalories);
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
