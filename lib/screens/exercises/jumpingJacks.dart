@@ -214,7 +214,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
     userWeight = Provider.of<UserData>(context).weight;
     if (caloriesBurned != 0)
       Provider.of<CaloriesBurned>(context)
-          .addExercise('JumpinJacks', caloriesBurned);
+          .addExercise('Jumping', caloriesBurned);
 
     return Stack(
       children: [

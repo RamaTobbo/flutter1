@@ -36,6 +36,13 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
   @override
   Widget build(BuildContext context) {
     double totalBurnedCalories = 0;
+    setState(() {
+      Provider.of<CaloriesBurned>(context, listen: false)
+          .settotalBurnedCaloriesPerDay(
+              Provider.of<CaloriesBurned>(context, listen: false)
+                  .totalBurnedCalories);
+    });
+
     String formattedDate = DateFormat('EEEE, M/d/y').format(now);
     final exercises = Provider.of<CaloriesBurned>(context).exercisesh;
 
@@ -89,6 +96,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                 .userId;
 
                         totalBurnedCalories += exercise.caloriesBurned;
+
                         Provider.of<CaloriesBurned>(context, listen: false)
                             .settotalBurnedCaloriesPerDay(totalBurnedCalories);
 

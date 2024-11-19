@@ -39,16 +39,32 @@ class CaloriesBurned with ChangeNotifier {
 
   Future<void> fetchExercises(String userId) async {
     try {
+      // Get today's date and set the start and end of the day
+      DateTime today = DateTime.now().toLocal();
+      DateTime startOfDay = DateTime(today.year, today.month, today.day);
+      DateTime endOfDay = startOfDay.add(Duration(days: 1));
+
+      // Convert DateTime to Firestore Timestamps
+      Timestamp startTimestamp = Timestamp.fromDate(startOfDay);
+      Timestamp endTimestamp = Timestamp.fromDate(endOfDay);
+
+      // Query to fetch exercises where the date is today
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
           .collection('exercises')
+          .where('date', isGreaterThanOrEqualTo: startTimestamp)
+          .where('date', isLessThan: endTimestamp)
           .get();
 
       if (snapshot.docs.isEmpty) {
-        print("No exercises found in Firestore.");
+        print("No exercises found for today.");
       } else {
-        print("Found exercises: ${snapshot.docs.length}");
+        print("Found exercises for today: ${snapshot.docs.length}");
+        // Print the date of each fetched exercise to debug
+        snapshot.docs.forEach((doc) {
+          print("Exercise date: ${doc['date']}");
+        });
       }
 
       _exercisesh = snapshot.docs.map((doc) {
