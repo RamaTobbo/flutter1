@@ -9,7 +9,7 @@ import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/congratulations.dart';
 import 'package:track_pro/screens/tab.dart';
-import 'package:track_pro/services/firebase.dart';
+
 import 'package:wheel_chooser/wheel_chooser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';

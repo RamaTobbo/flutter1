@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:track_pro/DataHistory/exercisesCalendar.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
@@ -177,24 +178,33 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
               ),
       ),
       Positioned(
+        top: 30,
+        child: IconButton(
+            onPressed: Provider.of<Isasmartwatchuser>(context, listen: false)
+                    .isNotUsingSmartwatch
+                ? () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (ctx) => TabNav1(index: 3)),
+                        (Route) => false);
+                  }
+                : () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (ctx) => TabNav(index: 3)),
+                        (Route) => false);
+                  },
+            icon: Icon(Icons.arrow_back)),
+      ),
+      Positioned(
           top: 30,
+          right: 30,
           child: IconButton(
-              onPressed: Provider.of<Isasmartwatchuser>(context, listen: false)
-                      .isNotUsingSmartwatch
-                  ? () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (ctx) => TabNav1(index: 3)),
-                          (Route) => false);
-                    }
-                  : () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (ctx) => TabNav(index: 3)),
-                          (Route) => false);
-                    },
-              icon: Icon(Icons.arrow_back)))
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (ctx) => ExerciseCalendar()));
+              },
+              icon: Icon(Icons.calendar_month)))
     ]);
   }
 }
