@@ -35,7 +35,7 @@ class CaloriesBurned with ChangeNotifier {
   String get exerciseDoneDate => _exerciseDoneDate;
   double get totalBurnedCalories => _totalBurnedCalories;
 
-  final FirestoreService _firestoreService = FirestoreService();
+  // final FirestoreService _firestoreService = FirestoreService();
 
   Future<void> fetchExercises(String userId) async {
     try {
@@ -94,11 +94,6 @@ class CaloriesBurned with ChangeNotifier {
   void setExerciseName(String name) {
     _exerciseName = name;
     notifyListeners();
-  }
-
-  Future<void> removeExercise(String id) async {
-    await _firestoreService.deleteExercise(id);
-    await fetchExercises(id);
   }
 
   void setExerciseDate(String date) {
