@@ -113,7 +113,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                             onDismissed: (direction) {},
                             child: Container(
                               width: 330,
-                              height: 100,
+                              height: 110,
                               decoration: BoxDecoration(
                                 color: const Color(0xffffdd7f),
                                 borderRadius: BorderRadius.all(
@@ -132,7 +132,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                               fontSize: 15,
                                               color: Colors.black),
                                         ),
-                                        SizedBox(width: 20),
+                                        SizedBox(width: 15),
                                         Text(
                                           '${exercise.exerciseName}',
                                           style: GoogleFonts.robotoSlab(

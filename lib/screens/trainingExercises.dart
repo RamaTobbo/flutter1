@@ -602,7 +602,7 @@ class _TrainingexercisesState extends State<Trainingexercises> {
                   child: Text(
                     'Workout',
                     style: GoogleFonts.roboto(
-                        fontSize: 30, fontWeight: FontWeight.bold),
+                        fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 )
               ],
