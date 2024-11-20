@@ -5,7 +5,6 @@ import 'package:track_pro/models/Exercises.dart';
 import 'package:track_pro/models/exercise.dart';
 import 'package:track_pro/models/exercisesHistory.dart';
 import 'package:track_pro/provider/userdata.dart';
-import 'package:track_pro/services/firebase.dart';
 
 // class CaloriesBurned with ChangeNotifier {
 //   double _caloriesBurned = 0;
@@ -34,8 +33,6 @@ class CaloriesBurned with ChangeNotifier {
   String get exerciseName => _exerciseName;
   String get exerciseDoneDate => _exerciseDoneDate;
   double get totalBurnedCalories => _totalBurnedCalories;
-
-  // final FirestoreService _firestoreService = FirestoreService();
 
   Future<void> fetchExercises(String userId) async {
     try {

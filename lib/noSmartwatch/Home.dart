@@ -13,7 +13,7 @@ import 'package:track_pro/provider/temp.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/heartRate.dart';
-import 'package:track_pro/services/firebase.dart';
+
 import 'package:track_pro/services/weather.dart';
 import 'package:track_pro/widgets/chatbot.dart';
 
