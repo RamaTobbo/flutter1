@@ -100,7 +100,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                 color: Colors.amber,
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 108.0),
+                                padding: const EdgeInsets.only(left: 100.0),
                                 child: Text(
                                   '${exercise.exerciseName}',
                                   style: GoogleFonts.robotoSlab(
@@ -136,7 +136,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                         Text(
                                           '${exercise.exerciseName}',
                                           style: GoogleFonts.robotoSlab(
-                                              fontSize: 18,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black),
                                         ),
@@ -144,7 +144,7 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: 20,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,

@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/DataHistory/caloriesAndDaysChart.dart';
+import 'package:track_pro/DataHistory/drinkWater.dart';
+import 'package:track_pro/DataHistory/exercisesCalendar.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/CaloriesBurnedPerExercise.dart';
@@ -67,6 +69,12 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     if (index == 3) {
       Navigator.push(
           context, MaterialPageRoute(builder: (ctx) => CaloriesAndDaysChart()));
+    } else if (index == 2) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (ctx) => ExerciseCalendar()));
+    } else if (index == 0) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (ctx) => Drinkwater()));
     }
   }
 
@@ -100,11 +108,11 @@ class _TrainingexercisesState extends State<Trainingexercises> {
         return Column(
           children: [
             Image.asset(
-              'assets/images/dumble.png',
+              'assets/images/water.png',
               width: 60,
             ),
             Text(
-              'Muscle Building',
+              'Drink Water',
               style: GoogleFonts.robotoFlex(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
@@ -118,7 +126,7 @@ class _TrainingexercisesState extends State<Trainingexercises> {
           children: [
             Image.asset('assets/images/sport.png', width: 60),
             Text(
-              'Exercises History',
+              'More information',
               style: GoogleFonts.robotoFlex(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,

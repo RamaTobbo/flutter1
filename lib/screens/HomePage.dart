@@ -40,6 +40,18 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
+    final bmi = Provider.of<UserData>(context, listen: false).bmi;
+
+    String bmiCategory;
+    if (bmi < 18.5) {
+      bmiCategory = 'UnderWeight';
+    } else if (bmi > 18.5 && bmi <= 24.9) {
+      bmiCategory = 'Normal';
+    } else if (bmi > 15 && bmi <= 29.9) {
+      bmiCategory = 'OverWeight';
+    } else {
+      bmiCategory = 'Obese';
+    }
     return PopScope(
       canPop: false,
       child: Stack(
@@ -252,7 +264,8 @@ class _HomepageState extends State<Homepage> {
                                         left: 20.0, top: 20),
                                     child: Row(
                                       children: [
-                                        Text('Result',
+                                        Text(
+                                            '${Provider.of<UserData>(context, listen: false).bmi}',
                                             style: GoogleFonts.roboto(
                                                 fontSize: 29,
                                                 fontWeight: FontWeight.bold,
@@ -260,17 +273,19 @@ class _HomepageState extends State<Homepage> {
                                         const SizedBox(
                                           width: 4,
                                         ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8.0),
-                                          child: Text('step',
-                                              style: GoogleFonts.roboto(
-                                                  color:
-                                                      const Color(0xFF675c5e))),
-                                        )
+                                        Text(
+                                          'kg/m²',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
                                       ],
                                     ),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 0.0),
+                                    child: Text('${bmiCategory}',
+                                        style: GoogleFonts.roboto(
+                                            color: const Color(0xFF675c5e))),
+                                  )
                                 ],
                               ),
                             ),
@@ -332,7 +347,7 @@ class _HomepageState extends State<Homepage> {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
-                                      child: Text('bpm',
+                                      child: Text('',
                                           style: GoogleFonts.roboto(
                                               color: const Color(0xFF675c5e))),
                                     )
