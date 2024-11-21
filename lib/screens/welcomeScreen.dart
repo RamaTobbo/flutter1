@@ -48,7 +48,7 @@ class Welcomescreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Welcome ${toUpperCase(enteredName)}! To TrackPro App',
+                  'Welcome ${toUpperCase(enteredName)} To TrackPro App!',
                   style: GoogleFonts.robotoFlex(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,

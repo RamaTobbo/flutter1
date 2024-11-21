@@ -69,10 +69,13 @@ class _ProfileUserState extends State<ProfileUser> {
       int newHeight = int.tryParse(_heightController.text) ?? height;
       int newWeight = int.tryParse(_weightController.text) ?? weight;
 
+      setState(() {
+        weightHistory.add(newWeight);
+      });
       await FirebaseFirestore.instance.collection('users').doc(userId).update({
         'height': newHeight,
         'weight': newWeight,
-        'weightHistory': FieldValue.arrayUnion([newWeight]),
+        'weightHistory': weightHistory,
       });
 
       setState(() {

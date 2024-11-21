@@ -27,8 +27,34 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _weatherService = WeatherService('f8f10eafbcae3f86eabf5628da94f88a');
   Weather _weather = Weather();
+  int height = 0;
+  int weight = 0;
   double? userBmi;
   DateTime? _lastPressed;
+  void fetchUserInformation(BuildContext context) async {
+    try {
+      String userId = Provider.of<UserData>(context, listen: false).userId;
+
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (snapshot.exists) {
+        setState(() {
+          height = snapshot['height'];
+          weight = snapshot['weight'];
+
+          // Optionally update weightHistory from Firestore
+        });
+      } else {
+        debugPrint("No user found for the given ID.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching user information: $e");
+    }
+  }
+
   Future<bool> _onWillPop() async {
     DateTime now = DateTime.now();
     if (_lastPressed == null ||
@@ -96,6 +122,7 @@ class _HomeState extends State<Home> {
     super.initState();
     _fetchWeather();
     _loadUserId();
+    fetchUserInformation(context);
   }
 
   Future<void> _loadUserId() async {
@@ -116,7 +143,12 @@ class _HomeState extends State<Home> {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
     final stepProvider = Provider.of<Steps>(context);
 
-    final bmi = Provider.of<UserData>(context, listen: false).bmi;
+    double bmi = 0;
+
+    if (height > 0 && weight > 0) {
+      bmi = weight / ((height / 100) * (height / 100));
+    }
+    ;
 
     String bmiCategory;
     if (bmi < 18.5) {
@@ -287,11 +319,14 @@ class _HomeState extends State<Home> {
                                                   fontSize: 24,
                                                   fontWeight: FontWeight.bold),
                                         ),
-                                        SizedBox(width: 49),
+                                        bmiCategory == 'UnderWeight' ||
+                                                bmiCategory == 'OverWeight'
+                                            ? SizedBox(width: 36)
+                                            : SizedBox(width: 66),
                                         Text('${bmiCategory}',
                                             style: GoogleFonts.roboto(
                                                 color: const Color(0xFF3e4445),
-                                                fontSize: 15,
+                                                fontSize: 14,
                                                 fontWeight: FontWeight.bold)),
                                       ],
                                     ),
@@ -300,8 +335,7 @@ class _HomeState extends State<Home> {
                                           left: 90.0, top: 20),
                                       child: Row(
                                         children: [
-                                          Text(
-                                              '${Provider.of<UserData>(context, listen: false).bmi}',
+                                          Text('${bmi.toStringAsFixed(2)}',
                                               style: themeProvider1.isDarkMode
                                                   ? GoogleFonts.roboto(
                                                       color: Colors.black,

@@ -67,8 +67,9 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    double bmi = 0;
     final themeProvider1 = Provider.of<ThemeProvider>(context);
+    double bmi = 0;
+
     if (height > 0 && weight > 0) {
       bmi = weight / ((height / 100) * (height / 100));
     }

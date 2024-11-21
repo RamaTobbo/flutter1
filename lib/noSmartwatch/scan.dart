@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 
 import 'package:track_pro/provider/themeprovider.dart';
 
@@ -35,12 +36,14 @@ class _ConnectingTotrackProState extends State<ConnectingTotrackPro> {
         context,
         MaterialPageRoute(builder: (ctx) => const Bluetoothpairingscreen1()),
       );
+      Provider.of<Isasmartwatchuser>(context, listen: false).setUserMode(false);
     } else {
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (ctx) => QrCodeScanner(setResult: setResult)),
       );
+      Provider.of<Isasmartwatchuser>(context, listen: false).setUserMode(false);
     }
   }
 
