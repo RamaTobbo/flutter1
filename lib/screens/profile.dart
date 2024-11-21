@@ -15,7 +15,7 @@ class _ProfileUserState extends State<ProfileUser> {
   String username = '';
   int height = 0; // In cm
   int weight = 0; // In kg
-  List<int> weightHistory = [70, 72, 68, 75]; // Sample weight data
+  List<int> weightHistory = [];
   bool isEditingHeight = false;
   bool isEditingWeight = false;
 
@@ -51,6 +51,8 @@ class _ProfileUserState extends State<ProfileUser> {
           weight = snapshot['weight'];
           _heightController.text = height.toString();
           _weightController.text = weight.toString();
+          weightHistory = List<int>.from(snapshot['weightHistory'] ?? []);
+
           // Optionally update weightHistory from Firestore
         });
       } else {
@@ -70,6 +72,7 @@ class _ProfileUserState extends State<ProfileUser> {
       await FirebaseFirestore.instance.collection('users').doc(userId).update({
         'height': newHeight,
         'weight': newWeight,
+        'weightHistory': FieldValue.arrayUnion([newWeight]),
       });
 
       setState(() {
