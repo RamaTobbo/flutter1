@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -17,11 +18,38 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  int height = 0; // In cm
+  int weight = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _loadUserId();
+    fetchUserInformation(context);
+  }
+
+  void fetchUserInformation(BuildContext context) async {
+    try {
+      String userId = Provider.of<UserData>(context, listen: false).userId;
+
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (snapshot.exists) {
+        setState(() {
+          height = snapshot['height'];
+          weight = snapshot['weight'];
+
+          // Optionally update weightHistory from Firestore
+        });
+      } else {
+        debugPrint("No user found for the given ID.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching user information: $e");
+    }
   }
 
   Future<void> _loadUserId() async {
@@ -39,8 +67,12 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    double bmi = 0;
     final themeProvider1 = Provider.of<ThemeProvider>(context);
-    final bmi = Provider.of<UserData>(context, listen: false).bmi;
+    if (height > 0 && weight > 0) {
+      bmi = weight / ((height / 100) * (height / 100));
+    }
+    ;
 
     String bmiCategory;
     if (bmi < 18.5) {
@@ -264,8 +296,7 @@ class _HomepageState extends State<Homepage> {
                                         left: 20.0, top: 20),
                                     child: Row(
                                       children: [
-                                        Text(
-                                            '${Provider.of<UserData>(context, listen: false).bmi}',
+                                        Text('${bmi.toStringAsFixed(2)}',
                                             style: GoogleFonts.roboto(
                                                 fontSize: 29,
                                                 fontWeight: FontWeight.bold,
