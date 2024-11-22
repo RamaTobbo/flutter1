@@ -1,27 +1,99 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:track_pro/models/exercise.dart';
 import 'package:track_pro/provider/userdata.dart';
 
-class CaloriesAndDaysChart extends StatefulWidget {
-  const CaloriesAndDaysChart({super.key});
+class BarChartSample1 extends StatefulWidget {
+  BarChartSample1({super.key});
+
+  final Color barBackgroundColor = Colors.grey;
+  final Color barColor = AppColors.contentColorPurple;
+  final Color touchedBarColor = AppColors.contentColorPurple;
 
   @override
-  _CaloriesAndDaysChartState createState() => _CaloriesAndDaysChartState();
+  State<StatefulWidget> createState() => BarChartSample1State();
 }
 
-class _CaloriesAndDaysChartState extends State<CaloriesAndDaysChart> {
-  List<Map<String, dynamic>> _exercises = [];
-  Map<String, double> _weeklyCalories = {}; // Store total calories per weekday
+class BarChartSample1State extends State<BarChartSample1> {
+  final Duration animDuration = const Duration(milliseconds: 250);
+
+  int touchedIndex = -1;
+  bool isPlaying = false;
+
+  // List of colors for each bar
+  final List<Color> barColors = [
+    AppColors.contentColorPurple,
+    AppColors.contentColorYellow,
+    AppColors.contentColorBlue,
+    AppColors.contentColorPink,
+    AppColors.contentColorPurple,
+    AppColors.contentColorPink,
+    AppColors.contentColorBlue,
+  ];
+  List<PieChartSectionData> _getPieChartSections() {
+    return _weeklyCalories.entries.map((entry) {
+      double calories = entry.value;
+      Color sectionColor;
+
+      switch (entry.key) {
+        case "Monday":
+          sectionColor = AppColors.contentColorPurple;
+          break;
+        case "Tuesday":
+          sectionColor = AppColors.contentColorYellow;
+          break;
+        case "Wednesday":
+          sectionColor = AppColors.contentColorBlue;
+          break;
+        case "Thursday":
+          sectionColor = AppColors.contentColorPink;
+          break;
+        case "Friday":
+          sectionColor = AppColors.contentColorPurple;
+          break;
+        case "Saturday":
+          sectionColor = AppColors.contentColorPink;
+          break;
+        case "Sunday":
+          sectionColor = AppColors.contentColorBlue;
+          break;
+        default:
+          sectionColor = Colors.grey;
+      }
+
+      return PieChartSectionData(
+        value: calories,
+        color: sectionColor,
+        title: '${entry.key}\n${calories.toStringAsFixed(1)} kcal',
+        radius: 50,
+        titleStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+      );
+    }).toList();
+  }
+
+  // Store weekly calories data
+  Map<String, double> _weeklyCalories = {
+    "Monday": 0.0,
+    "Tuesday": 0.0,
+    "Wednesday": 0.0,
+    "Thursday": 0.0,
+    "Friday": 0.0,
+    "Saturday": 0.0,
+    "Sunday": 0.0,
+  };
 
   @override
   void initState() {
     super.initState();
-    fetchExercisesForWeek(); // Fetch exercises for the whole week
+    fetchExercisesForWeek();
   }
 
-  // Fetch exercises for the whole week (Monday to Sunday)
   Future<void> fetchExercisesForWeek() async {
     final userId = Provider.of<UserData>(context, listen: false).userId;
     DateTime now = DateTime.now();
@@ -58,7 +130,6 @@ class _CaloriesAndDaysChartState extends State<CaloriesAndDaysChart> {
       }
 
       setState(() {
-        _exercises = exercises;
         _weeklyCalories = weeklyCalories;
       });
     } catch (e) {
@@ -66,25 +137,24 @@ class _CaloriesAndDaysChartState extends State<CaloriesAndDaysChart> {
     }
   }
 
-  // Helper method to get the day of the week (e.g., Monday, Tuesday, etc.)
   String _getDayOfWeek(DateTime date) {
     switch (date.weekday) {
-      case 1:
-        return 'Monday';
-      case 2:
-        return 'Tuesday';
-      case 3:
-        return 'Wednesday';
-      case 4:
-        return 'Thursday';
-      case 5:
-        return 'Friday';
-      case 6:
-        return 'Saturday';
-      case 7:
-        return 'Sunday';
+      case DateTime.monday:
+        return "Monday";
+      case DateTime.tuesday:
+        return "Tuesday";
+      case DateTime.wednesday:
+        return "Wednesday";
+      case DateTime.thursday:
+        return "Thursday";
+      case DateTime.friday:
+        return "Friday";
+      case DateTime.saturday:
+        return "Saturday";
+      case DateTime.sunday:
+        return "Sunday";
       default:
-        return '';
+        return "Unknown";
     }
   }
 
@@ -92,135 +162,294 @@ class _CaloriesAndDaysChartState extends State<CaloriesAndDaysChart> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Weekly Calories Burned'),
+        title: Text('Daily Burned Calories'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _weeklyCalories.isEmpty
-                ? const Center(child: Text("No exercises for the week."))
-                : Expanded(
-                    child: BarChart(
-                      BarChartData(
-                        alignment: BarChartAlignment.spaceAround,
-                        maxY:
-                            _getMaxCalories(), // Adjust max Y value dynamically
-                        barTouchData: BarTouchData(enabled: false),
-                        titlesData: FlTitlesData(
-                          // Show left Y-axis titles
-                          bottomTitles: AxisTitles(
-                            drawBelowEverything: true,
-                            sideTitles: SideTitles(
-                              showTitles: true,
-                              getTitlesWidget: (double value, TitleMeta meta) {
-                                String title;
-                                switch (value.toInt()) {
-                                  case 0:
-                                    title = 'M'; // Monday
-                                    break;
-                                  case 1:
-                                    title = 'T'; // Tuesday
-                                    break;
-                                  case 2:
-                                    title = 'W'; // Wednesday
-                                    break;
-                                  case 3:
-                                    title = 'Th'; // Thursday
-                                    break;
-                                  case 4:
-                                    title = 'F'; // Friday
-                                    break;
-                                  case 5:
-                                    title = 'S'; // Saturday
-                                    break;
-                                  case 6:
-                                    title = 'S'; // Sunday
-                                    break;
-                                  default:
-                                    title = '';
-                                }
-                                return SideTitleWidget(
-                                  axisSide: meta.axisSide,
-                                  space: 8,
-                                  child: Text(title),
-                                );
-                              },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 38.0),
+            child: Text(
+              'Bunred Calories From Exercises:',
+              style:
+                  GoogleFonts.roboto(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        const SizedBox(
+                          height: 38,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: BarChart(
+                              mainBarData(),
                             ),
                           ),
                         ),
-                        gridData: FlGridData(show: true),
-                        borderData: FlBorderData(
-                          show: true,
-                          border: Border(
-                            bottom: BorderSide(color: Colors.black, width: 1),
-                            left: BorderSide(color: Colors.black, width: 1),
-                            top: BorderSide.none, // Remove top border
-                            right: BorderSide.none, // Remove right border
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 38.0, top: 30),
+                          child: Text(
+                            'Burned Calories From Steps:',
+                            style: GoogleFonts.roboto(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        barGroups: _weeklyCalories.entries.map((entry) {
-                          int dayIndex = [
-                            'Monday',
-                            'Tuesday',
-                            'Wednesday',
-                            'Thursday',
-                            'Friday',
-                            'Saturday',
-                            'Sunday'
-                          ].indexOf(entry.key);
-
-                          return BarChartGroupData(
-                            x: dayIndex,
-                            barRods: [
-                              BarChartRodData(
-                                toY: entry.value,
-                                color: _getColorForDay(entry.key),
-                                width: 20,
-                                borderRadius: BorderRadius.zero,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 30),
+                            child: PieChart(
+                              PieChartData(
+                                sections: _getPieChartSections(),
+                                borderData: FlBorderData(show: false),
+                                centerSpaceRadius: 40,
+                                sectionsSpace: 0,
+                                startDegreeOffset: 90,
                               ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-          ],
-        ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  // Helper method to return a color based on the day of the week
-  Color _getColorForDay(String day) {
-    switch (day) {
-      case 'Monday':
-        return Colors.blue;
-      case 'Tuesday':
-        return Colors.green;
-      case 'Wednesday':
-        return Colors.orange;
-      case 'Thursday':
-        return Colors.red;
-      case 'Friday':
-        return Colors.purple;
-      case 'Saturday':
-        return Colors.yellow;
-      case 'Sunday':
-        return Colors.teal;
-      default:
-        return Colors.grey;
-    }
+  BarChartGroupData makeGroupData(
+    int x,
+    double y, {
+    bool isTouched = false,
+    Color? barColor,
+    double width = 22,
+    List<int> showTooltips = const [],
+  }) {
+    barColor ??= barColors[x];
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: isTouched ? y + 1 : y,
+          color: isTouched ? widget.touchedBarColor : barColor,
+          width: width,
+          borderSide: isTouched
+              ? BorderSide(color: Colors.black)
+              : const BorderSide(color: Colors.black, width: 0),
+          backDrawRodData: BackgroundBarChartRodData(
+            show: true,
+            toY: 20,
+            color: widget.barBackgroundColor,
+          ),
+        ),
+      ],
+      showingTooltipIndicators: showTooltips,
+    );
   }
 
-  // Helper method to calculate the maximum Y value for the chart dynamically
-  double _getMaxCalories() {
-    double maxCalories = 0.0;
-    _weeklyCalories.forEach((key, value) {
-      if (value > maxCalories) {
-        maxCalories = value;
-      }
-    });
-    return maxCalories + 100; // Adding some buffer to the maximum value
+  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
+        switch (i) {
+          case 0:
+            return makeGroupData(0, _weeklyCalories["Monday"] ?? 0.0,
+                isTouched: i == touchedIndex);
+          case 1:
+            return makeGroupData(1, _weeklyCalories["Tuesday"] ?? 0.0,
+                isTouched: i == touchedIndex);
+          case 2:
+            return makeGroupData(2, _weeklyCalories["Wednesday"] ?? 0.0,
+                isTouched: i == touchedIndex);
+          case 3:
+            return makeGroupData(3, _weeklyCalories["Thursday"] ?? 0.0,
+                isTouched: i == touchedIndex);
+          case 4:
+            return makeGroupData(4, _weeklyCalories["Friday"] ?? 0.0,
+                isTouched: i == touchedIndex);
+          case 5:
+            return makeGroupData(5, _weeklyCalories["Saturday"] ?? 0.0,
+                isTouched: i == touchedIndex);
+          case 6:
+            return makeGroupData(6, _weeklyCalories["Sunday"] ?? 0.0,
+                isTouched: i == touchedIndex);
+          default:
+            return throw Error();
+        }
+      });
+
+  BarChartData mainBarData() {
+    return BarChartData(
+      barTouchData: BarTouchData(
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipColor: (_) => Colors.blueGrey,
+          tooltipHorizontalAlignment: FLHorizontalAlignment.center,
+          tooltipMargin:
+              10, // Adjust this value to control the vertical positioning
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            String weekDay;
+            switch (group.x) {
+              case 0:
+                weekDay = 'Monday';
+                break;
+              case 1:
+                weekDay = 'Tuesday';
+                break;
+              case 2:
+                weekDay = 'Wednesday';
+                break;
+              case 3:
+                weekDay = 'Thursday';
+                break;
+              case 4:
+                weekDay = 'Friday';
+                break;
+              case 5:
+                weekDay = 'Saturday';
+                break;
+              case 6:
+                weekDay = 'Sunday';
+                break;
+              default:
+                throw Error();
+            }
+            return BarTooltipItem(
+              '$weekDay\n',
+              const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: (rod.toY - 1).toStringAsFixed(2),
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        touchCallback: (FlTouchEvent event, barTouchResponse) {
+          setState(() {
+            if (!event.isInterestedForInteractions ||
+                barTouchResponse == null ||
+                barTouchResponse.spot == null) {
+              touchedIndex = -1;
+              return;
+            }
+            touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
+          });
+        },
+      ),
+      titlesData: FlTitlesData(
+        show: true,
+        rightTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        topTitles: const AxisTitles(
+          sideTitles: SideTitles(showTitles: false),
+        ),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            getTitlesWidget: bottomTitleWidgets,
+          ),
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 28,
+            getTitlesWidget: leftTitleWidgets,
+          ),
+        ),
+      ),
+      gridData: const FlGridData(show: false),
+      borderData: FlBorderData(
+        show: true,
+        border: Border(
+          left: BorderSide(color: Color(0xff37434d), width: 1),
+          bottom: BorderSide(color: Color(0xff37434d), width: 1),
+        ),
+      ),
+      barGroups: showingGroups(),
+    );
   }
+
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.bold,
+    );
+    String text;
+    switch (value.toInt()) {
+      case 0:
+        text = 'Mon';
+        break;
+      case 1:
+        text = 'Tue';
+        break;
+      case 2:
+        text = 'Wed';
+        break;
+      case 3:
+        text = 'Thu';
+        break;
+      case 4:
+        text = 'Fri';
+        break;
+      case 5:
+        text = 'Sat';
+        break;
+      case 6:
+        text = 'Sun';
+        break;
+      default:
+        text = '';
+        break;
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 4,
+      child: Text(text, style: style),
+    );
+  }
+
+  Widget leftTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.bold,
+    );
+    String text = value.toInt().toString();
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 4,
+      child: Text(text, style: style),
+    );
+  }
+}
+
+class AppColors {
+  static const Color contentColorPurple = Color(0xFF9B4DFF);
+  static const Color contentColorYellow = Color(0xFFFF9E00);
+  static const Color contentColorBlue = Color(0xFF53A7FF);
+  static const Color contentColorPink = Color(0xFFFB57C5);
 }
