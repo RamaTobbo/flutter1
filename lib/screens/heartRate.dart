@@ -220,7 +220,7 @@ class _HeartrateState extends State<Heartrate> {
               ),
               Positioned(
                 top: 130,
-                left: 70,
+                left: 80,
                 child: Image.asset(
                   'assets/images/pulse.png',
                   width: 200,

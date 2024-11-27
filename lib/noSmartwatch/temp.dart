@@ -157,7 +157,7 @@ class _TemperatureState extends State<Temperature1> {
             ClipPath(
               clipper: RoundedBottomClipper(),
               child: Container(
-                width: 375,
+                width: 395,
                 height: 169.92,
                 decoration: BoxDecoration(
                   color: themeProvider1.isDarkMode
@@ -193,8 +193,8 @@ class _TemperatureState extends State<Temperature1> {
                   Stack(
                     children: [
                       Container(
-                        width: 238,
-                        height: 430,
+                        width: 258,
+                        height: 480,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: const BorderRadius.all(
@@ -244,7 +244,7 @@ class _TemperatureState extends State<Temperature1> {
                               ),
                             ),
                             const SizedBox(
-                              height: 60,
+                              height: 100,
                             ),
                             Row(
                               children: [
@@ -295,7 +295,7 @@ class _TemperatureState extends State<Temperature1> {
                                   ? Color(0xffADD8E6)
                                   : const Color(0xFF4a4d7a)),
                           child: const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30.0),
+                            padding: EdgeInsets.symmetric(horizontal: 40.0),
                             child: Text(
                               'View Location',
                               style: TextStyle(

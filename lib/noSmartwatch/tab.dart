@@ -8,9 +8,11 @@ import 'package:track_pro/noSmartwatch/scan.dart';
 import 'package:track_pro/noSmartwatch/settings.dart';
 import 'package:track_pro/noSmartwatch/steps.dart';
 import 'package:track_pro/noSmartwatch/temp.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:track_pro/screens/tab.dart';
 import 'dart:convert';
 
 import 'package:track_pro/screens/trainingExercises.dart';
@@ -30,8 +32,19 @@ class _TabNav1State extends State<TabNav1> {
   bool isSwitchedDark = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Provider.of<Isasmartwatchuser>(context, listen: false)
+              .isNotUsingSmartwatch ==
+          false) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => TabNav()),
+        );
+      }
+    });
+
     selectedPageIndex = widget.index;
   }
 

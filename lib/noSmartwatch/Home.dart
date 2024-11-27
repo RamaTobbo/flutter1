@@ -172,7 +172,7 @@ class _HomeState extends State<Home> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 158.0, top: 20),
+                        padding: const EdgeInsets.only(right: 198.0, top: 90),
                         child: Text(
                           'Home',
                           style: GoogleFonts.roboto(
@@ -184,7 +184,7 @@ class _HomeState extends State<Home> {
                             horizontal: 15, vertical: 34),
                         child: InkWell(
                           child: Container(
-                            width: 415,
+                            width: 345,
                             height: 146,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -274,8 +274,8 @@ class _HomeState extends State<Home> {
                             ),
                             InkWell(
                               child: Container(
-                                width: 415,
-                                height: 147,
+                                width: 345,
+                                height: 146,
                                 padding: const EdgeInsets.all(9),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
@@ -373,7 +373,7 @@ class _HomeState extends State<Home> {
                         child: InkWell(
                           onTap: () {},
                           child: Container(
-                            width: 415,
+                            width: 345,
                             height: 146,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -462,7 +462,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           Positioned(
-            top: 30,
+            top: 70,
             right: 20,
             child: InkWell(
               onTap: () {
