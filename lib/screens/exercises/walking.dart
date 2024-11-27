@@ -238,7 +238,7 @@ class _WalkingState extends State<Walking> {
                   : Text('youtube video'),
               SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.only(right: 220.0),
+                padding: const EdgeInsets.only(right: 247.0),
                 child: ToggleSwitch(
                   minWidth: 140.0,
                   initialLabelIndex: 0,

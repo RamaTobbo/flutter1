@@ -245,7 +245,7 @@ class _SquatsState extends State<Squats> {
                   ),
                 )
               : Text('youtube video'),
-          SizedBox(height: 0),
+          SizedBox(height: 50),
           ToggleSwitch(
             minWidth: 140.0,
             initialLabelIndex: 0,
@@ -268,7 +268,7 @@ class _SquatsState extends State<Squats> {
               }
             },
           ),
-          SizedBox(height: 0),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

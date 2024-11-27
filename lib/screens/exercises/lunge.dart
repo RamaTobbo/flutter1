@@ -213,7 +213,7 @@ class _LungeState extends State<Lunge> {
                           fit: BoxFit.cover),
                     )
                   : Text('youtube video'),
-              SizedBox(height: 0),
+              SizedBox(height: 60),
               ToggleSwitch(
                 minWidth: 140.0,
                 initialLabelIndex: 0,

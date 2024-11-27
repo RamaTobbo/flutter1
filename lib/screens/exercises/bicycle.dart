@@ -257,7 +257,7 @@ class _BicycleState extends State<Bicycle> {
                 : Text('youtube video'),
             SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.only(right: 222.0),
+              padding: const EdgeInsets.only(right: 252.0),
               child: ToggleSwitch(
                 minWidth: 140.0,
                 initialLabelIndex: 0,

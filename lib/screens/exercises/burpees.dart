@@ -242,7 +242,7 @@ class _BurpeesState extends State<Burpees> {
                       ),
                     )
                   : Text('youtube video'),
-              SizedBox(height: 3),
+              SizedBox(height: 60),
               ToggleSwitch(
                 minWidth: 140.0,
                 initialLabelIndex: 0,

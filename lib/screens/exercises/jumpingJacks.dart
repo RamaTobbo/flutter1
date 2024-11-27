@@ -237,7 +237,7 @@ class _JumpingjacksState extends State<Jumpingjacks> {
                       ),
                     )
                   : Text('youtube video'),
-              SizedBox(height: 0),
+              SizedBox(height: 60),
               ToggleSwitch(
                 minWidth: 140.0,
                 initialLabelIndex: 0,

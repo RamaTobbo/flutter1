@@ -184,7 +184,7 @@ class _HomeState extends State<Home> {
                             horizontal: 15, vertical: 34),
                         child: InkWell(
                           child: Container(
-                            width: 315,
+                            width: 415,
                             height: 146,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -274,7 +274,7 @@ class _HomeState extends State<Home> {
                             ),
                             InkWell(
                               child: Container(
-                                width: 315,
+                                width: 415,
                                 height: 147,
                                 padding: const EdgeInsets.all(9),
                                 decoration: BoxDecoration(
@@ -373,7 +373,7 @@ class _HomeState extends State<Home> {
                         child: InkWell(
                           onTap: () {},
                           child: Container(
-                            width: 315,
+                            width: 415,
                             height: 146,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),

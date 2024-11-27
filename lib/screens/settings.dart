@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/themeprovider.dart';
@@ -25,6 +26,44 @@ class _SettingsState extends State<Settings> {
   bool isSwitched = false;
   bool isSwitchedDark = false;
   bool showRatingBar = false;
+  DateTime? _lastPressed;
+  Future<bool> _onWillPop() async {
+    DateTime now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > Duration(seconds: 2)) {
+      _lastPressed = now;
+      return false;
+    } else {
+      return await _showExitDialog() ?? false;
+    }
+  }
+
+  Future<bool?> _showExitDialog() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Exit'),
+          content: const Text('Do you want to exit trackPro app?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                SystemNavigator.pop();
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -60,87 +99,91 @@ class _SettingsState extends State<Settings> {
 
     return PopScope(
       canPop: false,
-      child: Scaffold(
-        backgroundColor: themeProvider.isDarkMode ? Colors.black : Colors.white,
-        appBar: AppBar(
+      child: WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
           backgroundColor:
               themeProvider.isDarkMode ? Colors.black : Colors.white,
-          title: Text('Settings', style: textStyle),
-        ),
-        body: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 48.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 60),
-                    buildWarningRow(),
-                    const SizedBox(height: 30),
-                    buildSettingsList(context, textStyle),
-                  ],
+          appBar: AppBar(
+            backgroundColor:
+                themeProvider.isDarkMode ? Colors.black : Colors.white,
+            title: Text('Settings', style: textStyle),
+          ),
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 48.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 60),
+                      buildWarningRow(),
+                      const SizedBox(height: 30),
+                      buildSettingsList(context, textStyle),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 160,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                child: Text(
-                  'Automatically send notifications \nin cases of high pulse or low \npulse heart',
-                  style: themeProvider.isDarkMode
-                      ? GoogleFonts.poppins(
-                          fontSize: 13,
-                          color: Colors.white,
-                        )
-                      : GoogleFonts.poppins(
-                          fontSize: 13,
-                          color: Colors.black,
-                        ),
-                  textAlign: TextAlign.justify,
+              Positioned(
+                top: 160,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                  child: Text(
+                    'Automatically send notifications \nin cases of high pulse or low \npulse heart',
+                    style: themeProvider.isDarkMode
+                        ? GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: Colors.white,
+                          )
+                        : GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: Colors.black,
+                          ),
+                    textAlign: TextAlign.justify,
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 150,
-              right: 10,
-              child: Switch(
-                activeColor: Colors.green,
-                value: isSwitched,
-                onChanged: (value) {
-                  setState(() {
-                    isSwitched = value;
-                  });
-                },
-              ),
-            ),
-            Positioned(
-              top: 10,
-              right: 30,
-              child: Transform.scale(
-                scale: 1.2,
+              Positioned(
+                top: 150,
+                right: 10,
                 child: Switch(
-                  activeColor: isDarkMode ? Colors.white : Colors.black,
-                  value: themeProvider.isDarkMode,
+                  activeColor: Colors.green,
+                  value: isSwitched,
                   onChanged: (value) {
                     setState(() {
-                      themeProvider.setDarkMode(value);
-                      // isSwitchedDark = value;
-                      // _saveSwitchState(value);
+                      isSwitched = value;
                     });
                   },
                 ),
               ),
-            ),
-            Positioned(
-              top: 60,
-              right: 10,
-              child: Text(
-                themeProvider.isDarkMode ? 'Dark Mode' : 'Light Mode',
-                style: textStyle,
+              Positioned(
+                top: 10,
+                right: 30,
+                child: Transform.scale(
+                  scale: 1.2,
+                  child: Switch(
+                    activeColor: isDarkMode ? Colors.white : Colors.black,
+                    value: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      setState(() {
+                        themeProvider.setDarkMode(value);
+                        // isSwitchedDark = value;
+                        // _saveSwitchState(value);
+                      });
+                    },
+                  ),
+                ),
               ),
-            ),
-          ],
+              Positioned(
+                top: 60,
+                right: 10,
+                child: Text(
+                  themeProvider.isDarkMode ? 'Dark Mode' : 'Light Mode',
+                  style: textStyle,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

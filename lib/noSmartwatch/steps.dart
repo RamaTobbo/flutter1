@@ -129,7 +129,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
             Column(
               children: [
                 Container(
-                  width: 375,
+                  width: 495,
                   height: 248,
                   decoration: BoxDecoration(
                       color: themeProvider1.isDarkMode
@@ -153,11 +153,11 @@ class _StepsCaloriesState extends State<StepsCalories> {
                       fontWeight: FontWeight.bold)),
             ),
             Positioned(
-              left: 67,
-              top: 170,
+              left: 59,
+              top: 180,
               child: Container(
-                width: 232,
-                height: 420,
+                width: 262,
+                height: 450,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: const BorderRadius.all(Radius.circular(25)),
