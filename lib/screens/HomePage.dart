@@ -96,7 +96,7 @@ class _HomepageState extends State<Homepage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 158.0, top: 20),
+                      padding: const EdgeInsets.only(right: 178.0, top: 60),
                       child: Text(
                         'Home',
                         style: GoogleFonts.roboto(
@@ -114,8 +114,8 @@ class _HomepageState extends State<Homepage> {
                                   builder: (ctx) => const Heartrate()));
                         },
                         child: Container(
-                          width: 315,
-                          height: 146,
+                          width: 415,
+                          height: 156,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: const Color(0xFFf9e0e4),
@@ -181,7 +181,7 @@ class _HomepageState extends State<Homepage> {
                         children: [
                           InkWell(
                             child: Container(
-                              width: 161,
+                              width: 171,
                               height: 147,
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -252,7 +252,7 @@ class _HomepageState extends State<Homepage> {
                           ),
                           InkWell(
                             child: Container(
-                              width: 161,
+                              width: 171,
                               height: 147,
                               padding: const EdgeInsets.all(9),
                               decoration: BoxDecoration(
@@ -331,8 +331,8 @@ class _HomepageState extends State<Homepage> {
                       child: InkWell(
                         onTap: () {},
                         child: Container(
-                          width: 335,
-                          height: 146,
+                          width: 415,
+                          height: 156,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             color: const Color(0xFFb6c7ca),
@@ -397,7 +397,7 @@ class _HomepageState extends State<Homepage> {
             ),
           ),
           Positioned(
-            top: 30,
+            top: 60,
             right: 20,
             child: InkWell(
               onTap: () {
