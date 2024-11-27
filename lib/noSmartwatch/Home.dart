@@ -31,6 +31,7 @@ class _HomeState extends State<Home> {
   int weight = 0;
   double? userBmi;
   DateTime? _lastPressed;
+
   void fetchUserInformation(BuildContext context) async {
     try {
       String userId = Provider.of<UserData>(context, listen: false).userId;

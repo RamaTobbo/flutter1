@@ -34,17 +34,6 @@ class _TabNav1State extends State<TabNav1> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (Provider.of<Isasmartwatchuser>(context, listen: false)
-              .isNotUsingSmartwatch ==
-          false) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => TabNav()),
-        );
-      }
-    });
-
     selectedPageIndex = widget.index;
   }
 

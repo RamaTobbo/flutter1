@@ -98,6 +98,7 @@ class _SetupscreensState extends State<Setupscreens> {
         'age': Provider.of<UserData>(context, listen: false).age,
         'height': Provider.of<UserData>(context, listen: false).height,
         'weight': Provider.of<UserData>(context, listen: false).weight,
+        'weightHistory': [Provider.of<UserData>(context, listen: false).weight],
         'IsNotAsmartwatchUser':
             Provider.of<Isasmartwatchuser>(context, listen: false)
                 .isNotUsingSmartwatch,

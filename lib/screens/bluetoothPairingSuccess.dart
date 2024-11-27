@@ -80,17 +80,17 @@ class _BluetoothpairingsuccessState extends State<Bluetoothpairingsuccess> {
   }
 
   void nextPageSmartWatch() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (ctx) => TabNav(index: 0)),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (ctx) => TabNav(index: 0)),
+        (Route) => false);
   }
 
   void nextPageNonSmartWatch() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (ctx) => TabNav(index: 0)),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (ctx) => TabNav(index: 0)),
+        (Route) => false);
   }
 
   @override

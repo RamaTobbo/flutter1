@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
+import 'package:track_pro/provider/userdata.dart';
 
 import 'package:track_pro/screens/OnboardingScreens.dart';
 import 'package:track_pro/screens/tab.dart';
@@ -17,9 +21,59 @@ class Splash1screen extends StatefulWidget {
 }
 
 class _Splash1screenState extends State<Splash1screen> {
+  bool userNotUsingSmartWatch = true;
+  void fetchUserUsingSmartWatch(BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final storedUserId = prefs.getString('userId');
+      Provider.of<UserData>(context, listen: false).setUserId(storedUserId!);
+      print('idddd${storedUserId}');
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(storedUserId)
+          .get();
+
+      if (snapshot.exists) {
+        debugPrint("Fetched user dataaaaa: ${snapshot.data()}");
+
+        userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
+
+        if (snapshot.data() != null) {
+          if (mounted) {
+            setState(() {
+              userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
+
+              if (userNotUsingSmartWatch == false) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => TabNav()),
+                );
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => TabNav1()),
+                );
+              }
+            });
+          }
+        } else {
+          debugPrint("Field 'IsNotAsmartwatchUser' is missing.");
+        }
+      } else {
+        debugPrint("No user found for the given ID.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching user information: $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    fetchUserUsingSmartWatch(context);
+    print('user mode: ${userNotUsingSmartWatch}');
+
     hideScreen();
   }
 
