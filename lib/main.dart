@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
@@ -22,6 +24,7 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   firestore.settings = Settings(persistenceEnabled: true);
+  await dotenv.load(fileName: ".env");
 
   bool notUsingSmartwatch = prefs.getBool('isNotUsingSmartwatch') ?? false;
   // FirebaseMessaging.instance.getToken().then((token) {

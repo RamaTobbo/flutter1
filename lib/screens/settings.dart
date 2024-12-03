@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/HomePage.dart';
+import 'package:track_pro/screens/Support.dart';
 import 'package:track_pro/screens/privacyPolicy.dart';
 import 'package:track_pro/screens/profile.dart';
 import 'package:track_pro/screens/rating.dart';
@@ -231,11 +232,11 @@ class _SettingsState extends State<Settings> {
           themeProvider1.isDarkMode ? buildDividerDark() : buildDivider(),
           buildSettingsRow(
               context,
-              'How to use',
+              'Help & Support',
               themeProvider1.isDarkMode
                   ? 'assets/images/questioamber.png'
                   : 'assets/images/howtouse.png',
-              PrivacyPolicyPage()),
+              Support()),
           themeProvider1.isDarkMode ? buildDividerDark() : buildDivider(),
           buildRateUsRow(),
           themeProvider1.isDarkMode ? buildDividerDark() : buildDivider(),
