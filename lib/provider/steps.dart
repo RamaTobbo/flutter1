@@ -5,6 +5,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 
 class Steps extends ChangeNotifier {
   double _steps = 0;
+  int _duration = 0;
   double _burnedCalories = 0;
   bool _isCounting = false;
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
@@ -12,6 +13,7 @@ class Steps extends ChangeNotifier {
   double _previousMagnitude = 0.0;
   double _stirdeLength = 0;
   double get steps => _steps;
+  int get duration => _duration;
   double get burnedCalories => _burnedCalories;
   bool get isCounting => _isCounting;
   double get stirdeLength => _stirdeLength;
@@ -43,6 +45,7 @@ class Steps extends ChangeNotifier {
 
   void resetSteps() {
     _steps = 0;
+    _duration = 0;
     _burnedCalories = 0;
     _previousMagnitude = 0.0;
     _stirdeLength = 0;

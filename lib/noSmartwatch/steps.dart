@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/steps.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -25,13 +28,33 @@ class StepsCalories extends StatefulWidget {
 
 class _StepsCaloriesState extends State<StepsCalories> {
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
-  double _steps = 0;
-  double _previousMagnitude = 0.0;
-  double _burnedCalories = 0;
-  double _distance = 0;
+
   double _strideLength = 0;
-  final double _threshold = 1.9;
+
   bool isStartPressed = false;
+  Timer? _timer;
+  int _elapsedTime = 0;
+
+  // Timer tick handler
+  void _startTimer() {
+    _elapsedTime = 0;
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _elapsedTime++;
+      });
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  String _formatTime(int elapsedTime) {
+    int minutes = elapsedTime ~/ 60;
+    int seconds = elapsedTime % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
   // void restartCounter() {
   //   setState(() {
   //     _steps = 0;
@@ -87,13 +110,47 @@ class _StepsCaloriesState extends State<StepsCalories> {
   }
 
   void stopTheCounter(Steps stepsProvider) {
+    uploadData();
+
     _accelerometerSubscription?.cancel();
     stepsProvider.stopCounting();
     _accelerometerSubscription = null;
-    stepsProvider.stopCounting();
+
     setState(() {
       isStartPressed = false;
     });
+  }
+
+  Future<void> uploadData() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+
+    // Check if userId exists in SharedPreferences
+    if (userId == null) {
+      print('User ID not found in SharedPreferences.');
+      return; // Exit if userId is not found
+    } else {
+      print('User ID not found in SharedPreferences.$userId');
+    }
+
+    try {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      CollectionReference stepsCollection =
+          firestore.collection('users').doc(userId).collection('steps');
+
+      await stepsCollection.add({
+        'steps': (Provider.of<Steps>(context, listen: false).steps / 3).floor(),
+        'caloriesBurned':
+            Provider.of<Steps>(context, listen: false).burnedCalories.round(),
+        'duration': _elapsedTime,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      print('Steps, calories, and duration uploaded successfully!');
+    } catch (e) {
+      print('Error uploading data: $e');
+    }
   }
 
   // void beginTheCounter(Steps stepsProvider) {
@@ -121,6 +178,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
 
     userProviderHeight1 = Provider.of<UserData>(context).height;
     _strideLength = (userProviderHeight1! * 0.415) / 100;
+    _elapsedTime = Provider.of<Steps>(context).duration;
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -189,7 +247,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                               width: 60,
                             ),
                             Text(
-                              '${stepsProvider.steps}',
+                              '${(stepsProvider.steps / 3).floor()}',
                               style: themeProvider1.isDarkMode
                                   ? GoogleFonts.roboto(
                                       color: Colors.black,
@@ -318,7 +376,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                                     children: [
                                       Image.asset('assets/images/time.png'),
                                       Text(
-                                        'result',
+                                        _formatTime(_elapsedTime),
                                         style: themeProvider1.isDarkMode
                                             ? GoogleFonts.roboto(
                                                 color: Colors.black,
@@ -342,6 +400,8 @@ class _StepsCaloriesState extends State<StepsCalories> {
                               ? ElevatedButton(
                                   onPressed: () {
                                     stopTheCounter(stepsProvider);
+
+                                    _stopTimer();
                                   },
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: themeProvider1.isDarkMode
@@ -361,6 +421,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                               : ElevatedButton(
                                   onPressed: () {
                                     stepsProvider.startCounting();
+                                    _startTimer();
                                     // beginTheCounter(stepsProvider);
                                   },
                                   style: ElevatedButton.styleFrom(

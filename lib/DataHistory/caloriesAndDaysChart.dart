@@ -37,7 +37,7 @@ class BarChartSample1State extends State<BarChartSample1> {
     AppColors.contentColorBlue,
   ];
   List<PieChartSectionData> _getPieChartSections() {
-    return _weeklyCalories.entries.map((entry) {
+    return _weeklystepsCalories.entries.map((entry) {
       double calories = entry.value;
       Color sectionColor;
 
@@ -87,11 +87,65 @@ class BarChartSample1State extends State<BarChartSample1> {
     "Saturday": 0.0,
     "Sunday": 0.0,
   };
-
+  Map<String, double> _weeklystepsCalories = {
+    "Monday": 0.0,
+    "Tuesday": 0.0,
+    "Wednesday": 0.0,
+    "Thursday": 0.0,
+    "Friday": 0.0,
+    "Saturday": 0.0,
+    "Sunday": 0.0,
+  };
   @override
   void initState() {
     super.initState();
+    fetchStepsForWeek();
     fetchExercisesForWeek();
+  }
+
+  Future<void> fetchStepsForWeek() async {
+    final userId = Provider.of<UserData>(context, listen: false).userId;
+    DateTime now = DateTime.now();
+    DateTime startOfWeek = now.subtract(
+        Duration(days: now.weekday - 1)); // Start of this week (Monday)
+    DateTime endOfWeek =
+        startOfWeek.add(Duration(days: 6)); // End of this week (Sunday)
+
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('steps')
+          .where('timestamp',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfWeek))
+          .where('timestamp',
+              isLessThan: Timestamp.fromDate(endOfWeek.add(Duration(days: 1))))
+          .get();
+
+      final exercises = querySnapshot.docs.map((doc) {
+        return {
+          "steps": doc['steps'],
+          "caloriesBurned": doc['caloriesBurned']?.toDouble() ?? 0.0,
+          "timestamp": (doc['timestamp'] as Timestamp)
+              .toDate(), // Ensure correct field here
+        };
+      }).toList();
+
+      // Group steps and calories by day of the week (Monday to Sunday)
+      Map<String, double> weeklystepsCalories = {};
+      for (var exercise in exercises) {
+        String dayOfWeek = _getDayOfWeek(exercise['timestamp']);
+        weeklystepsCalories[dayOfWeek] =
+            (weeklystepsCalories[dayOfWeek] ?? 0.0) +
+                exercise['caloriesBurned'];
+      }
+
+      setState(() {
+        _weeklystepsCalories = weeklystepsCalories; // Set state for Pie Chart
+      });
+    } catch (e) {
+      print("Error fetching steps: $e");
+    }
   }
 
   Future<void> fetchExercisesForWeek() async {
@@ -113,7 +167,7 @@ class BarChartSample1State extends State<BarChartSample1> {
               isLessThan: Timestamp.fromDate(endOfWeek.add(Duration(days: 1))))
           .get();
 
-      final exercises = querySnapshot.docs.map((doc) {
+      final steps = querySnapshot.docs.map((doc) {
         return {
           "name": doc['exerciseName'] ?? 'Unknown Exercise',
           "caloriesBurned": doc['caloriesBurned']?.toDouble() ?? 0.0,
@@ -123,10 +177,10 @@ class BarChartSample1State extends State<BarChartSample1> {
 
       // Group exercises by day of the week (Monday to Sunday)
       Map<String, double> weeklyCalories = {};
-      for (var exercise in exercises) {
-        String dayOfWeek = _getDayOfWeek(exercise['date']);
+      for (var step in steps) {
+        String dayOfWeek = _getDayOfWeek(step['date']);
         weeklyCalories[dayOfWeek] =
-            (weeklyCalories[dayOfWeek] ?? 0.0) + exercise['caloriesBurned'];
+            (weeklyCalories[dayOfWeek] ?? 0.0) + step['caloriesBurned'];
       }
 
       setState(() {
