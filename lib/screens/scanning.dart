@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/screens/BluetoothPairingSuccess.dart';
 
 class QrCodeScanner extends StatelessWidget {

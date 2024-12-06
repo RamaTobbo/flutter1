@@ -448,8 +448,8 @@ class BarChartSample1State extends State<BarChartSample1> {
 }
 
 class AppColors {
-  static const Color contentColorPurple = Color(0xFF9B4DFF);
-  static const Color contentColorYellow = Color(0xFFFF9E00);
-  static const Color contentColorBlue = Color(0xFF53A7FF);
-  static const Color contentColorPink = Color(0xFFFB57C5);
+  static const Color contentColorPurple = Color(0xFF8082a2);
+  static const Color contentColorYellow = Color(0xFFffce48);
+  static const Color contentColorBlue = Color(0xFF96afb3);
+  static const Color contentColorPink = Color(0xFFf9e0e4);
 }

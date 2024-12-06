@@ -37,6 +37,7 @@ class _BluetoothSetupscreensState extends State<BluetoothSetupscreens> {
 
   Future<void> _checkIfSetupCompleted() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isNotUsingSmartwatch', true);
     bool setupCompleted = prefs.getBool('isSetupCompleted') ?? false;
 
     if (setupCompleted) {

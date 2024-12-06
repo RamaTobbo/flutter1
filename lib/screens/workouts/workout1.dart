@@ -1,13 +1,16 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/lunge.dart';
 import 'package:track_pro/screens/exercises/squats.dart';
 import 'package:track_pro/screens/tab.dart';
@@ -25,6 +28,41 @@ class WorkoutLowerBoddy extends StatefulWidget {
 class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
   final style = TextStyle(color: Colors.black);
   bool isgoingback = true;
+  bool userNotUsingSmartWatch = true;
+
+  Future<bool> fetchUserUsingSmartWatch(BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final storedUserId = prefs.getString('userId');
+      Provider.of<UserData>(context, listen: false).setUserId(storedUserId!);
+      print('idddd${storedUserId}');
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(storedUserId)
+          .get();
+
+      if (snapshot.exists) {
+        debugPrint("Fetched user dataaaaa: ${snapshot.data()}");
+
+        userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
+
+        if (snapshot.data() != null) {
+          if (mounted) {
+            setState(() {
+              userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
+            });
+          }
+        } else {
+          debugPrint("Field 'IsNotAsmartwatchUser' is missing.");
+        }
+      } else {
+        debugPrint("No user found for the given ID.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching user information: $e");
+    }
+    return userNotUsingSmartWatch;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +93,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                   title: Padding(
                     padding: EdgeInsets.only(left: 48),
                     child: Text(
-                      'Lower Boddy',
+                      'Lower Body',
                       style: GoogleFonts.roboto(
                           color: themeProvide.isDarkMode
                               ? Colors.white
@@ -106,21 +144,6 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white),
                               ),
-                              // child: Row(
-                              //   mainAxisSize: MainAxisSize.min,
-                              //   children: [
-                              //     IconButton(
-                              //         onPressed: showTimerDialog,
-                              //         icon: const Icon(
-                              //             Icons.access_time_filled_outlined),
-                              //         color: Colors.black),
-                              //     const SizedBox(width: 5),
-                              //     Text(
-                              //       '$_selectedMinutes min',
-                              //       style: const TextStyle(color: Colors.black),
-                              //     ),
-                              //   ],
-                              // ),
                             ),
                           ),
                           Positioned(
@@ -204,21 +227,19 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
             Positioned(
               top: 30,
               child: IconButton(
-                onPressed: () {
+                onPressed: () async {
+                  bool isNotUsingSmartWatch =
+                      await fetchUserUsingSmartWatch(context);
+
                   Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (ctx) =>
-                              Provider.of<Isasmartwatchuser>(context)
-                                      .isNotUsingSmartwatch
-                                  ? TabNav1(
-                                      index: 3,
-                                    )
-                                  : TabNav(
-                                      index: 3,
-                                    )),
-                      // UserWithSmartWatch ? TabNav() : TabNav1()),
-                      (Route) => true);
+                    context,
+                    MaterialPageRoute(
+                      builder: (ctx) => isNotUsingSmartWatch
+                          ? TabNav1(index: 3)
+                          : TabNav(index: 3),
+                    ),
+                    (Route) => true,
+                  );
                 },
                 icon: Icon(Icons.arrow_back),
               ),
