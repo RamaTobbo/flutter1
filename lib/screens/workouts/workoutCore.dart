@@ -34,6 +34,7 @@ class _WorkoutCoreState extends State<WorkoutCore> {
   List<String> WorkoutExercises = [];
   List<String> WorkoutImages = [];
   List<String> WorkoutGifImages = [];
+  List<String> videotutorial = [];
   Future<bool> fetchUserUsingSmartWatch(BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -120,12 +121,14 @@ class _WorkoutCoreState extends State<WorkoutCore> {
               exerciseDoc['subImage'] ?? 'No image';
           String fetchedExerciseGifImage =
               exerciseDoc['exerciseImage'] ?? 'No image';
+          String tutorial = exerciseDoc['videotutorial'] ?? 'No image';
 
           if (mounted) {
             setState(() {
               WorkoutExercises.add(fetchedExerciseName);
               WorkoutImages.add(fetchedExerciseSubImage);
               WorkoutGifImages.add(fetchedExerciseGifImage);
+              videotutorial.add(tutorial);
             });
           }
 
@@ -192,6 +195,7 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                             builder: (ctx) => Exercisess(
                               animationImage: WorkoutGifImages[index],
                               exerciseName: WorkoutExercises[index],
+                              videoTutorial: videotutorial[index],
 
                               nextExerciseRoute:
                                   "", // Handle next route if needed

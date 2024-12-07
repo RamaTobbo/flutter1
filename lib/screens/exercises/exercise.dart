@@ -13,6 +13,7 @@ import 'package:track_pro/screens/exercises/jumpingJacks.dart';
 import 'package:track_pro/screens/exercises/walking.dart';
 import 'package:track_pro/screens/workouts/workoutCardio.dart';
 import 'package:track_pro/widgets/finishedWorkouts.dart';
+import 'package:track_pro/exercisesTutorial/exercisesTutorial.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -21,14 +22,16 @@ var userWeight;
 class Exercisess extends StatefulWidget {
   final String exerciseName;
 
-  final String animationImage; // Example: heartpulse.png
+  final String animationImage;
 
-  final String nextExerciseRoute; // Next exercise route for navigation
+  final String nextExerciseRoute;
+  final String videoTutorial;
 
   const Exercisess({
     required this.exerciseName,
     required this.animationImage,
     required this.nextExerciseRoute,
+    required this.videoTutorial,
     super.key,
   });
 
@@ -161,7 +164,13 @@ class _ExercisessState extends State<Exercisess> {
                           onPressed: () {
                             Navigator.pushAndRemoveUntil(
                                 context,
-                                MaterialPageRoute(builder: (ctx) => Bicycle()),
+                                MaterialPageRoute(
+                                    builder: (ctx) => Exercisess(
+                                        exerciseName: widget.exerciseName,
+                                        animationImage: widget.animationImage,
+                                        nextExerciseRoute:
+                                            widget.nextExerciseRoute,
+                                        videoTutorial: widget.videoTutorial)),
                                 (Route) => false);
                           },
                           icon: Icon(Icons.restart_alt))
@@ -268,21 +277,30 @@ class _ExercisessState extends State<Exercisess> {
                   )
                 : Text('youtube video'),
             SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(right: 252.0),
-              child: ToggleSwitch(
-                minWidth: 140.0,
-                initialLabelIndex: 0,
-                cornerRadius: 20.0,
-                activeFgColor: Colors.white,
-                inactiveBgColor: Colors.grey,
-                inactiveFgColor: Colors.white,
-                totalSwitches: 1,
-                labels: ['Animation'],
-                activeBgColors: [
-                  [Color(0xffffce48)],
-                ],
-              ),
+            ToggleSwitch(
+              minWidth: 140.0,
+              initialLabelIndex: 0,
+              cornerRadius: 20.0,
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey,
+              inactiveFgColor: Colors.white,
+              totalSwitches: 2,
+              labels: ['Animation', 'How to do'],
+              activeBgColors: [
+                [Color(0xffffce48)],
+                [Color(0xffffce48)],
+              ],
+              onToggle: (index) {
+                if (index == 1) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (ctx) => Exercisestutorial(
+                              videoUrl: widget.videoTutorial,
+                            )),
+                  );
+                }
+              },
             ),
             SizedBox(height: 20),
             Row(

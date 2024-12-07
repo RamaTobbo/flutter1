@@ -31,8 +31,9 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
   bool userNotUsingSmartWatch = true;
   String WorkoutName = "";
   List<String> WorkoutExercises = [];
-  List<String> WorkoutImages = [];
   List<String> WorkoutGifImages = [];
+  List<String> WorkoutImages = [];
+  List<String> videotutorial = [];
   Future<bool> fetchUserUsingSmartWatch(BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -120,11 +121,13 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
               exerciseDoc['subImage'] ?? 'No image';
           String fetchedExerciseGifImage =
               exerciseDoc['exerciseImage'] ?? 'No image';
+          String tutorial = exerciseDoc['videotutorial'] ?? 'No image';
           if (mounted) {
             setState(() {
               WorkoutExercises.add(fetchedExerciseName);
               WorkoutImages.add(fetchedExerciseSubImage);
               WorkoutGifImages.add(fetchedExerciseGifImage);
+              videotutorial.add(tutorial);
             });
           }
 
@@ -132,7 +135,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
               'Exercise Name: $fetchedExerciseName, Image: $fetchedExerciseSubImage');
         });
       } else {
-        debugPrint('No exercises found in the LowerBody subcollection.');
+        debugPrint('No exercises found in the Cardio subcollection.');
       }
     } catch (e) {
       debugPrint("Error fetching exercises: $e");
@@ -191,6 +194,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                             builder: (ctx) => Exercisess(
                               animationImage: WorkoutGifImages[index],
                               exerciseName: WorkoutExercises[index],
+                              videoTutorial: videotutorial[index],
 
                               nextExerciseRoute:
                                   "", // Handle next route if needed
@@ -199,16 +203,26 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                           (route) =>
                               false, // This removes all routes until the new one
                         );
-
-                        // if (WorkoutExercises[index] == "Lunges") {
+                        // if (WorkoutExercises[index] == "Cycling") {
                         //   Navigator.pushAndRemoveUntil(
                         //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Lunge()),
+                        //       MaterialPageRoute(builder: (ctx) => Bicycle()),
                         //       (Route) => false);
-                        // } else if (WorkoutExercises[index] == "Squats") {
+                        // } else if (WorkoutExercises[index] == "Walking") {
                         //   Navigator.pushAndRemoveUntil(
                         //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Squats()),
+                        //       MaterialPageRoute(builder: (ctx) => Walking()),
+                        //       (Route) => false);
+                        // } else if (WorkoutExercises[index] == "Jumping Jacks") {
+                        //   Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (ctx) => Jumpingjacks()),
+                        //       (Route) => false);
+                        // } else if (WorkoutExercises[index] == "Burpees") {
+                        //   Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(builder: (ctx) => Burpees()),
                         //       (Route) => false);
                         // }
                       },
