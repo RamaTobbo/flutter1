@@ -10,7 +10,7 @@ import 'package:track_pro/noSmartwatch/tab.dart';
 
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
-import 'package:track_pro/screens/exercises/bicycle.dart';
+
 import 'package:track_pro/screens/exercises/exercise.dart';
 
 import 'package:track_pro/screens/tab.dart';
@@ -195,6 +195,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                               animationImage: WorkoutGifImages[index],
                               exerciseName: WorkoutExercises[index],
                               videoTutorial: videotutorial[index],
+                              workoutName: WorkoutName,
 
                               nextExerciseRoute:
                                   "", // Handle next route if needed

@@ -5,17 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:track_pro/data/workout.dart';
+
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
-import 'package:track_pro/provider/isAsmartWatchuser.dart';
+
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/exercises/exercise.dart';
-import 'package:track_pro/screens/exercises/plank.dart';
-import 'package:track_pro/screens/exercises/russian_twist.dart';
+
 import 'package:track_pro/screens/tab.dart';
-import 'package:track_pro/screens/trainingExercises.dart';
 
 var UserWithSmartWatch;
 
@@ -196,6 +194,7 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                               animationImage: WorkoutGifImages[index],
                               exerciseName: WorkoutExercises[index],
                               videoTutorial: videotutorial[index],
+                              workoutName: WorkoutName,
 
                               nextExerciseRoute:
                                   "", // Handle next route if needed

@@ -11,10 +11,7 @@ import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
-import 'package:track_pro/screens/exercises/bicycle.dart';
-import 'package:track_pro/screens/exercises/burpees.dart';
-import 'package:track_pro/screens/exercises/jumpingJacks.dart';
-import 'package:track_pro/screens/exercises/walking.dart';
+
 import 'package:track_pro/screens/tab.dart';
 import 'package:track_pro/screens/trainingExercises.dart';
 
@@ -197,7 +194,7 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                               animationImage: WorkoutGifImages[index],
                               exerciseName: WorkoutExercises[index],
                               videoTutorial: videotutorial[index],
-
+                              workoutName: WorkoutName,
                               nextExerciseRoute:
                                   "", // Handle next route if needed
                             ),
