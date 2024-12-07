@@ -196,6 +196,10 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                               exerciseName: WorkoutExercises[index],
                               videoTutorial: videotutorial[index],
                               workoutName: WorkoutName,
+                              videoTutorials: videotutorial,
+                              workoutExercises: WorkoutExercises,
+                              workoutGifImages: WorkoutGifImages,
+                              exerciseIndex: index,
 
                               nextExerciseRoute:
                                   "", // Handle next route if needed

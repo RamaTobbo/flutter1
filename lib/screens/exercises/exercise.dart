@@ -5,33 +5,38 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:track_pro/exercisesTutorial/lungeExercise.dart';
+
 import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/userdata.dart';
-import 'package:track_pro/screens/exercises/bicycle.dart';
-import 'package:track_pro/screens/exercises/jumpingJacks.dart';
-import 'package:track_pro/screens/exercises/walking.dart';
+
 import 'package:track_pro/screens/workouts/workoutCardio.dart';
 import 'package:track_pro/widgets/finishedWorkouts.dart';
 import 'package:track_pro/exercisesTutorial/exercisesTutorial.dart';
-import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 var userWeight;
 
 class Exercisess extends StatefulWidget {
   final String exerciseName;
-
+  final String workoutName;
   final String animationImage;
 
   final String nextExerciseRoute;
   final String videoTutorial;
+  final int exerciseIndex;
+  final List<String> workoutExercises;
+  final List<String> workoutGifImages;
+  final List<String> videoTutorials;
 
   const Exercisess({
     required this.exerciseName,
     required this.animationImage,
     required this.nextExerciseRoute,
     required this.videoTutorial,
+    required this.workoutName,
+    required this.exerciseIndex,
+    required this.videoTutorials,
+    required this.workoutExercises,
+    required this.workoutGifImages,
     super.key,
   });
 
@@ -49,7 +54,9 @@ class _ExercisessState extends State<Exercisess> {
   int countdownTimer = 25;
   int actualElapsedTime = 0;
   final int maxTimer = 3600;
+
   Timer? timer;
+
   void playTestSound() async {
     try {
       await audioPlayer.play(AssetSource('completed.mp3'));
@@ -58,9 +65,53 @@ class _ExercisessState extends State<Exercisess> {
     }
   }
 
+  int currentExerciseIndex = 0; // Keep track of the current exercise
+
   void nextExercise() {
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (ctx) => Jumpingjacks()), (Route) => false);
+    int nextIndex = widget.exerciseIndex + 1;
+    if (nextIndex < widget.workoutExercises.length) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (ctx) => Exercisess(
+            exerciseName: widget.workoutExercises[nextIndex],
+            animationImage: widget.workoutGifImages[nextIndex],
+            videoTutorial: widget.videoTutorials[nextIndex],
+            videoTutorials: widget.videoTutorials,
+            workoutExercises: widget.workoutExercises,
+            workoutGifImages: widget.workoutGifImages,
+            nextExerciseRoute: "",
+            workoutName: widget.workoutName,
+            exerciseIndex: nextIndex, // Pass the new index
+          ),
+        ),
+        (route) => false, // Clear the stack so user cannot go back
+      );
+    }
+  }
+
+  // Handle Previous Exercise
+  void previousExercise() {
+    int previousIndex = widget.exerciseIndex - 1;
+    if (previousIndex >= 0) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (ctx) => Exercisess(
+            exerciseName: widget.workoutExercises[previousIndex],
+            animationImage: widget.workoutGifImages[previousIndex],
+            videoTutorial: widget.videoTutorials[previousIndex],
+            videoTutorials: widget.videoTutorials,
+            workoutExercises: widget.workoutExercises,
+            workoutGifImages: widget.workoutGifImages,
+            nextExerciseRoute: "",
+            workoutName: widget.workoutName,
+            exerciseIndex: previousIndex, // Pass the new index
+          ),
+        ),
+        (route) => false, // Clear the stack so user cannot go back
+      );
+    }
   }
 
   void EndExerciseCalculatedCalories() {
@@ -122,19 +173,24 @@ class _ExercisessState extends State<Exercisess> {
         context,
         MaterialPageRoute(
             builder: (ctx) => Finishedworkouts(
-                  Workout: 'Cardio',
+                  Workout: widget.workoutName, //workout name
                   repeatWorkout: () {
                     Navigator.pushAndRemoveUntil(
                         context,
-                        MaterialPageRoute(builder: (ctx) => Jumpingjacks()),
+                        MaterialPageRoute(
+                            builder: (ctx) => Exercisess(
+                                exerciseName: widget.exerciseName,
+                                animationImage: widget.animationImage,
+                                exerciseIndex: widget.exerciseIndex,
+                                nextExerciseRoute: "",
+                                videoTutorials: widget.videoTutorials,
+                                workoutExercises: widget.workoutExercises,
+                                workoutGifImages: widget.workoutGifImages,
+                                videoTutorial: widget.videoTutorial,
+                                workoutName: widget.workoutName)),
                         (Route) => false);
                   },
                 )));
-  }
-
-  void previousExercise() {
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (ctx) => Walking()), (Route) => false);
   }
 
   void showCaloriesBurnedDialog() {
@@ -168,6 +224,13 @@ class _ExercisessState extends State<Exercisess> {
                                     builder: (ctx) => Exercisess(
                                         exerciseName: widget.exerciseName,
                                         animationImage: widget.animationImage,
+                                        workoutName: widget.workoutName,
+                                        exerciseIndex: widget.exerciseIndex,
+                                        videoTutorials: widget.videoTutorials,
+                                        workoutExercises:
+                                            widget.workoutExercises,
+                                        workoutGifImages:
+                                            widget.workoutGifImages,
                                         nextExerciseRoute:
                                             widget.nextExerciseRoute,
                                         videoTutorial: widget.videoTutorial)),

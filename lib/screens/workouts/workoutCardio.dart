@@ -195,6 +195,10 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                               exerciseName: WorkoutExercises[index],
                               videoTutorial: videotutorial[index],
                               workoutName: WorkoutName,
+                              exerciseIndex: index,
+                              videoTutorials: videotutorial,
+                              workoutExercises: WorkoutExercises,
+                              workoutGifImages: WorkoutGifImages,
                               nextExerciseRoute:
                                   "", // Handle next route if needed
                             ),

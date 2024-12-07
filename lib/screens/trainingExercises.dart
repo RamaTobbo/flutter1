@@ -9,11 +9,7 @@ import 'package:track_pro/DataHistory/exercisesCalendar.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/CaloriesBurnedPerExercise.dart';
-import 'package:track_pro/screens/exercises/burpees.dart';
-import 'package:track_pro/screens/exercises/jumpingJacks.dart';
-
-import 'package:track_pro/screens/exercises/plank.dart';
-import 'package:track_pro/screens/exercises/russian_twist.dart';
+import 'package:track_pro/screens/exercises/exercise.dart';
 
 import 'package:track_pro/screens/workouts/workout1.dart';
 import 'package:track_pro/screens/workouts/workoutCardio.dart';
@@ -75,30 +71,6 @@ class _TrainingexercisesState extends State<Trainingexercises> {
     } else if (index == 0) {
       Navigator.push(
           context, MaterialPageRoute(builder: (ctx) => Drinkwater()));
-    }
-  }
-
-  _goToexerciseForIndex(int index) {
-    switch (index) {
-      case 0:
-        return Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (ctx) => Plank()), (Route) => false);
-      case 1:
-        return Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (ctx) => Jumpingjacks()),
-            (Route) => false);
-      case 2:
-        return Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (ctx) => Burpees()), (Route) => false);
-      case 3:
-        return Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (ctx) => RussianTwist()),
-            (Route) => false);
-      default:
-        return Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (ctx) => Plank()), (Route) => false);
     }
   }
 
