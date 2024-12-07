@@ -29,396 +29,226 @@ class WorkoutCardio extends StatefulWidget {
 
 class _WorkoutCardioState extends State<WorkoutCardio> {
   final style = TextStyle(color: Colors.black);
+  bool isgoingback = true;
+  bool userNotUsingSmartWatch = true;
+  String WorkoutName = "";
+  List<String> WorkoutExercises = [];
+  List<String> WorkoutImages = [];
+  Future<bool> fetchUserUsingSmartWatch(BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final storedUserId = prefs.getString('userId');
+      Provider.of<UserData>(context, listen: false).setUserId(storedUserId!);
+      print('idddd${storedUserId}');
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(storedUserId)
+          .get();
+
+      if (snapshot.exists) {
+        debugPrint("Fetched user dataaaaa: ${snapshot.data()}");
+
+        userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
+
+        if (snapshot.data() != null) {
+          if (mounted) {
+            setState(() {
+              userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
+            });
+          }
+        } else {
+          debugPrint("Field 'IsNotAsmartwatchUser' is missing.");
+        }
+      } else {
+        debugPrint("No user found for the given ID.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching user information: $e");
+    }
+    return userNotUsingSmartWatch;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLowerBody(context);
+    fetchLowerBodyExercises(context);
+  }
+
+  // Fetch workout name
+  void fetchLowerBody(BuildContext context) async {
+    try {
+      QuerySnapshot workoutNameSnapshot = await FirebaseFirestore.instance
+          .collection('Workouts')
+          .doc('oP1kIzPEgMdCspN1pFYy')
+          .collection('exercises')
+          .where('name', isEqualTo: 'Cardio')
+          .get();
+
+      if (workoutNameSnapshot.docs.isNotEmpty) {
+        workoutNameSnapshot.docs.forEach((exerciseDoc) {
+          String fetchedWorkoutName = exerciseDoc['name'] ?? 'No name';
+
+          if (mounted) {
+            setState(() {
+              WorkoutName = fetchedWorkoutName;
+            });
+          }
+
+          debugPrint('Exercise: $WorkoutName');
+        });
+      }
+    } catch (e) {
+      debugPrint("Error fetching exercises: $e");
+    }
+  }
+
+  // Fetch lower body exercises and their images
+  void fetchLowerBodyExercises(BuildContext context) async {
+    try {
+      QuerySnapshot lowerBodySnapshot = await FirebaseFirestore.instance
+          .collection('Workouts')
+          .doc('oP1kIzPEgMdCspN1pFYy')
+          .collection('exercises')
+          .doc('4MpH1GUh12EhhKo0Q5FD')
+          .collection('Cardio')
+          .get();
+
+      if (lowerBodySnapshot.docs.isNotEmpty) {
+        lowerBodySnapshot.docs.forEach((exerciseDoc) {
+          String fetchedExerciseName = exerciseDoc['exerciseName'] ?? 'No name';
+          String fetchedExerciseSubImage =
+              exerciseDoc['subImage'] ?? 'No image';
+
+          if (mounted) {
+            setState(() {
+              WorkoutExercises.add(fetchedExerciseName);
+              WorkoutImages.add(fetchedExerciseSubImage);
+            });
+          }
+
+          debugPrint(
+              'Exercise Name: $fetchedExerciseName, Image: $fetchedExerciseSubImage');
+        });
+      } else {
+        debugPrint('No exercises found in the Cardio subcollection.');
+      }
+    } catch (e) {
+      debugPrint("Error fetching exercises: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    UserWithSmartWatch =
-        Provider.of<Isasmartwatchuser>(context).isNotUsingSmartwatch;
-    bool userNotUsingSmartWatch = true;
-    Future<bool> fetchUserUsingSmartWatch(BuildContext context) async {
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        final storedUserId = prefs.getString('userId');
-        Provider.of<UserData>(context, listen: false).setUserId(storedUserId!);
-        print('idddd${storedUserId}');
-        DocumentSnapshot snapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(storedUserId)
-            .get();
-
-        if (snapshot.exists) {
-          debugPrint("Fetched user dataaaaa: ${snapshot.data()}");
-
-          userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
-
-          if (snapshot.data() != null) {
-            if (mounted) {
-              setState(() {
-                userNotUsingSmartWatch =
-                    snapshot['IsNotAsmartwatchUser'] ?? true;
-              });
-            }
-          } else {
-            debugPrint("Field 'IsNotAsmartwatchUser' is missing.");
-          }
-        } else {
-          debugPrint("No user found for the given ID.");
-        }
-      } catch (e) {
-        debugPrint("Error fetching user information: $e");
-      }
-      return userNotUsingSmartWatch;
-    }
-
-    final workoutData = Provider.of<WorkoutData>(context);
     final themeProvide = Provider.of<ThemeProvider>(context);
-    final exercise1 =
-        workoutData.getExercisesForWorkout(workoutData.getWorkoutNames()[2])[0];
-    final exercise2 =
-        workoutData.getExercisesForWorkout(workoutData.getWorkoutNames()[2])[1];
-    final exercise3 =
-        workoutData.getExercisesForWorkout(workoutData.getWorkoutNames()[2])[2];
-    final exercise4 =
-        workoutData.getExercisesForWorkout(workoutData.getWorkoutNames()[2])[3];
-    final exerciseImage = workoutData
-        .getExercisesForWorkout(workoutData.getWorkoutNames()[2])[0]
-        .image;
-    final exerciseImage1 = workoutData
-        .getExercisesForWorkout(workoutData.getWorkoutNames()[2])[1]
-        .image;
-    final exerciseImage2 = workoutData
-        .getExercisesForWorkout(workoutData.getWorkoutNames()[2])[2]
-        .image;
 
-    final exerciseImage3 = workoutData
-        .getExercisesForWorkout(workoutData.getWorkoutNames()[2])[3]
-        .image;
-
-    String selectedWorkoutName = workoutData.getWorkoutNames()[1];
-    return Stack(
-      children: [
-        PopScope(
-          canPop: false,
-          child: Scaffold(
-            appBar: AppBar(
-              title: Padding(
-                padding: const EdgeInsets.only(left: 48.0),
-                child: Text(
-                  'Cardio',
-                  style: GoogleFonts.roboto(
-                      color: themeProvide.isDarkMode
-                          ? Colors.white
-                          : Colors.black),
-                ),
+    return Stack(children: [
+      Scaffold(
+        appBar: AppBar(
+          title: Padding(
+            padding: EdgeInsets.only(left: 48),
+            child: Text(
+              '$WorkoutName',
+              style: GoogleFonts.roboto(
+                  color: themeProvide.isDarkMode ? Colors.white : Colors.black),
+            ),
+          ),
+        ),
+        body: ListView.builder(
+          itemCount: WorkoutExercises.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Stack(
+                children: [
+                  Container(
+                    width: 350,
+                    height: 107,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xfff9e0e4),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8.0, left: 20),
+                      child: Text(
+                        WorkoutExercises[index], // Exercise name
+                        style: GoogleFonts.robotoFlex(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 50,
+                    right: 30,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (WorkoutExercises[index] == "Cycling") {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (ctx) => Bicycle()),
+                              (Route) => false);
+                        } else if (WorkoutExercises[index] == "Walking") {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (ctx) => Walking()),
+                              (Route) => false);
+                        } else if (WorkoutExercises[index] == "Jumping Jacks") {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) => Jumpingjacks()),
+                              (Route) => false);
+                        } else if (WorkoutExercises[index] == "Burpees") {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (ctx) => Burpees()),
+                              (Route) => false);
+                        }
+                      },
+                      child: Text('Begin', style: style),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white),
+                    ),
+                  ),
+                  Positioned(
+                    top: 60,
+                    left: 30,
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: Colors.white,
+                      ),
+                      child: Image.asset(WorkoutImages[index]),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            body: Column(
-              children: [
-                ListTile(
-                  title: Stack(
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          width: 350,
-                          height: 107,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xffffce48),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 20),
-                        child: Text(
-                          exercise1.name,
-                          style: GoogleFonts.robotoFlex(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 50,
-                        right: 30,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) => Jumpingjacks()),
-                                (Route) => false);
-                          },
-                          child: Text(
-                            'Begin',
-                            style: style,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white),
-                        ),
-
-                        // child: Center(
-                        //   child: Row(
-                        //     mainAxisSize: MainAxisSize.min,
-                        //     children: [
-                        //       IconButton(
-                        //           onPressed: showTimerDialog,
-                        //           icon: const Icon(
-                        //               Icons.access_time_filled_outlined),
-                        //           color: Colors.black),
-                        //       const SizedBox(width: 5),
-                        //       Text(
-                        //         '$_selectedMinutes min',
-                        //         style: const TextStyle(color: Colors.black),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                      ),
-                      Positioned(
-                        top: 60,
-                        left: 30,
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              color: Colors.white),
-                          child: Image.asset(exerciseImage),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ListTile(
-                  title: Stack(
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          width: 350,
-                          height: 107,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xffffce48),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 20),
-                        child: Text(
-                          exercise2.name,
-                          style: GoogleFonts.robotoFlex(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 50,
-                        right: 30,
-
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (ctx) => Burpees()),
-                                (Route) => false);
-                          },
-                          child: Text('Begin', style: style),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white),
-                        ),
-                        // child: Row(
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   children: [
-                        //     IconButton(
-                        //         onPressed: showTimerDialog1,
-                        //         icon: const Icon(
-                        //             Icons.access_time_filled_outlined),
-                        //         color: Colors.black),
-                        //     const SizedBox(width: 5),
-                        //     Text(
-                        //       '$_selectedMinutes1 min',
-                        //       style: const TextStyle(color: Colors.black),
-                        //     ),
-                        //   ],
-                        // ),
-                      ),
-                      Positioned(
-                        top: 60,
-                        left: 30,
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              color: Colors.white),
-                          child: Image.asset(exerciseImage1),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ListTile(
-                  title: Stack(
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          width: 350,
-                          height: 107,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xffffce48),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 20),
-                        child: Text(
-                          exercise3.name,
-                          style: GoogleFonts.robotoFlex(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 50,
-                        right: 30,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (ctx) => Walking()),
-                                (Route) => false);
-                          },
-                          child: Text('Begin', style: style),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white),
-                        ),
-                      ),
-                      Positioned(
-                        top: 60,
-                        left: 30,
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              color: Colors.white),
-                          child: Image.asset(exerciseImage1),
-                        ),
-                      ),
-                      Positioned(
-                        top: 60,
-                        left: 30,
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              color: Colors.white),
-                          child: Image.asset(exerciseImage2),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ListTile(
-                  title: Stack(
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          width: 350,
-                          height: 107,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xffffce48),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 20),
-                        child: Text(
-                          exercise4.name,
-                          style: GoogleFonts.robotoFlex(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 50,
-                        right: 30,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (ctx) => Bicycle()),
-                                (Route) => false);
-                          },
-                          child: Text('Begin', style: style),
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white),
-                        ),
-                      ),
-                      Positioned(
-                        top: 60,
-                        left: 30,
-                        child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                              color: Colors.white),
-                          child: Image.asset(exerciseImage3),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+            );
+          },
         ),
-        Positioned(
-          top: 30,
-          child: IconButton(
-            onPressed: () async {
-              bool isNotUsingSmartWatch =
-                  await fetchUserUsingSmartWatch(context);
+      ),
+      Positioned(
+        top: 30,
+        child: IconButton(
+          onPressed: () async {
+            bool isNotUsingSmartWatch = await fetchUserUsingSmartWatch(context);
 
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (ctx) => isNotUsingSmartWatch
-                      ? TabNav1(index: 3)
-                      : TabNav(index: 3),
-                ),
-                (Route) => true,
-              );
-            },
-            icon: Icon(Icons.arrow_back),
-          ),
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) =>
+                    isNotUsingSmartWatch ? TabNav1(index: 3) : TabNav(index: 3),
+              ),
+              (Route) => true,
+            );
+          },
+          icon: Icon(Icons.arrow_back),
         ),
-      ],
-    );
+      )
+    ]);
   }
 }
