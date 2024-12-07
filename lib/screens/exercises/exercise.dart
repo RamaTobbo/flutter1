@@ -169,28 +169,52 @@ class _ExercisessState extends State<Exercisess> {
   }
 
   void nextWorkout() {
-    Navigator.push(
+    // Check if current exercise is the last one
+    if (widget.exerciseIndex == widget.workoutExercises.length - 1) {
+      // Navigate to Finishedworkouts if it's the last exercise
+      Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (ctx) => Finishedworkouts(
-                  Workout: widget.workoutName, //workout name
-                  repeatWorkout: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) => Exercisess(
-                                exerciseName: widget.exerciseName,
-                                animationImage: widget.animationImage,
-                                exerciseIndex: widget.exerciseIndex,
-                                nextExerciseRoute: "",
-                                videoTutorials: widget.videoTutorials,
-                                workoutExercises: widget.workoutExercises,
-                                workoutGifImages: widget.workoutGifImages,
-                                videoTutorial: widget.videoTutorial,
-                                workoutName: widget.workoutName)),
-                        (Route) => false);
-                  },
-                )));
+          builder: (ctx) => Finishedworkouts(
+            Workout: widget.workoutName, // workout name
+            repeatWorkout: () {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (ctx) => Exercisess(
+                          exerciseName: widget.exerciseName,
+                          animationImage: widget.animationImage,
+                          exerciseIndex: widget.exerciseIndex,
+                          nextExerciseRoute: "",
+                          videoTutorials: widget.videoTutorials,
+                          workoutExercises: widget.workoutExercises,
+                          workoutGifImages: widget.workoutGifImages,
+                          videoTutorial: widget.videoTutorial,
+                          workoutName: widget.workoutName)),
+                  (Route) => false);
+            },
+          ),
+        ),
+      );
+    } else {
+      // Navigate to the next exercise if it's not the last one
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (ctx) => Exercisess(
+              exerciseName: widget.workoutExercises[widget.exerciseIndex + 1],
+              animationImage: widget.workoutGifImages[widget.exerciseIndex + 1],
+              exerciseIndex: widget.exerciseIndex + 1,
+              nextExerciseRoute: "",
+              videoTutorials: widget.videoTutorials,
+              workoutExercises: widget.workoutExercises,
+              workoutGifImages: widget.workoutGifImages,
+              videoTutorial: widget.workoutExercises[widget.exerciseIndex + 1],
+              workoutName: widget.workoutName,
+            ),
+          ),
+          (Route) => false);
+    }
   }
 
   void showCaloriesBurnedDialog() {
