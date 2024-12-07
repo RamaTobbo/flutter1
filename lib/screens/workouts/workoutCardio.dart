@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:track_pro/screens/exercises/exercise.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,6 +33,7 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
   bool userNotUsingSmartWatch = true;
   String WorkoutName = "";
   List<String> WorkoutExercises = [];
+  List<String> WorkoutGifImages = [];
   List<String> WorkoutImages = [];
   Future<bool> fetchUserUsingSmartWatch(BuildContext context) async {
     try {
@@ -119,11 +120,13 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
           String fetchedExerciseName = exerciseDoc['exerciseName'] ?? 'No name';
           String fetchedExerciseSubImage =
               exerciseDoc['subImage'] ?? 'No image';
-
+          String fetchedExerciseGifImage =
+              exerciseDoc['exerciseImage'] ?? 'No image';
           if (mounted) {
             setState(() {
               WorkoutExercises.add(fetchedExerciseName);
               WorkoutImages.add(fetchedExerciseSubImage);
+              WorkoutGifImages.add(fetchedExerciseGifImage);
             });
           }
 
@@ -184,28 +187,42 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                     right: 30,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (WorkoutExercises[index] == "Cycling") {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (ctx) => Bicycle()),
-                              (Route) => false);
-                        } else if (WorkoutExercises[index] == "Walking") {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (ctx) => Walking()),
-                              (Route) => false);
-                        } else if (WorkoutExercises[index] == "Jumping Jacks") {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) => Jumpingjacks()),
-                              (Route) => false);
-                        } else if (WorkoutExercises[index] == "Burpees") {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (ctx) => Burpees()),
-                              (Route) => false);
-                        }
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) => Exercisess(
+                              animationImage: WorkoutGifImages[index],
+                              exerciseName: WorkoutExercises[index],
+
+                              nextExerciseRoute:
+                                  "", // Handle next route if needed
+                            ),
+                          ),
+                          (route) =>
+                              false, // This removes all routes until the new one
+                        );
+                        // if (WorkoutExercises[index] == "Cycling") {
+                        //   Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(builder: (ctx) => Bicycle()),
+                        //       (Route) => false);
+                        // } else if (WorkoutExercises[index] == "Walking") {
+                        //   Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(builder: (ctx) => Walking()),
+                        //       (Route) => false);
+                        // } else if (WorkoutExercises[index] == "Jumping Jacks") {
+                        //   Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (ctx) => Jumpingjacks()),
+                        //       (Route) => false);
+                        // } else if (WorkoutExercises[index] == "Burpees") {
+                        //   Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(builder: (ctx) => Burpees()),
+                        //       (Route) => false);
+                        // }
                       },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(

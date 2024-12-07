@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:track_pro/data/workout.dart';
-import 'package:track_pro/noSmartwatch/Home.dart';
+
 import 'package:track_pro/noSmartwatch/tab.dart';
-import 'package:track_pro/provider/isAsmartWatchuser.dart';
+
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
-import 'package:track_pro/screens/exercises/lunge.dart';
-import 'package:track_pro/screens/exercises/squats.dart';
+import 'package:track_pro/screens/exercises/bicycle.dart';
+import 'package:track_pro/screens/exercises/exercise.dart';
+
 import 'package:track_pro/screens/tab.dart';
 import 'package:track_pro/screens/trainingExercises.dart';
 
@@ -32,6 +32,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
   String WorkoutName = "";
   List<String> WorkoutExercises = [];
   List<String> WorkoutImages = [];
+  List<String> WorkoutGifImages = [];
   Future<bool> fetchUserUsingSmartWatch(BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -117,11 +118,13 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
           String fetchedExerciseName = exerciseDoc['exerciseName'] ?? 'No name';
           String fetchedExerciseSubImage =
               exerciseDoc['subImage'] ?? 'No image';
-
+          String fetchedExerciseGifImage =
+              exerciseDoc['exerciseImage'] ?? 'No image';
           if (mounted) {
             setState(() {
               WorkoutExercises.add(fetchedExerciseName);
               WorkoutImages.add(fetchedExerciseSubImage);
+              WorkoutGifImages.add(fetchedExerciseGifImage);
             });
           }
 
@@ -182,17 +185,32 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                     right: 30,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (WorkoutExercises[index] == "Lunges") {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (ctx) => Lunge()),
-                              (Route) => false);
-                        } else if (WorkoutExercises[index] == "Squats") {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (ctx) => Squats()),
-                              (Route) => false);
-                        }
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) => Exercisess(
+                              animationImage: WorkoutGifImages[index],
+                              exerciseName: WorkoutExercises[index],
+
+                              nextExerciseRoute:
+                                  "", // Handle next route if needed
+                            ),
+                          ),
+                          (route) =>
+                              false, // This removes all routes until the new one
+                        );
+
+                        // if (WorkoutExercises[index] == "Lunges") {
+                        //   Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(builder: (ctx) => Lunge()),
+                        //       (Route) => false);
+                        // } else if (WorkoutExercises[index] == "Squats") {
+                        //   Navigator.pushAndRemoveUntil(
+                        //       context,
+                        //       MaterialPageRoute(builder: (ctx) => Squats()),
+                        //       (Route) => false);
+                        // }
                       },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(
