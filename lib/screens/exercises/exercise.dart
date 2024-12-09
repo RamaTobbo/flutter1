@@ -120,7 +120,7 @@ class _ExercisessState extends State<Exercisess> {
     caloriesBurned = metValue * userWeight * (actualElapsedTime / 3600);
     if (caloriesBurned != 0) {
       Provider.of<CaloriesBurned>(context, listen: false)
-          .addExercise('cycling', caloriesBurned);
+          .addExercise(widget.exerciseName, caloriesBurned);
     }
     playTestSound();
     showCaloriesBurnedDialog();
@@ -198,7 +198,6 @@ class _ExercisessState extends State<Exercisess> {
         ),
       );
     } else {
-      // Navigate to the next exercise if it's not the last one
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -222,7 +221,8 @@ class _ExercisessState extends State<Exercisess> {
     final DateTime currentDate = DateTime.now();
     final userId = Provider.of<UserData>(context, listen: false).userId;
     if (caloriesBurned != 0) {
-      saveExerciseToFirestore(userId, 'Cycling', caloriesBurned, currentDate);
+      saveExerciseToFirestore(
+          userId, widget.exerciseName, caloriesBurned, currentDate);
     }
     ;
 

@@ -6,10 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:track_pro/DataHistory/exercisesCalendar.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
-import 'package:track_pro/provider/isAsmartWatchuser.dart';
+
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/tab.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Caloriesburnedperexercise extends StatefulWidget {
   const Caloriesburnedperexercise({super.key});
@@ -21,6 +22,40 @@ class Caloriesburnedperexercise extends StatefulWidget {
 
 class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
   DateTime now = DateTime.now();
+  bool userNotUsingSmartWatch = true;
+  Future<bool> fetchUserUsingSmartWatch(BuildContext context) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final storedUserId = prefs.getString('userId');
+      Provider.of<UserData>(context, listen: false).setUserId(storedUserId!);
+      print('idddd${storedUserId}');
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(storedUserId)
+          .get();
+
+      if (snapshot.exists) {
+        debugPrint("Fetched user dataaaaa: ${snapshot.data()}");
+
+        userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
+
+        if (snapshot.data() != null) {
+          if (mounted) {
+            setState(() {
+              userNotUsingSmartWatch = snapshot['IsNotAsmartwatchUser'] ?? true;
+            });
+          }
+        } else {
+          debugPrint("Field 'IsNotAsmartwatchUser' is missing.");
+        }
+      } else {
+        debugPrint("No user found for the given ID.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching user information: $e");
+    }
+    return userNotUsingSmartWatch;
+  }
 
   @override
   void initState() {
@@ -180,21 +215,20 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
       Positioned(
         top: 30,
         child: IconButton(
-            onPressed: Provider.of<Isasmartwatchuser>(context, listen: false)
-                    .isNotUsingSmartwatch
-                ? () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (ctx) => TabNav1(index: 3)),
-                        (Route) => false);
-                  }
-                : () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (ctx) => TabNav(index: 3)),
-                        (Route) => false);
-                  },
-            icon: Icon(Icons.arrow_back)),
+          onPressed: () async {
+            bool isNotUsingSmartWatch = await fetchUserUsingSmartWatch(context);
+
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (ctx) =>
+                    isNotUsingSmartWatch ? TabNav1(index: 3) : TabNav(index: 3),
+              ),
+              (Route) => true,
+            );
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       Positioned(
           top: 30,
