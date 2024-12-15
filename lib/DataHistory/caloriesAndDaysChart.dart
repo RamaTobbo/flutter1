@@ -126,12 +126,10 @@ class BarChartSample1State extends State<BarChartSample1> {
         return {
           "steps": doc['steps'],
           "caloriesBurned": doc['caloriesBurned']?.toDouble() ?? 0.0,
-          "timestamp": (doc['timestamp'] as Timestamp)
-              .toDate(), // Ensure correct field here
+          "timestamp": (doc['timestamp'] as Timestamp).toDate(),
         };
       }).toList();
 
-      // Group steps and calories by day of the week (Monday to Sunday)
       Map<String, double> weeklystepsCalories = {};
       for (var exercise in exercises) {
         String dayOfWeek = _getDayOfWeek(exercise['timestamp']);
@@ -141,7 +139,7 @@ class BarChartSample1State extends State<BarChartSample1> {
       }
 
       setState(() {
-        _weeklystepsCalories = weeklystepsCalories; // Set state for Pie Chart
+        _weeklystepsCalories = weeklystepsCalories;
       });
     } catch (e) {
       print("Error fetching steps: $e");
@@ -353,8 +351,7 @@ class BarChartSample1State extends State<BarChartSample1> {
         touchTooltipData: BarTouchTooltipData(
           getTooltipColor: (_) => Colors.blueGrey,
           tooltipHorizontalAlignment: FLHorizontalAlignment.center,
-          tooltipMargin:
-              10, // Adjust this value to control the vertical positioning
+          tooltipMargin: 10,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
             String weekDay;
             switch (group.x) {

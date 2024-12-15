@@ -61,18 +61,16 @@ class _ExerciseCalendarState extends State<ExerciseCalendar> {
     }
   }
 
-  // Format DateTime to 'yyyy-MM-dd' to easily store and compare
   String _formatDate(DateTime date) {
     return '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  // Get all previous days up to the selected day
   void getAllDaysBeforeSelectedDay() {
     DateTime startOfMonth = DateTime(_selectedDay.year, _selectedDay.month, 1);
     for (DateTime day = _selectedDay.subtract(Duration(days: 1));
         day.isAfter(startOfMonth);
         day = day.subtract(Duration(days: 1))) {
-      fetchExercisesForDay(day); // Fetch exercises for each day
+      fetchExercisesForDay(day);
     }
   }
 
@@ -94,8 +92,7 @@ class _ExerciseCalendarState extends State<ExerciseCalendar> {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
               });
-              fetchExercisesForDay(
-                  selectedDay); // Fetch exercises when a day is selected
+              fetchExercisesForDay(selectedDay);
             },
             calendarFormat: CalendarFormat.month,
             calendarBuilders: CalendarBuilders(
@@ -114,7 +111,6 @@ class _ExerciseCalendarState extends State<ExerciseCalendar> {
                   ),
                 );
               },
-              // Highlight days with exercises
               defaultBuilder: (context, date, focusedDay) {
                 if (_daysWithExercises.contains(_formatDate(date))) {
                   return Container(
@@ -128,7 +124,7 @@ class _ExerciseCalendarState extends State<ExerciseCalendar> {
                     ),
                   );
                 }
-                return null; // Default rendering for days without exercises
+                return null;
               },
             ),
           ),
