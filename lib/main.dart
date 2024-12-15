@@ -13,6 +13,7 @@ import 'package:track_pro/provider/steps.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/userdata.dart';
+import 'package:track_pro/screens/bluetoothDeviceConnection.dart';
 
 import 'package:track_pro/screens/splash1Screen.dart';
 import 'package:track_pro/provider/temp.dart';

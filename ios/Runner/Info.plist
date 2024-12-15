@@ -46,6 +46,13 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+<string>We need Bluetooth to connect to devices</string>
+<key>NSLocationAlwaysUsageDescription</key>
+<string>We need location access to use Bluetooth</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need location access to use Bluetooth</string>
+
 <string>This app needs camera access to scan QR codes</string>
 </dict>
 </plist>
