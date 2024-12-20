@@ -279,7 +279,7 @@ class _CaloriesState extends State<Calories> {
                                         height: 3,
                                       ),
                                       Text(
-                                          '${stepsProvider.stirdeLength.toStringAsFixed(2)}',
+                                          '${stepsProvider.strideLength.toStringAsFixed(2)}',
                                           style: themeProvider1.isDarkMode
                                               ? GoogleFonts.roboto(
                                                   color: Colors.black,

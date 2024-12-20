@@ -31,7 +31,7 @@ void main() async {
   // FirebaseMessaging.instance.getToken().then((token) {
   //   print("Firebase Token: $token");
   // });
-  // await Firebase.in itializeApp(
+  // await Firebase.initializeApp(
   //   options: const FirebaseOptions(
   //       apiKey: "AIzaSyCnSMpxF1MED57KpXEXi8BvIvEsbv04PyI",
   //       appId: '1:172594653485:android:8a8e83f2dadfba9561cba4',

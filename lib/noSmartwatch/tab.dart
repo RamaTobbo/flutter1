@@ -3,12 +3,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/models/location.dart';
+import 'package:track_pro/models/weather.dart';
 import 'package:track_pro/noSmartwatch/Home.dart';
 import 'package:track_pro/noSmartwatch/scan.dart';
 import 'package:track_pro/noSmartwatch/settings.dart';
 import 'package:track_pro/noSmartwatch/steps.dart';
 import 'package:track_pro/noSmartwatch/temp.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
+import 'package:track_pro/provider/temp.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 
 import 'package:http/http.dart' as http;
@@ -16,6 +18,7 @@ import 'package:track_pro/screens/tab.dart';
 import 'dart:convert';
 
 import 'package:track_pro/screens/trainingExercises.dart';
+import 'package:track_pro/services/weather.dart';
 
 class TabNav1 extends StatefulWidget {
   TabNav1({super.key, this.index = 0});
@@ -30,6 +33,7 @@ class _TabNav1State extends State<TabNav1> {
   PlaceLocation? pickedPlace;
   PlaceLocation? currentLocation;
   bool isSwitchedDark = false;
+
   @override
   void initState() {
     super.initState();
@@ -172,7 +176,7 @@ class _TabNav1State extends State<TabNav1> {
                   ? const Color(0xFFf15134)
                   : const Color(0xFF666666),
             ),
-            label: 'Heart Rate',
+            label: 'Connect',
           ),
           BottomNavigationBarItem(
             icon: Icon(

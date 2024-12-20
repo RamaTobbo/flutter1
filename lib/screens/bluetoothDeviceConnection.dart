@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -5,7 +7,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:track_pro/screens/bluetoothPairingSuccess.dart';
 
@@ -202,6 +204,91 @@ class _BluetoothdeviceconnectionState extends State<Bluetoothdeviceconnection> {
   //   }
   //   FlutterBluePlus.stopScan();
   // }
+  final _ble = FlutterReactiveBle();
+  StreamSubscription<DiscoveredDevice>? _scanSub;
+  StreamSubscription<ConnectionStateUpdate>? _connectSub;
+  StreamSubscription<List<int>>? _notifySub;
+
+  var _found = false;
+  var _value = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _checkPermissionsAndStartScan();
+  }
+
+  @override
+  void dispose() {
+    _notifySub?.cancel();
+    _connectSub?.cancel();
+    _scanSub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _checkPermissionsAndStartScan() async {
+    await Permission.locationWhenInUse.request();
+    await Permission.bluetooth.request();
+    await Permission.bluetoothScan.request();
+    await Permission.bluetoothConnect.request();
+
+    if (await Permission.locationWhenInUse.isGranted &&
+        await Permission.bluetooth.isGranted &&
+        await Permission.bluetoothScan.isGranted &&
+        await Permission.bluetoothConnect.isGranted) {
+      _scanSub = _ble.scanForDevices(withServices: []).listen(_onScanUpdate);
+    } else {
+      print('Permissions not granted.');
+    }
+  }
+
+  void _onScanUpdate(DiscoveredDevice device) {
+    print('Discovered device: ${device.name}, ID: ${device.id}');
+    if (device.name == 'TrackPro SmartWatch' && !_found) {
+      _found = true;
+      _connectSub = _ble
+          .connectToDevice(
+        id: device.id,
+        servicesWithCharacteristicsToDiscover: {
+          Uuid.parse('00000000-5EC4-4083-81CD-A10B8D5CF6EC'): [
+            Uuid.parse('00000001-5EC4-4083-81CD-A10B8D5CF6EC')
+          ]
+        },
+        connectionTimeout: Duration(seconds: 30),
+      )
+          .listen(
+        (update) {
+          if (update.connectionState == DeviceConnectionState.connected) {
+            _onConnected(device.id);
+          } else if (update.connectionState ==
+              DeviceConnectionState.disconnected) {
+            print('Disconnected from device');
+          }
+        },
+        onError: (e) {
+          print('Connection error: $e');
+        },
+      );
+    }
+  }
+
+  void _onConnected(String deviceId) {
+    final characteristic = QualifiedCharacteristic(
+      deviceId: deviceId,
+      serviceId: Uuid.parse('00000000-5EC4-4083-81CD-A10B8D5CF6EC'),
+      characteristicId: Uuid.parse('00000001-5EC4-4083-81CD-A10B8D5CF6EC'),
+    );
+
+    _notifySub = _ble.subscribeToCharacteristic(characteristic).listen((bytes) {
+      setState(() {
+        _value = const Utf8Decoder().convert(bytes);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (ctx) => const Bluetoothpairingsuccess()),
+        );
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -224,10 +311,12 @@ class _BluetoothdeviceconnectionState extends State<Bluetoothdeviceconnection> {
               ),
             ),
             const SizedBox(height: 25),
-            const SpinKitCircle(
-              color: Color(0xFFb7b7b7),
-              size: 340.0,
-            ),
+            _value.isEmpty
+                ? const SpinKitCircle(
+                    color: Color(0xFFb7b7b7),
+                    size: 340.0,
+                  )
+                : Text(_value, style: Theme.of(context).textTheme.titleLarge),
           ],
         ),
       ),

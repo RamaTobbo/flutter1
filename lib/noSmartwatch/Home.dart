@@ -30,7 +30,35 @@ class _HomeState extends State<Home> {
   int height = 0;
   int weight = 0;
   double? userBmi;
+  int steps = 0;
   DateTime? _lastPressed;
+  void _fetchLastStepCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+
+    if (userId != null) {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      try {
+        QuerySnapshot snapshot = await firestore
+            .collection('users')
+            .doc(userId)
+            .collection('steps')
+            .orderBy('timestamp', descending: true)
+            .limit(1)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          var lastStepDoc = snapshot.docs.first;
+          var lastSteps = lastStepDoc['steps'];
+
+          double steps =
+              (lastSteps is int) ? lastSteps.toDouble() : lastSteps ?? 0.0;
+        }
+      } catch (e) {
+        print('Error fetching last step count: $e');
+      }
+    }
+  }
 
   void fetchUserInformation(BuildContext context) async {
     try {
@@ -121,6 +149,7 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _fetchLastStepCount();
     _fetchWeather();
     _loadUserId();
     fetchUserInformation(context);
