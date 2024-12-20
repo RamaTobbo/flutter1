@@ -27,8 +27,10 @@ class _StepsCaloriesState extends State<StepsCalories> {
   }
 
   void stopTheCounter(Steps stepsProvider) {
-    uploadData(); // Upload data and stop counting
-    stepsProvider.stopCounting();
+    uploadData().then((_) {
+      stepsProvider.resetSteps();
+      stepsProvider.stopCounting();
+    });
   }
 
   void pause() {
@@ -282,33 +284,33 @@ class _StepsCaloriesState extends State<StepsCalories> {
               ),
             ),
           ),
-          Positioned(
-            top: 30,
-            right: 20,
-            child: Column(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      stepsProvider.resetSteps();
-                    });
-                  },
-                  icon: themeProvider1.isDarkMode
-                      ? Icon(
-                          Icons.restart_alt,
-                          color: Colors.black,
-                        )
-                      : Icon(Icons.restart_alt),
-                ),
-                Text(
-                  'Restart Counter',
-                  style: themeProvider1.isDarkMode
-                      ? TextStyle(fontSize: 10, color: Colors.black)
-                      : TextStyle(fontSize: 10),
-                ),
-              ],
-            ),
-          ),
+          // Positioned(
+          //   top: 30,
+          //   right: 20,
+          //   child: Column(
+          //     children: [
+          //       IconButton(
+          //         onPressed: () {
+          //           setState(() {
+          //             stepsProvider.resetSteps();
+          //           });
+          //         },
+          //         icon: themeProvider1.isDarkMode
+          //             ? Icon(
+          //                 Icons.restart_alt,
+          //                 color: Colors.black,
+          //               )
+          //             : Icon(Icons.restart_alt),
+          //       ),
+          //       Text(
+          //         'Restart Counter',
+          //         style: themeProvider1.isDarkMode
+          //             ? TextStyle(fontSize: 10, color: Colors.black)
+          //             : TextStyle(fontSize: 10),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

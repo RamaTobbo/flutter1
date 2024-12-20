@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
   int height = 0;
   int weight = 0;
   double? userBmi;
-  int steps = 0;
+  double steps = 0;
   DateTime? _lastPressed;
   void _fetchLastStepCount() async {
     final prefs = await SharedPreferences.getInstance();
@@ -51,8 +51,7 @@ class _HomeState extends State<Home> {
           var lastStepDoc = snapshot.docs.first;
           var lastSteps = lastStepDoc['steps'];
 
-          double steps =
-              (lastSteps is int) ? lastSteps.toDouble() : lastSteps ?? 0.0;
+          steps = (lastSteps is int) ? lastSteps.toDouble() : lastSteps ?? 0.0;
         }
       } catch (e) {
         print('Error fetching last step count: $e');
@@ -263,7 +262,7 @@ class _HomeState extends State<Home> {
                                   padding: const EdgeInsets.only(left: 98.0),
                                   child: Row(
                                     children: [
-                                      Text('${stepProvider.steps}',
+                                      Text('${steps}',
                                           style: themeProvider1.isDarkMode
                                               ? GoogleFonts.roboto(
                                                   color: Colors.black,
