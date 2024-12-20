@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:track_pro/models/exercise.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:track_pro/provider/userdata.dart';
 
 class BarChartSample1 extends StatefulWidget {
@@ -22,6 +22,8 @@ class BarChartSample1 extends StatefulWidget {
 
 class BarChartSample1State extends State<BarChartSample1> {
   final Duration animDuration = const Duration(milliseconds: 250);
+  double steps = 0;
+  double totalSteps = 0.0;
 
   int touchedIndex = -1;
   bool isPlaying = false;
@@ -38,7 +40,7 @@ class BarChartSample1State extends State<BarChartSample1> {
   ];
   List<PieChartSectionData> _getPieChartSections() {
     return _weeklystepsCalories.entries.map((entry) {
-      double calories = entry.value;
+      double calories = steps * 0.04;
       Color sectionColor;
 
       switch (entry.key) {
@@ -77,6 +79,49 @@ class BarChartSample1State extends State<BarChartSample1> {
     }).toList();
   }
 
+  void _fetchTotalStepCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+
+    if (userId != null) {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      try {
+        // Fetch all steps for the user
+        QuerySnapshot snapshot = await firestore
+            .collection('users')
+            .doc(userId)
+            .collection('steps')
+            .orderBy('timestamp',
+                descending: true) // Optional: You can order by timestamp
+            .get(); // No limit to fetch all documents
+
+        if (snapshot.docs.isNotEmpty) {
+          double totalSteps = 0.0;
+
+          // Sum all the steps
+          for (var doc in snapshot.docs) {
+            var stepsData = doc['steps'];
+            if (stepsData != null) {
+              // Ensure the value is treated as a double, even if it's stored as an integer
+              totalSteps += (stepsData is int)
+                  ? stepsData.toDouble()
+                  : stepsData.toDouble();
+            }
+          }
+
+          // Update the total steps value
+          steps = totalSteps;
+        } else {
+          print('No steps found for the user.');
+        }
+      } catch (e) {
+        print('Error fetching total step count: $e');
+      }
+    } else {
+      print('User ID not found in SharedPreferences.');
+    }
+  }
+
   // Store weekly calories data
   Map<String, double> _weeklyCalories = {
     "Monday": 0.0,
@@ -99,6 +144,7 @@ class BarChartSample1State extends State<BarChartSample1> {
   @override
   void initState() {
     super.initState();
+    _fetchTotalStepCount();
     fetchStepsForWeek();
     fetchExercisesForWeek();
   }

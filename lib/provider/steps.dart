@@ -17,8 +17,10 @@ class Steps extends ChangeNotifier {
   DateTime? _lastPausedTime;
   double _stepsBeforePause = 0.0;
   double _magnitudeAtPause = 0.0;
+  double _totalsteps = 0;
 
   double get steps => _steps;
+  double get totalsteps => _totalsteps;
   int get duration => _duration;
   double get burnedCalories => _burnedCalories;
   bool get isCounting => _isCounting;
@@ -128,5 +130,10 @@ class Steps extends ChangeNotifier {
       _strideLength = _steps * 0.64;
       notifyListeners();
     }
+  }
+
+  void setTotalSteps(double totalSteps) {
+    _totalsteps = totalSteps;
+    notifyListeners();
   }
 }

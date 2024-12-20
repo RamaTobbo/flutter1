@@ -32,30 +32,47 @@ class _HomeState extends State<Home> {
   double? userBmi;
   double steps = 0;
   DateTime? _lastPressed;
-  void _fetchLastStepCount() async {
+  void _fetchTotalStepCount() async {
     final prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
 
     if (userId != null) {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       try {
+        // Fetch all steps for the user
         QuerySnapshot snapshot = await firestore
             .collection('users')
             .doc(userId)
             .collection('steps')
-            .orderBy('timestamp', descending: true)
-            .limit(1)
-            .get();
+            .orderBy('timestamp',
+                descending: true) // Optional: You can order by timestamp
+            .get(); // No limit to fetch all documents
 
         if (snapshot.docs.isNotEmpty) {
-          var lastStepDoc = snapshot.docs.first;
-          var lastSteps = lastStepDoc['steps'];
+          double totalSteps = 0.0;
 
-          steps = (lastSteps is int) ? lastSteps.toDouble() : lastSteps ?? 0.0;
+          // Sum all the steps
+          for (var doc in snapshot.docs) {
+            var stepsData = doc['steps'];
+            if (stepsData != null) {
+              // Ensure the value is treated as a double, even if it's stored as an integer
+              totalSteps += (stepsData is int)
+                  ? stepsData.toDouble()
+                  : stepsData.toDouble();
+            }
+          }
+
+          // Update the total steps value
+          steps = totalSteps;
+          Provider.of<Steps>(context, listen: false).setTotalSteps(totalSteps);
+        } else {
+          print('No steps found for the user.');
         }
       } catch (e) {
-        print('Error fetching last step count: $e');
+        print('Error fetching total step count: $e');
       }
+    } else {
+      print('User ID not found in SharedPreferences.');
     }
   }
 
@@ -148,7 +165,7 @@ class _HomeState extends State<Home> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _fetchLastStepCount();
+    _fetchTotalStepCount();
     _fetchWeather();
     _loadUserId();
     fetchUserInformation(context);
@@ -262,7 +279,8 @@ class _HomeState extends State<Home> {
                                   padding: const EdgeInsets.only(left: 98.0),
                                   child: Row(
                                     children: [
-                                      Text('${steps}',
+                                      Text(
+                                          '${Provider.of<Steps>(context).totalsteps}',
                                           style: themeProvider1.isDarkMode
                                               ? GoogleFonts.roboto(
                                                   color: Colors.black,
