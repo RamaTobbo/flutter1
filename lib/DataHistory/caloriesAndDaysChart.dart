@@ -85,47 +85,39 @@ class BarChartSample1State extends State<BarChartSample1> {
     String? userId = prefs.getString('userId');
 
     if (userId != null) {
-      double? savedSteps = prefs.getDouble('totalSteps');
-      if (savedSteps != null) {
-        setState(() {
-          steps = savedSteps;
-        });
-        Provider.of<Steps>(context, listen: false).setTotalSteps(savedSteps);
-      } else {
-        FirebaseFirestore firestore = FirebaseFirestore.instance;
-        try {
-          QuerySnapshot snapshot = await firestore
-              .collection('users')
-              .doc(userId)
-              .collection('steps')
-              .orderBy('timestamp', descending: true)
-              .get();
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      try {
+        // Fetch all steps for the user
+        QuerySnapshot snapshot = await firestore
+            .collection('users')
+            .doc(userId)
+            .collection('steps')
+            .orderBy('timestamp',
+                descending: true) // Optional: You can order by timestamp
+            .get(); // No limit to fetch all documents
 
-          if (snapshot.docs.isNotEmpty) {
-            double totalSteps = 0.0;
+        if (snapshot.docs.isNotEmpty) {
+          double totalSteps = 0.0;
 
-            for (var doc in snapshot.docs) {
-              var stepsData = doc['steps'];
-              if (stepsData != null) {
-                totalSteps += (stepsData is int)
-                    ? stepsData.toDouble()
-                    : stepsData.toDouble();
-              }
+          // Sum all the steps
+          for (var doc in snapshot.docs) {
+            var stepsData = doc['steps'];
+            if (stepsData != null) {
+              // Ensure the value is treated as a double, even if it's stored as an integer
+              totalSteps += (stepsData is int)
+                  ? stepsData.toDouble()
+                  : stepsData.toDouble();
             }
-
-            await prefs.setDouble('totalSteps', totalSteps);
-
-            setState(() {
-              steps = totalSteps;
-            });
-            Provider.of<Steps>(context, listen: false)
-                .setTotalSteps(totalSteps);
-          } else {
-            print('No steps found for the user.');
           }
-        } catch (e) {
-          print('Error fetching total step count: $e');
+
+          // Update the total steps value
+          steps = totalSteps;
+          Provider.of<Steps>(context, listen: false).setTotalSteps(totalSteps);
+        } else {
+          print('No steps found for the user.');
         }
+      } catch (e) {
+        print('Error fetching total step count: $e');
       }
     } else {
       print('User ID not found in SharedPreferences.');
