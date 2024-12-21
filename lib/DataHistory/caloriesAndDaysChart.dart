@@ -87,23 +87,19 @@ class BarChartSample1State extends State<BarChartSample1> {
     if (userId != null) {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       try {
-        // Fetch all steps for the user
         QuerySnapshot snapshot = await firestore
             .collection('users')
             .doc(userId)
             .collection('steps')
-            .orderBy('timestamp',
-                descending: true) // Optional: You can order by timestamp
-            .get(); // No limit to fetch all documents
+            .orderBy('timestamp', descending: true)
+            .get();
 
         if (snapshot.docs.isNotEmpty) {
           double totalSteps = 0.0;
 
-          // Sum all the steps
           for (var doc in snapshot.docs) {
             var stepsData = doc['steps'];
             if (stepsData != null) {
-              // Ensure the value is treated as a double, even if it's stored as an integer
               totalSteps += (stepsData is int)
                   ? stepsData.toDouble()
                   : stepsData.toDouble();

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:track_pro/DataHistory/exercisesCalendar.dart';
 import 'package:track_pro/noSmartwatch/tab.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
-
+import 'package:track_pro/screens/CaloriesBurnedFromSteps.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/tab.dart';
@@ -104,12 +104,13 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
                   Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: Text(
-                      'Total Burned Calories: ${Provider.of<CaloriesBurned>(context, listen: false).totalBurnedCalories.toStringAsFixed(2)} cal',
+                      'Workouts Total Burned Calories: ${Provider.of<CaloriesBurned>(context, listen: false).totalBurnedCalories.toStringAsFixed(2)} cal',
                       style: GoogleFonts.robotoSlab(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: isdarkmode ? Colors.white : Colors.black87,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Expanded(
@@ -231,14 +232,31 @@ class _CaloriesburnedperexerciseState extends State<Caloriesburnedperexercise> {
         ),
       ),
       Positioned(
-          top: 30,
-          right: 30,
-          child: IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (ctx) => ExerciseCalendar()));
-              },
-              icon: Icon(Icons.calendar_month)))
+        top: 30,
+        right: 30,
+        child: IconButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (ctx) => ExerciseCalendar()));
+          },
+          icon: Icon(Icons.calendar_month),
+        ),
+      ),
+      Positioned(
+        top: 30,
+        right: 60,
+        child: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (ctx) => Caloriesburnedfromsteps()),
+              (Route route) => false,
+            );
+          },
+          icon: Icon(Icons.directions_walk),
+          iconSize: 30,
+        ),
+      ),
     ]);
   }
 }

@@ -39,8 +39,6 @@ class _StepsCaloriesState extends State<StepsCalories> {
     final DateTime currentDate = DateTime.now();
     final userId = Provider.of<UserData>(context, listen: false).userId;
 
-    ;
-
     showModalBottomSheet(
         context: context,
         builder: (ctx) {
