@@ -10,6 +10,7 @@ import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/location.dart';
 import 'package:track_pro/provider/steps.dart';
+import 'package:track_pro/screens/listofDevices.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/data/workout.dart';
 import 'package:track_pro/provider/userdata.dart';
@@ -64,9 +65,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: themeProvider.isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      home: const Splash1screen(),
-    );
+        debugShowCheckedModeBanner: false,
+        theme: themeProvider.isDarkMode ? ThemeData.dark() : ThemeData.light(),
+        home: SelectBluetoothDevice() // const Splash1screen(),
+        );
   }
 }
