@@ -37,39 +37,47 @@ class _HomeState extends State<Home> {
     String? userId = prefs.getString('userId');
 
     if (userId != null) {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      try {
-        // Fetch all steps for the user
-        QuerySnapshot snapshot = await firestore
-            .collection('users')
-            .doc(userId)
-            .collection('steps')
-            .orderBy('timestamp',
-                descending: true) // Optional: You can order by timestamp
-            .get(); // No limit to fetch all documents
+      double? savedSteps = prefs.getDouble('totalSteps');
+      if (savedSteps != null) {
+        setState(() {
+          steps = savedSteps;
+        });
+        Provider.of<Steps>(context, listen: false).setTotalSteps(savedSteps);
+      } else {
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        try {
+          QuerySnapshot snapshot = await firestore
+              .collection('users')
+              .doc(userId)
+              .collection('steps')
+              .orderBy('timestamp', descending: true)
+              .get();
 
-        if (snapshot.docs.isNotEmpty) {
-          double totalSteps = 0.0;
+          if (snapshot.docs.isNotEmpty) {
+            double totalSteps = 0.0;
 
-          // Sum all the steps
-          for (var doc in snapshot.docs) {
-            var stepsData = doc['steps'];
-            if (stepsData != null) {
-              // Ensure the value is treated as a double, even if it's stored as an integer
-              totalSteps += (stepsData is int)
-                  ? stepsData.toDouble()
-                  : stepsData.toDouble();
+            for (var doc in snapshot.docs) {
+              var stepsData = doc['steps'];
+              if (stepsData != null) {
+                totalSteps += (stepsData is int)
+                    ? stepsData.toDouble()
+                    : stepsData.toDouble();
+              }
             }
-          }
 
-          // Update the total steps value
-          steps = totalSteps;
-          Provider.of<Steps>(context, listen: false).setTotalSteps(totalSteps);
-        } else {
-          print('No steps found for the user.');
+            await prefs.setDouble('totalSteps', totalSteps);
+
+            setState(() {
+              steps = totalSteps;
+            });
+            Provider.of<Steps>(context, listen: false)
+                .setTotalSteps(totalSteps);
+          } else {
+            print('No steps found for the user.');
+          }
+        } catch (e) {
+          print('Error fetching total step count: $e');
         }
-      } catch (e) {
-        print('Error fetching total step count: $e');
       }
     } else {
       print('User ID not found in SharedPreferences.');
@@ -89,8 +97,6 @@ class _HomeState extends State<Home> {
         setState(() {
           height = snapshot['height'];
           weight = snapshot['weight'];
-
-          // Optionally update weightHistory from Firestore
         });
       } else {
         debugPrint("No user found for the given ID.");
