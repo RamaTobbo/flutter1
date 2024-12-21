@@ -113,12 +113,17 @@ class Steps extends ChangeNotifier {
 
     if ((magnitude - _previousMagnitude).abs() > _threshold) {
       _steps++;
-      _burnedCalories = _steps * 0.04;
+      // _burnedCalories = _steps * 0.04;
       _strideLength = _steps * 0.64;
       notifyListeners();
     }
 
     _previousMagnitude = magnitude;
+  }
+
+  void burnedCalorie(double burnedCalories) {
+    _burnedCalories = burnedCalories;
+    notifyListeners();
   }
 
   void _handleStepDetectionOnResume() {

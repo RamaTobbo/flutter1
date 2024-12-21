@@ -104,7 +104,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
       await stepsCollection.add({
         'steps': (Provider.of<Steps>(context, listen: false).steps / 3).floor(),
         'caloriesBurned':
-            Provider.of<Steps>(context, listen: false).burnedCalories.round(),
+            ((Provider.of<Steps>(context, listen: false).steps / 3) * 0.04),
         'duration': _elapsedTime,
         'timestamp': FieldValue.serverTimestamp(),
       });
@@ -208,7 +208,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                               )),
                           const SizedBox(width: 30),
                           Text(
-                            '${stepsProvider.burnedCalories.round()}',
+                            '${((Provider.of<Steps>(context, listen: false).steps / 3) * 0.04).toStringAsFixed(2)}',
                             style: GoogleFonts.roboto(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
