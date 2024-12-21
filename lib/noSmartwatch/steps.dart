@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/provider/steps.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/provider/userdata.dart';
 
 class StepsCalories extends StatefulWidget {
   const StepsCalories({super.key});
@@ -30,7 +31,53 @@ class _StepsCaloriesState extends State<StepsCalories> {
     uploadData().then((_) {
       stepsProvider.resetSteps();
       stepsProvider.stopCounting();
+      // showDialog();
     });
+  }
+
+  void showDialog() {
+    final DateTime currentDate = DateTime.now();
+    final userId = Provider.of<UserData>(context, listen: false).userId;
+
+    ;
+
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return SizedBox(
+            width: 700,
+            height: 300,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 98.0),
+                  child: Row(
+                    children: [
+                      Image.asset('assets/images/fire.gif'),
+                    ],
+                  ),
+                ),
+                Text(
+                  "You burned ${Provider.of<Steps>(context, listen: false).burnedCalories} calories!",
+                  style: GoogleFonts.roboto(
+                      fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 80.0),
+                  child: Row(
+                    children: [],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 130.0),
+                  child: Row(
+                    children: [],
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 
   void pause() {
@@ -45,10 +92,9 @@ class _StepsCaloriesState extends State<StepsCalories> {
     final prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
 
-    // Check if userId exists in SharedPreferences
     if (userId == null) {
       print('User ID not found in SharedPreferences.');
-      return; // Exit if userId is not found
+      return;
     }
 
     try {

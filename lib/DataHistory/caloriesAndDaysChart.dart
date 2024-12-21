@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:track_pro/provider/steps.dart';
 
 import 'package:track_pro/provider/userdata.dart';
 
@@ -84,38 +85,47 @@ class BarChartSample1State extends State<BarChartSample1> {
     String? userId = prefs.getString('userId');
 
     if (userId != null) {
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      try {
-        // Fetch all steps for the user
-        QuerySnapshot snapshot = await firestore
-            .collection('users')
-            .doc(userId)
-            .collection('steps')
-            .orderBy('timestamp',
-                descending: true) // Optional: You can order by timestamp
-            .get(); // No limit to fetch all documents
+      double? savedSteps = prefs.getDouble('totalSteps');
+      if (savedSteps != null) {
+        setState(() {
+          steps = savedSteps;
+        });
+        Provider.of<Steps>(context, listen: false).setTotalSteps(savedSteps);
+      } else {
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        try {
+          QuerySnapshot snapshot = await firestore
+              .collection('users')
+              .doc(userId)
+              .collection('steps')
+              .orderBy('timestamp', descending: true)
+              .get();
 
-        if (snapshot.docs.isNotEmpty) {
-          double totalSteps = 0.0;
+          if (snapshot.docs.isNotEmpty) {
+            double totalSteps = 0.0;
 
-          // Sum all the steps
-          for (var doc in snapshot.docs) {
-            var stepsData = doc['steps'];
-            if (stepsData != null) {
-              // Ensure the value is treated as a double, even if it's stored as an integer
-              totalSteps += (stepsData is int)
-                  ? stepsData.toDouble()
-                  : stepsData.toDouble();
+            for (var doc in snapshot.docs) {
+              var stepsData = doc['steps'];
+              if (stepsData != null) {
+                totalSteps += (stepsData is int)
+                    ? stepsData.toDouble()
+                    : stepsData.toDouble();
+              }
             }
-          }
 
-          // Update the total steps value
-          steps = totalSteps;
-        } else {
-          print('No steps found for the user.');
+            await prefs.setDouble('totalSteps', totalSteps);
+
+            setState(() {
+              steps = totalSteps;
+            });
+            Provider.of<Steps>(context, listen: false)
+                .setTotalSteps(totalSteps);
+          } else {
+            print('No steps found for the user.');
+          }
+        } catch (e) {
+          print('Error fetching total step count: $e');
         }
-      } catch (e) {
-        print('Error fetching total step count: $e');
       }
     } else {
       print('User ID not found in SharedPreferences.');
@@ -168,7 +178,7 @@ class BarChartSample1State extends State<BarChartSample1> {
               isLessThan: Timestamp.fromDate(endOfWeek.add(Duration(days: 1))))
           .get();
 
-      final exercises = querySnapshot.docs.map((doc) {
+      final steps = querySnapshot.docs.map((doc) {
         return {
           "steps": doc['steps'],
           "caloriesBurned": doc['caloriesBurned']?.toDouble() ?? 0.0,
@@ -176,12 +186,12 @@ class BarChartSample1State extends State<BarChartSample1> {
         };
       }).toList();
 
+      // Sum calories for each day
       Map<String, double> weeklystepsCalories = {};
-      for (var exercise in exercises) {
-        String dayOfWeek = _getDayOfWeek(exercise['timestamp']);
+      for (var step in steps) {
+        String dayOfWeek = _getDayOfWeek(step['timestamp']);
         weeklystepsCalories[dayOfWeek] =
-            (weeklystepsCalories[dayOfWeek] ?? 0.0) +
-                exercise['caloriesBurned'];
+            (weeklystepsCalories[dayOfWeek] ?? 0.0) + step['caloriesBurned'];
       }
 
       setState(() {
