@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +11,7 @@ import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/heartRate.dart';
 import 'package:track_pro/widgets/chatbot.dart';
+import 'package:track_pro/screens/connectAgain.dart';
 import 'package:track_pro/provider/sensorsData.dart';
 
 class Homepage extends StatefulWidget {
@@ -22,12 +24,50 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   int height = 0; // In cm
   int weight = 0;
+  String receivedTime = "No time yet"; // Variable to store the received time
+  String receivedPressure = "No pressure yet";
+  String receivedTemperature = "No temperature yet";
+  String receivedHumidity = "No humidity yet";
+  bool isBluetoothOn = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _checkBluetoothStatus();
+    loadReceivedData();
     _loadUserId();
     fetchUserInformation(context);
+  }
+
+  void _checkBluetoothStatus() async {
+    FlutterBluePlus flutterBlue = FlutterBluePlus();
+
+    // Check if Bluetooth is powered on
+    bool isOn = await FlutterBluePlus.isOn;
+    if (!isOn) {
+      // If Bluetooth is off, navigate to the ConnectPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Connectagain()),
+      );
+    } else {
+      setState(() {
+        isBluetoothOn = true; // Bluetooth is on, proceed to main screen
+      });
+    }
+  }
+
+  Future<void> loadReceivedData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      receivedTime = prefs.getString('receivedTime') ?? "No time yet";
+      receivedPressure =
+          prefs.getString('receivedPressure') ?? "No pressure yet";
+      receivedTemperature =
+          prefs.getString('receivedTemperature') ?? "No temperature yet";
+      receivedHumidity =
+          prefs.getString('receivedHumidity') ?? "No humidity yet";
+    });
   }
 
   DateTime? _lastPressed;
@@ -417,8 +457,7 @@ class _HomepageState extends State<Homepage> {
                                   padding: const EdgeInsets.only(left: 98.0),
                                   child: Row(
                                     children: [
-                                      Text(
-                                          '${Provider.of<BluetoothDataProvider>(context, listen: false).pressure}${"\u2103"}',
+                                      Text('${receivedPressure}${"\u2103"}',
                                           style: GoogleFonts.roboto(
                                               fontSize: 29,
                                               fontWeight: FontWeight.bold,

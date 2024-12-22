@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:track_pro/models/location.dart';
 import 'package:track_pro/noSmartwatch/steps.dart';
 import 'package:track_pro/screens/HomePage.dart';
 import 'package:track_pro/screens/calories.dart';
+import 'package:track_pro/screens/connectAgain.dart';
 import 'package:track_pro/screens/heartRate.dart';
 import 'package:track_pro/screens/settings.dart';
 import 'package:track_pro/screens/temperature.dart';
@@ -22,10 +24,29 @@ class TabNav extends StatefulWidget {
 }
 
 class _TabNavState extends State<TabNav> {
+  bool isBluetoothOn = false;
   int selectedPageIndex = 0;
   PlaceLocation? pickedPlace;
   PlaceLocation? currentLocation;
   bool isSwitchedDark = false;
+  void _checkBluetoothStatus() async {
+    FlutterBluePlus flutterBlue = FlutterBluePlus();
+
+    // Check if Bluetooth is powered on
+    bool isOn = await FlutterBluePlus.isOn;
+    if (!isOn) {
+      // If Bluetooth is off, navigate to the ConnectPage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Connectagain()),
+      );
+    } else {
+      setState(() {
+        isBluetoothOn = true; // Bluetooth is on, proceed to main screen
+      });
+    }
+  }
+
   void toggleDarkMode(bool value) {
     setState(() {
       isSwitchedDark = value;
@@ -35,6 +56,7 @@ class _TabNavState extends State<TabNav> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _checkBluetoothStatus();
     selectedPageIndex = widget.index;
   }
 

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:track_pro/models/location.dart';
@@ -25,6 +26,28 @@ class Temperature extends StatefulWidget {
 class _TemperatureState extends State<Temperature> {
   PlaceLocation? pickedPlace;
   bool isGettingLocation = false; // Declare the variable here
+  String receivedTime = "No time yet"; // Variable to store the received time
+  String receivedPressure = "No pressure yet";
+  String receivedTemperature = "No temperature yet";
+  String receivedHumidity = "No humidity yet";
+  @override
+  void initState() {
+    super.initState();
+    loadReceivedData();
+  }
+
+  Future<void> loadReceivedData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      receivedTime = prefs.getString('receivedTime') ?? "No time yet";
+      receivedPressure =
+          prefs.getString('receivedPressure') ?? "No pressure yet";
+      receivedTemperature =
+          prefs.getString('receivedTemperature') ?? "No temperature yet";
+      receivedHumidity =
+          prefs.getString('receivedHumidity') ?? "No humidity yet";
+    });
+  }
 
   void getCurrentLocation() async {
     Location location = Location();
@@ -213,7 +236,7 @@ class _TemperatureState extends State<Temperature> {
                                     width: 10,
                                   ),
                                   Text(
-                                    '${Provider.of<BluetoothDataProvider>(context).pressure}${"\u2103"}',
+                                    '${receivedPressure}${"\u2103"}',
                                     style: resultstyle,
                                   ),
                                 ],
@@ -232,8 +255,7 @@ class _TemperatureState extends State<Temperature> {
                                 const SizedBox(
                                   width: 35,
                                 ),
-                                Text(
-                                    '${Provider.of<BluetoothDataProvider>(context).temperature}%',
+                                Text('${receivedTemperature}%',
                                     style: resultstyle),
                               ],
                             ),
@@ -250,8 +272,7 @@ class _TemperatureState extends State<Temperature> {
                                 const SizedBox(
                                   width: 35,
                                 ),
-                                Text(
-                                    '${Provider.of<BluetoothDataProvider>(context).humidity} hpa',
+                                Text('${receivedHumidity} hpa',
                                     style: resultstyle),
                               ],
                             ),

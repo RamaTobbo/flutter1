@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:intl/intl.dart'; // Import the intl package
+import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/sensorsData.dart';
 import 'package:track_pro/screens/bluetoothPairingSuccess.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:track_pro/screens/tab.dart';
 
-class SelectBluetoothDevice extends StatefulWidget {
+class Connectagain extends StatefulWidget {
+  const Connectagain({super.key});
+
   @override
-  _SelectBluetoothDeviceState createState() => _SelectBluetoothDeviceState();
+  State<Connectagain> createState() => _ConnectagainState();
 }
 
-class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
+class _ConnectagainState extends State<Connectagain> {
   bool bluetoothState = false;
   BluetoothDevice? selectedDevice;
   BluetoothCharacteristic? timeCharacteristic;
@@ -362,8 +367,9 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (ctx) =>
-                                        Bluetoothpairingsuccess()));
+                                    builder: (ctx) => TabNav(
+                                          index: 0,
+                                        )));
                           },
                           child: Text(
                             "Connect",
