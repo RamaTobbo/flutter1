@@ -9,6 +9,7 @@ import 'dart:convert';
 import 'package:track_pro/models/location.dart';
 import 'package:track_pro/models/weather.dart';
 import 'package:track_pro/provider/location.dart';
+import 'package:track_pro/provider/sensorsData.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/map.dart';
 import 'package:track_pro/services/weather.dart';
@@ -23,9 +24,8 @@ class Temperature extends StatefulWidget {
 
 class _TemperatureState extends State<Temperature> {
   PlaceLocation? pickedPlace;
+  bool isGettingLocation = false; // Declare the variable here
 
-  @override
-  var isGettingLocation = false;
   void getCurrentLocation() async {
     Location location = Location();
 
@@ -52,20 +52,26 @@ class _TemperatureState extends State<Temperature> {
     setState(() {
       isGettingLocation = true;
     });
+
     locationData = await location.getLocation();
     double longitude = locationData.longitude!.toDouble();
     double latitude = locationData.latitude!.toDouble();
 
+    // Store the location in the provider
     Provider.of<location1>(context, listen: false).setLatitude(latitude);
-    Provider.of<location1>(context, listen: false).setLatitude(longitude);
+    Provider.of<location1>(context, listen: false)
+        .setLongitude(longitude); // Fix this line
+
     if (longitude == null || latitude == null) {
       return;
     }
+
     final url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=AIzaSyA664j9QIT6aPfNHPtMG9yKEM0Qx89RYVM');
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=YOUR_API_KEY');
     final response = await http.get(url);
     final resData = json.decode(response.body);
     final address = resData['results'][0]['formatted_address'];
+
     setState(() {
       pickedPlace =
           PlaceLocation(long: longitude, lat: latitude, address: address);
@@ -74,6 +80,7 @@ class _TemperatureState extends State<Temperature> {
   }
 
   DateTime? _lastPressed;
+
   Future<bool> _onWillPop() async {
     DateTime now = DateTime.now();
     if (_lastPressed == null ||
@@ -91,7 +98,7 @@ class _TemperatureState extends State<Temperature> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Exit'),
-          content: const Text('Do you want to exit trackPro app?'),
+          content: const Text('Do you want to exit the TrackPro app?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -115,7 +122,8 @@ class _TemperatureState extends State<Temperature> {
   final textstyle =
       GoogleFonts.roboto(fontSize: 20, color: const Color(0xff575757));
   final resultstyle =
-      GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold);
+      GoogleFonts.nunito(fontSize: 13, fontWeight: FontWeight.bold);
+
   @override
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
@@ -205,7 +213,7 @@ class _TemperatureState extends State<Temperature> {
                                     width: 10,
                                   ),
                                   Text(
-                                    'result${"\u2103"}',
+                                    '${Provider.of<BluetoothDataProvider>(context).pressure}${"\u2103"}',
                                     style: resultstyle,
                                   ),
                                 ],
@@ -224,7 +232,9 @@ class _TemperatureState extends State<Temperature> {
                                 const SizedBox(
                                   width: 35,
                                 ),
-                                Text('result', style: resultstyle),
+                                Text(
+                                    '${Provider.of<BluetoothDataProvider>(context).temperature}%',
+                                    style: resultstyle),
                               ],
                             ),
                             const SizedBox(
@@ -240,7 +250,9 @@ class _TemperatureState extends State<Temperature> {
                                 const SizedBox(
                                   width: 35,
                                 ),
-                                Text('result', style: resultstyle),
+                                Text(
+                                    '${Provider.of<BluetoothDataProvider>(context).humidity} hpa',
+                                    style: resultstyle),
                               ],
                             ),
                           ],

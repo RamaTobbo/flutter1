@@ -1,11 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:intl/intl.dart'; // Import the intl package
 import 'package:permission_handler/permission_handler.dart';
-
-void main() {
-  runApp(MaterialApp(home: SelectBluetoothDevice()));
-}
+import 'package:provider/provider.dart';
+import 'package:track_pro/provider/sensorsData.dart';
+import 'package:track_pro/screens/bluetoothPairingSuccess.dart';
 
 class SelectBluetoothDevice extends StatefulWidget {
   @override
@@ -16,8 +15,17 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
   bool bluetoothState = false;
   BluetoothDevice? selectedDevice;
   BluetoothCharacteristic? timeCharacteristic;
+  BluetoothCharacteristic? pressureCharacteristic;
+  BluetoothCharacteristic? temperatureCharacteristic;
+  BluetoothCharacteristic? humidityCharacteristic;
+
   bool connectionStatus = false;
   bool isConnecting = false;
+
+  String receivedTime = "No time yet"; // Variable to store the received time
+  String receivedPressure = "No pressure yet";
+  String receivedTemperature = "No temperature yet";
+  String receivedHumidity = "No humidity yet";
 
   @override
   void initState() {
@@ -40,7 +48,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
     }
   }
 
-  // Connect to the selected Bluetooth device
   Future<void> connectToDevice(BluetoothDevice device) async {
     try {
       setState(() {
@@ -52,26 +59,116 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
 
       // Discover services on the device
       List<BluetoothService> services = await device.discoverServices();
-      BluetoothService timeService = services.firstWhere((service) {
-        return service.uuid.toString() ==
-            "00000000-5EC4-4083-81CD-A10B8D5CF6EC";
+      print("Services discovered: ");
+      services.forEach((service) {
+        print("Service UUID: ${service.uuid}");
+        service.characteristics.forEach((characteristic) {
+          print("Characteristic UUID: ${characteristic.uuid}");
+        });
       });
 
-      // Find the characteristic
-      timeCharacteristic = timeService.characteristics.firstWhere((char) {
-        return char.uuid.toString() == "00000001-5EC4-4083-81CD-A10B8D5CF6EC";
+      // Try finding the sensor service
+      BluetoothService? sensorService;
+      try {
+        sensorService = services.firstWhere((service) =>
+            service.uuid.toString() == "00000000-5ec4-4083-81cd-a10b8d5cf6ec");
+      } catch (e) {
+        print("Sensor service not found: ${e.toString()}");
+      }
+
+      if (sensorService == null) {
+        print("Sensor service not found!");
+        return;
+      }
+
+      // Finding characteristics for time, pressure, temperature, and humidity
+      timeCharacteristic = sensorService.characteristics.firstWhere(
+        (char) =>
+            char.uuid.toString() == "00000001-5ec4-4083-81cd-a10b8d5cf6ec",
+      );
+      pressureCharacteristic = sensorService.characteristics.firstWhere(
+        (char) =>
+            char.uuid.toString() == "00000002-5ec4-4083-81cd-a10b8d5cf6ec",
+      );
+      temperatureCharacteristic = sensorService.characteristics.firstWhere(
+        (char) =>
+            char.uuid.toString() == "00000003-5ec4-4083-81cd-a10b8d5cf6ec",
+      );
+      humidityCharacteristic = sensorService.characteristics.firstWhere(
+        (char) =>
+            char.uuid.toString() == "00000004-5ec4-4083-81cd-a10b8d5cf6ec",
+      );
+
+      if (timeCharacteristic == null ||
+          pressureCharacteristic == null ||
+          temperatureCharacteristic == null ||
+          humidityCharacteristic == null) {
+        print("One or more characteristics not found!");
+        return;
+      }
+
+      // Read the values for time, pressure, temperature, and humidity
+      List<int> timeValue = await timeCharacteristic!.read();
+      String timeString = String.fromCharCodes(timeValue);
+
+      List<int> pressureValue = await pressureCharacteristic!.read();
+      String pressureString = String.fromCharCodes(pressureValue);
+
+      List<int> temperatureValue = await temperatureCharacteristic!.read();
+      String temperatureString = String.fromCharCodes(temperatureValue);
+
+      List<int> humidityValue = await humidityCharacteristic!.read();
+      String humidityString = String.fromCharCodes(humidityValue);
+
+      print("Received time string: $timeString");
+      print("Received pressure: $pressureString");
+      print("Received temperature: $temperatureString");
+      print("Received humidity: $humidityString");
+
+      // Set the initial values
+      setState(() {
+        receivedTime = timeString;
+        receivedPressure = pressureString;
+        receivedTemperature = temperatureString;
+        receivedHumidity = humidityString;
       });
 
-      // Example: Read value from the characteristic
-      List<int> value = await timeCharacteristic!.read();
-      print("Read value: $value");
-
-      // Setting up notifications to receive data
+      // Subscribe to notifications for time, pressure, temperature, and humidity
       await timeCharacteristic!.setNotifyValue(true);
+      await pressureCharacteristic!.setNotifyValue(true);
+      await temperatureCharacteristic!.setNotifyValue(true);
+      await humidityCharacteristic!.setNotifyValue(true);
+
+      // Listen for changes to each characteristic
       timeCharacteristic!.value.listen((value) {
-        print("Received notification: $value");
+        String timeString = String.fromCharCodes(value);
+        setState(() {
+          receivedTime = timeString;
+        });
       });
 
+      pressureCharacteristic!.value.listen((value) {
+        String pressureString = String.fromCharCodes(value);
+        setState(() {
+          receivedPressure = pressureString;
+        });
+      });
+
+      temperatureCharacteristic!.value.listen((value) {
+        String temperatureString = String.fromCharCodes(value);
+        setState(() {
+          receivedTemperature = temperatureString;
+        });
+      });
+
+      humidityCharacteristic!.value.listen((value) {
+        String humidityString = String.fromCharCodes(value);
+        setState(() {
+          receivedHumidity = humidityString;
+        });
+      });
+
+      // Update connection status
       setState(() {
         connectionStatus = true;
         isConnecting = false;
@@ -80,12 +177,106 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
       setState(() {
         isConnecting = false;
       });
-      print("Failed to connect or interact with the device: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to connect to device.")),
-      );
+      print("Error connecting to device: $e");
     }
   }
+
+  // // Connect to the selected Bluetooth device and discover services
+  // Future<void> connectToDevice(BluetoothDevice device) async {
+  //   try {
+  //     setState(() {
+  //       isConnecting = true;
+  //     });
+
+  //     // Connect to the device
+  //     await device.connect();
+
+  //     // Discover services on the device
+  //     List<BluetoothService> services = await device.discoverServices();
+  //     print("Services discovered: ");
+  //     services.forEach((service) {
+  //       print("Service UUID: ${service.uuid}");
+  //       service.characteristics.forEach((characteristic) {
+  //         print("Characteristic UUID: ${characteristic.uuid}");
+  //       });
+  //     });
+
+  //     // Try finding the time, pressure, temperature, and humidity services
+  //     BluetoothService? sensorService;
+  //     try {
+  //       sensorService = services.firstWhere((service) =>
+  //           service.uuid.toString() == "00000000-5ec4-4083-81cd-a10b8d5cf6ec");
+  //     } catch (e) {
+  //       print("Service not found: ${e.toString()}");
+  //     }
+
+  //     if (sensorService == null) {
+  //       print("Sensor service not found!");
+  //       return;
+  //     }
+
+  //     // Finding characteristics for time, pressure, temperature, and humidity
+  //     timeCharacteristic = sensorService.characteristics.firstWhere(
+  //       (char) =>
+  //           char.uuid.toString() == "00000001-5ec4-4083-81cd-a10b8d5cf6ec",
+  //     );
+  //     pressureCharacteristic = sensorService.characteristics.firstWhere(
+  //       (char) =>
+  //           char.uuid.toString() == "00000002-5ec4-4083-81cd-a10b8d5cf6ec",
+  //     );
+  //     temperatureCharacteristic = sensorService.characteristics.firstWhere(
+  //       (char) =>
+  //           char.uuid.toString() == "00000003-5ec4-4083-81cd-a10b8d5cf6ec",
+  //     );
+  //     humidityCharacteristic = sensorService.characteristics.firstWhere(
+  //       (char) =>
+  //           char.uuid.toString() == "00000004-5ec4-4083-81cd-a10b8d5cf6ec",
+  //     );
+
+  //     if (timeCharacteristic == null ||
+  //         pressureCharacteristic == null ||
+  //         temperatureCharacteristic == null ||
+  //         humidityCharacteristic == null) {
+  //       print("One or more characteristics not found!");
+  //       return;
+  //     }
+
+  //     // Explicitly read the characteristic's value
+  //     List<int> timeValue = await timeCharacteristic!.read();
+  //     String timeString = String.fromCharCodes(timeValue);
+
+  //     List<int> pressureValue = await pressureCharacteristic!.read();
+  //     String pressureString = String.fromCharCodes(pressureValue);
+
+  //     List<int> temperatureValue = await temperatureCharacteristic!.read();
+  //     String temperatureString = String.fromCharCodes(temperatureValue);
+
+  //     List<int> humidityValue = await humidityCharacteristic!.read();
+  //     String humidityString = String.fromCharCodes(humidityValue);
+
+  //     print("Received time string: $timeString");
+  //     print("Received pressure: $pressureString");
+  //     print("Received temperature: $temperatureString");
+  //     print("Received humidity: $humidityString");
+
+  //     setState(() {
+  //       receivedTime = timeString;
+  //       receivedPressure = pressureString;
+  //       receivedTemperature = temperatureString;
+  //       receivedHumidity = humidityString;
+  //     });
+
+  //     setState(() {
+  //       connectionStatus = true;
+  //       isConnecting = false;
+  //     });
+  //   } catch (e) {
+  //     setState(() {
+  //       isConnecting = false;
+  //     });
+  //     print("Error connecting to device: $e");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +317,9 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                 }
               },
             ),
+            SizedBox(
+              height: 80,
+            ),
 
             // Device scan results
             StreamBuilder<List<ScanResult>>(
@@ -150,7 +344,7 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)),
-                              side: BorderSide(color: Colors.orange),
+                              side: BorderSide(color: Colors.black),
                             ),
                           ),
                           onPressed: () async {
@@ -158,10 +352,25 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                               isConnecting = true;
                             });
                             await connectToDevice(tempList[index].device);
+                            Provider.of<BluetoothDataProvider>(context,
+                                    listen: false)
+                                .setPressure(receivedPressure);
+                            Provider.of<BluetoothDataProvider>(context,
+                                    listen: false)
+                                .setHumidity(receivedHumidity);
+                            Provider.of<BluetoothDataProvider>(context,
+                                    listen: false)
+                                .setTemperature(receivedTemperature);
+
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (ctx) =>
+                                        Bluetoothpairingsuccess()));
                           },
                           child: Text(
                             "Connect",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                         ),
                       );
@@ -176,6 +385,34 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
               Center(
                 child: CircularProgressIndicator(),
               ),
+
+            // Display the received values on the UI
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Current Time: $receivedTime',
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber),
+                  ),
+                  Text(
+                    'Pressure: $receivedPressure',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Temperature: $receivedTemperature',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Humidity: $receivedHumidity',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -187,7 +424,7 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         builder: (context, snapshot) {
           if (snapshot.data!) {
             return FloatingActionButton(
-              child: Icon(Icons.stop, color: Colors.red),
+              child: Icon(Icons.stop, color: Colors.black),
               onPressed: () => FlutterBluePlus.stopScan(),
               backgroundColor: Color(0xFFEDEDED),
             );
@@ -203,11 +440,4 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
       ),
     );
   }
-}
-
-class SelectedDevice {
-  BluetoothDevice? device;
-  int? state;
-
-  SelectedDevice(this.device, this.state);
 }

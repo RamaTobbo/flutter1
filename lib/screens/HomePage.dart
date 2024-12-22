@@ -10,6 +10,7 @@ import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/heartRate.dart';
 import 'package:track_pro/widgets/chatbot.dart';
+import 'package:track_pro/provider/sensorsData.dart';
 
 class Homepage extends StatefulWidget {
   Homepage({super.key});
@@ -416,7 +417,8 @@ class _HomepageState extends State<Homepage> {
                                   padding: const EdgeInsets.only(left: 98.0),
                                   child: Row(
                                     children: [
-                                      Text('Result',
+                                      Text(
+                                          '${Provider.of<BluetoothDataProvider>(context, listen: false).pressure}${"\u2103"}',
                                           style: GoogleFonts.roboto(
                                               fontSize: 29,
                                               fontWeight: FontWeight.bold,
