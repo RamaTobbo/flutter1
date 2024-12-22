@@ -4,10 +4,17 @@ class BluetoothDataProvider extends ChangeNotifier {
   String _pressure = "";
   String _humidity = "";
   String _temperature = "";
+  String _time = "";
 
   String get pressure => _pressure;
   String get humidity => _humidity;
   String get temperature => _temperature;
+  String get time => _time;
+
+  void setTime(String time) {
+    _time = time;
+    notifyListeners();
+  }
 
   void updateData(String temperature, String humidity, String pressure) {
     _temperature = temperature;

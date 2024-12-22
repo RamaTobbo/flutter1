@@ -107,32 +107,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         return;
       }
 
-      // Read the values for time, pressure, temperature, and humidity
-      List<int> timeValue = await timeCharacteristic!.read();
-      String timeString = String.fromCharCodes(timeValue);
-
-      List<int> pressureValue = await pressureCharacteristic!.read();
-      String pressureString = String.fromCharCodes(pressureValue);
-
-      List<int> temperatureValue = await temperatureCharacteristic!.read();
-      String temperatureString = String.fromCharCodes(temperatureValue);
-
-      List<int> humidityValue = await humidityCharacteristic!.read();
-      String humidityString = String.fromCharCodes(humidityValue);
-
-      print("Received time string: $timeString");
-      print("Received pressure: $pressureString");
-      print("Received temperature: $temperatureString");
-      print("Received humidity: $humidityString");
-
-      // Set the initial values
-      setState(() {
-        receivedTime = timeString;
-        receivedPressure = pressureString;
-        receivedTemperature = temperatureString;
-        receivedHumidity = humidityString;
-      });
-
       // Subscribe to notifications for time, pressure, temperature, and humidity
       await timeCharacteristic!.setNotifyValue(true);
       await pressureCharacteristic!.setNotifyValue(true);
@@ -145,6 +119,9 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         setState(() {
           receivedTime = timeString;
         });
+        Provider.of<BluetoothDataProvider>(context, listen: false)
+            .setHumidity(receivedHumidity);
+        print("Receivedd time: $timeString");
       });
 
       pressureCharacteristic!.value.listen((value) {
@@ -152,6 +129,9 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         setState(() {
           receivedPressure = pressureString;
         });
+        Provider.of<BluetoothDataProvider>(context, listen: false)
+            .setTime(receivedTime);
+        print("Receivedd pressure: $pressureString");
       });
 
       temperatureCharacteristic!.value.listen((value) {
@@ -159,6 +139,9 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         setState(() {
           receivedTemperature = temperatureString;
         });
+        Provider.of<BluetoothDataProvider>(context, listen: false)
+            .setPressure(receivedPressure);
+        print("Receivedd temperature: $temperatureString");
       });
 
       humidityCharacteristic!.value.listen((value) {
@@ -166,6 +149,9 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         setState(() {
           receivedHumidity = humidityString;
         });
+        Provider.of<BluetoothDataProvider>(context, listen: false)
+            .setTemperature(receivedTemperature);
+        print("Receivedd humidity: $humidityString");
       });
 
       // Update connection status
@@ -178,6 +164,13 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         isConnecting = false;
       });
       print("Error connecting to device: $e");
+      Provider.of<BluetoothDataProvider>(context, listen: false)
+          .setPressure(receivedPressure);
+
+      debugPrint("Received time: $receivedHumidity");
+      debugPrint("Received pressure: $receivedPressure");
+      debugPrint("Received temperature: $receivedTemperature");
+      debugPrint("Received humidity: $receivedTime");
     }
   }
 
@@ -352,15 +345,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                               isConnecting = true;
                             });
                             await connectToDevice(tempList[index].device);
-                            Provider.of<BluetoothDataProvider>(context,
-                                    listen: false)
-                                .setPressure(receivedPressure);
-                            Provider.of<BluetoothDataProvider>(context,
-                                    listen: false)
-                                .setHumidity(receivedHumidity);
-                            Provider.of<BluetoothDataProvider>(context,
-                                    listen: false)
-                                .setTemperature(receivedTemperature);
 
                             Navigator.push(
                                 context,
