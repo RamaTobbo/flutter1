@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_background/flutter_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/provider/caloriesburned.dart';
 import 'package:track_pro/provider/isAsmartWatchuser.dart';
@@ -28,6 +29,17 @@ void main() async {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   firestore.settings = Settings(persistenceEnabled: true);
   await dotenv.load(fileName: ".env");
+  final androidConfig = FlutterBackgroundAndroidConfig(
+    notificationTitle: "flutter_background example app",
+    notificationText:
+        "Background notification for keeping the example app running in the background",
+    notificationImportance: AndroidNotificationImportance.normal,
+    notificationIcon: AndroidResource(
+        name: 'background_icon',
+        defType: 'drawable'), // Default is ic_launcher from folder mipmap
+  );
+  bool success =
+      await FlutterBackground.initialize(androidConfig: androidConfig);
 
   bool notUsingSmartwatch = prefs.getBool('isNotUsingSmartwatch') ?? false;
   // FirebaseMessaging.instance.getToken().then((token) {
