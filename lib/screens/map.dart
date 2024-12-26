@@ -21,8 +21,6 @@ class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
   Location _location = Location();
   List<LatLng> _points = [];
-  double _totalDistance = 0.0;
-  bool _isTracking = false;
 
   @override
   void initState() {
@@ -43,58 +41,17 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _updateLocation(LatLng newLocation) {
-    if (_points.isNotEmpty) {
-      double distance = _calculateDistance(
-        _points.last.latitude,
-        _points.last.longitude,
-        newLocation.latitude,
-        newLocation.longitude,
-      );
-
-      if (distance > 5.0) {
-        _totalDistance += distance;
-      }
-    }
+    if (_points.isNotEmpty) {}
 
     setState(() {
       _points.add(newLocation);
     });
   }
 
-  double _calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371e3;
-    double phi1 = lat1 * (pi / 180);
-    double phi2 = lat2 * (pi / 180);
-    double deltaPhi = (lat2 - lat1) * (pi / 180);
-    double deltaLambda = (lon2 - lon1) * (pi / 180);
-
-    double a = sin(deltaPhi / 2) * sin(deltaPhi / 2) +
-        cos(phi1) * cos(phi2) * sin(deltaLambda / 2) * sin(deltaLambda / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-
-    return R * c;
-  }
-
   String _determineActivity() {
     if (_points.length < 2) return "Unknown";
 
-    double distance = _calculateDistance(
-      _points[_points.length - 2].latitude,
-      _points[_points.length - 2].longitude,
-      _points.last.latitude,
-      _points.last.longitude,
-    );
-
     double timeElapsed = 60.0;
-
-    if (distance > 0) {
-      double speed = distance / timeElapsed;
-      if (speed < 4.5) {
-        return "Not moving";
-      } else {
-        return "Running";
-      }
-    }
 
     return "Unknown";
   }
@@ -130,21 +87,6 @@ class _MapScreenState extends State<MapScreen> {
             width: 5,
           ),
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _isTracking = !_isTracking;
-          });
-        },
-        child: Icon(_isTracking ? Icons.stop : Icons.play_arrow),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-              'Total Distance: ${_totalDistance.toStringAsFixed(2)} m\nActivity: ${_determineActivity()}'),
-        ),
       ),
     );
   }
