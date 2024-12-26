@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,26 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
+
+  int? heartRate;
+  int? humidity;
+  int? pressure;
+  int? temperature;
+  void _fetchSensorData() {
+    _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value as Map?;
+      if (data != null) {
+        setState(() {
+          heartRate = data['heartRate'];
+          // humidity = data['humidity'];
+          // pressure = data['pressure'];
+          // temperature = data['temperature'];
+        });
+      }
+    });
+  }
+
   int height = 0; // In cm
   int weight = 0;
   String receivedTime = "No time yet"; // Variable to store the received time
@@ -29,10 +50,12 @@ class _HomepageState extends State<Homepage> {
   String receivedTemperature = "No temperature yet";
   String receivedHumidity = "No humidity yet";
   bool isBluetoothOn = false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _fetchSensorData();
     _checkBluetoothStatus();
     loadReceivedData();
     _loadUserId();
@@ -191,10 +214,7 @@ class _HomepageState extends State<Homepage> {
                             horizontal: 15, vertical: 34),
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) => const Heartrate()));
+                            ;
                           },
                           child: Container(
                             width: 415,
@@ -236,7 +256,7 @@ class _HomepageState extends State<Homepage> {
                                   padding: const EdgeInsets.only(left: 98.0),
                                   child: Row(
                                     children: [
-                                      Text('Result',
+                                      Text('${heartRate}',
                                           style: GoogleFonts.roboto(
                                               fontSize: 29,
                                               fontWeight: FontWeight.bold,

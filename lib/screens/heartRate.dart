@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,7 +13,33 @@ class Heartrate extends StatefulWidget {
 }
 
 class _HeartrateState extends State<Heartrate> {
-  var heartRate = 59;
+  var heartRate1 = 59;
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
+
+  int? heartRate;
+  int? humidity;
+  int? pressure;
+  int? temperature;
+  void _fetchSensorData() {
+    _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value as Map?;
+      if (data != null) {
+        setState(() {
+          heartRate = data['heartRate'];
+          // humidity = data['humidity'];
+          // pressure = data['pressure'];
+          // temperature = data['temperature'];
+        });
+      }
+    });
+  }
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchSensorData();
+  }
+
   DateTime? _lastPressed;
   Future<bool> _onWillPop() async {
     DateTime now = DateTime.now();
@@ -106,7 +133,7 @@ class _HeartrateState extends State<Heartrate> {
                                     width: 90),
                               ),
                               const SizedBox(width: 13),
-                              Text('Result',
+                              Text('${heartRate}',
                                   style: GoogleFonts.roboto(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold)),
@@ -126,7 +153,7 @@ class _HeartrateState extends State<Heartrate> {
                         Positioned(
                           top: 10,
                           right: 16,
-                          child: heartRate >= 60 && heartRate <= 100
+                          child: heartRate! >= 60 && heartRate! <= 100
                               ? Text(
                                   'Normal',
                                   style: GoogleFonts.roboto(
@@ -188,7 +215,7 @@ class _HeartrateState extends State<Heartrate> {
                         Positioned(
                           top: 10,
                           right: 16,
-                          child: heartRate >= 60 && heartRate <= 100
+                          child: heartRate1 >= 60 && heartRate1 <= 100
                               ? Text(
                                   'Normal',
                                   style: GoogleFonts.roboto(
