@@ -25,10 +25,14 @@ class _HeartrateState extends State<Heartrate> {
       final data = event.snapshot.value as Map?;
       if (data != null) {
         setState(() {
-          heartRate = (data['heartRate'] as double).round();
-          // humidity = data['humidity'];
-          // pressure = data['pressure'];
-          // temperature = data['temperature'];
+          // Check if the heartRate is a double, then convert it to int, or cast it directly if it's an int
+          if (data['heartRate'] is double) {
+            heartRate = (data['heartRate'] as double)
+                .toInt(); // Convert to int if it's a double
+          } else if (data['heartRate'] is int) {
+            heartRate = data['heartRate']
+                as int; // Directly assign if it's already an int
+          }
         });
       }
     });
