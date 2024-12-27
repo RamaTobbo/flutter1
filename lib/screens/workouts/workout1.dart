@@ -188,7 +188,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                     right: 30,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (ctx) => Exercisess(
@@ -200,13 +200,19 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                               workoutExercises: WorkoutExercises,
                               workoutGifImages: WorkoutGifImages,
                               exerciseIndex: index,
+                              previousWorkout: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (ctx) => WorkoutLowerBoddy()),
+                                );
+                              },
 
                               nextExerciseRoute:
                                   "", // Handle next route if needed
                             ),
                           ),
-                          (route) =>
-                              false, // This removes all routes until the new one
+                          // This removes all routes until the new one
                         );
                         // if (WorkoutExercises[index] == "Cycling") {
                         //   Navigator.pushAndRemoveUntil(

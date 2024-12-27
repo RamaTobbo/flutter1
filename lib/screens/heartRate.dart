@@ -25,7 +25,7 @@ class _HeartrateState extends State<Heartrate> {
       final data = event.snapshot.value as Map?;
       if (data != null) {
         setState(() {
-          heartRate = data['heartRate'];
+          heartRate = (data['heartRate'] as double).round();
           // humidity = data['humidity'];
           // pressure = data['pressure'];
           // temperature = data['temperature'];

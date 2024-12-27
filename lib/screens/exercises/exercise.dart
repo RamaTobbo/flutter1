@@ -19,6 +19,7 @@ class Exercisess extends StatefulWidget {
   final String exerciseName;
   final String workoutName;
   final String animationImage;
+  final Function previousWorkout;
 
   final String nextExerciseRoute;
   final String videoTutorial;
@@ -37,6 +38,7 @@ class Exercisess extends StatefulWidget {
     required this.videoTutorials,
     required this.workoutExercises,
     required this.workoutGifImages,
+    required this.previousWorkout,
     super.key,
   });
 
@@ -54,6 +56,7 @@ class _ExercisessState extends State<Exercisess> {
   int countdownTimer = 25;
   int actualElapsedTime = 0;
   final int maxTimer = 3600;
+  bool isPaused = false;
 
   Timer? timer;
 
@@ -70,7 +73,7 @@ class _ExercisessState extends State<Exercisess> {
   void nextExercise() {
     int nextIndex = widget.exerciseIndex + 1;
     if (nextIndex < widget.workoutExercises.length) {
-      Navigator.pushAndRemoveUntil(
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (ctx) => Exercisess(
@@ -83,9 +86,10 @@ class _ExercisessState extends State<Exercisess> {
             nextExerciseRoute: "",
             workoutName: widget.workoutName,
             exerciseIndex: nextIndex, // Pass the new index
+            previousWorkout: () {},
           ),
         ),
-        (route) => false, // Clear the stack so user cannot go back
+        // Clear the stack so user cannot go back
       );
     }
   }
@@ -94,7 +98,7 @@ class _ExercisessState extends State<Exercisess> {
   void previousExercise() {
     int previousIndex = widget.exerciseIndex - 1;
     if (previousIndex >= 0) {
-      Navigator.pushAndRemoveUntil(
+      Navigator.push(
         context,
         MaterialPageRoute(
           builder: (ctx) => Exercisess(
@@ -107,9 +111,10 @@ class _ExercisessState extends State<Exercisess> {
             nextExerciseRoute: "",
             workoutName: widget.workoutName,
             exerciseIndex: previousIndex, // Pass the new index
+            previousWorkout: () {},
           ),
         ),
-        (route) => false, // Clear the stack so user cannot go back
+        // Clear the stack so user cannot go back
       );
     }
   }
@@ -153,6 +158,7 @@ class _ExercisessState extends State<Exercisess> {
         timer = Timer.periodic(Duration(seconds: 1), (_) {
           setState(() {
             isRunning = true;
+            isPaused = false;
             actualElapsedTime++;
             if (countdownTimer > 0) {
               countdownTimer--;
@@ -178,42 +184,44 @@ class _ExercisessState extends State<Exercisess> {
           builder: (ctx) => Finishedworkouts(
             Workout: widget.workoutName, // workout name
             repeatWorkout: () {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (ctx) => Exercisess(
-                            exerciseName: widget.workoutExercises[0],
-                            animationImage: widget.workoutGifImages[0],
-                            videoTutorial: widget.videoTutorials[0],
-                            videoTutorials: widget.videoTutorials,
-                            workoutExercises: widget.workoutExercises,
-                            workoutGifImages: widget.workoutGifImages,
-                            nextExerciseRoute: "",
-                            workoutName: widget.workoutName,
-                            exerciseIndex: 0,
-                          )),
-                  (Route) => false);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (ctx) => Exercisess(
+                          exerciseName: widget.workoutExercises[0],
+                          animationImage: widget.workoutGifImages[0],
+                          videoTutorial: widget.videoTutorials[0],
+                          videoTutorials: widget.videoTutorials,
+                          workoutExercises: widget.workoutExercises,
+                          workoutGifImages: widget.workoutGifImages,
+                          nextExerciseRoute: "",
+                          workoutName: widget.workoutName,
+                          exerciseIndex: 0,
+                          previousWorkout: () {},
+                        )),
+              );
             },
           ),
         ),
       );
     } else {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (ctx) => Exercisess(
-              exerciseName: widget.workoutExercises[widget.exerciseIndex + 1],
-              animationImage: widget.workoutGifImages[widget.exerciseIndex + 1],
-              exerciseIndex: widget.exerciseIndex + 1,
-              nextExerciseRoute: "",
-              videoTutorials: widget.videoTutorials,
-              workoutExercises: widget.workoutExercises,
-              workoutGifImages: widget.workoutGifImages,
-              videoTutorial: widget.workoutExercises[widget.exerciseIndex + 1],
-              workoutName: widget.workoutName,
-            ),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (ctx) => Exercisess(
+            exerciseName: widget.workoutExercises[widget.exerciseIndex + 1],
+            animationImage: widget.workoutGifImages[widget.exerciseIndex + 1],
+            exerciseIndex: widget.exerciseIndex + 1,
+            nextExerciseRoute: "",
+            videoTutorials: widget.videoTutorials,
+            workoutExercises: widget.workoutExercises,
+            workoutGifImages: widget.workoutGifImages,
+            videoTutorial: widget.workoutExercises[widget.exerciseIndex + 1],
+            workoutName: widget.workoutName,
+            previousWorkout: widget.previousWorkout,
           ),
-          (Route) => false);
+        ),
+      );
     }
   }
 
@@ -243,23 +251,22 @@ class _ExercisessState extends State<Exercisess> {
                       Image.asset('assets/images/fire.gif'),
                       IconButton(
                           onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) => Exercisess(
-                                        exerciseName: widget.exerciseName,
-                                        animationImage: widget.animationImage,
-                                        workoutName: widget.workoutName,
-                                        exerciseIndex: widget.exerciseIndex,
-                                        videoTutorials: widget.videoTutorials,
-                                        workoutExercises:
-                                            widget.workoutExercises,
-                                        workoutGifImages:
-                                            widget.workoutGifImages,
-                                        nextExerciseRoute:
-                                            widget.nextExerciseRoute,
-                                        videoTutorial: widget.videoTutorial)),
-                                (Route) => false);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) => Exercisess(
+                                      exerciseName: widget.exerciseName,
+                                      animationImage: widget.animationImage,
+                                      workoutName: widget.workoutName,
+                                      exerciseIndex: widget.exerciseIndex,
+                                      videoTutorials: widget.videoTutorials,
+                                      workoutExercises: widget.workoutExercises,
+                                      workoutGifImages: widget.workoutGifImages,
+                                      nextExerciseRoute:
+                                          widget.nextExerciseRoute,
+                                      previousWorkout: widget.previousWorkout,
+                                      videoTutorial: widget.videoTutorial)),
+                            );
                           },
                           icon: Icon(Icons.restart_alt))
                     ],
@@ -312,6 +319,8 @@ class _ExercisessState extends State<Exercisess> {
 
   void pauseTimer() {
     setState(() {
+      isPaused = true;
+      isRunning = false;
       timer?.cancel();
     });
   }
@@ -403,7 +412,7 @@ class _ExercisessState extends State<Exercisess> {
                 ),
                 SizedBox(width: 20),
                 ElevatedButton(
-                  onPressed: isRunning
+                  onPressed: isRunning || isPaused
                       ? null
                       : () {
                           if (selectedDuration > 5) {
@@ -425,7 +434,7 @@ class _ExercisessState extends State<Exercisess> {
                 ),
                 SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: isRunning
+                  onPressed: isRunning || isPaused
                       ? null
                       : () {
                           if (selectedDuration < maxTimer) {
@@ -468,15 +477,27 @@ class _ExercisessState extends State<Exercisess> {
             Padding(
               padding: const EdgeInsets.only(top: 30.0),
               child: isRunning
-                  ? ElevatedButton(
-                      onPressed: EndExerciseCalculatedCalories,
-                      child: Text('End Exercise'),
+                  ? Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: EndExerciseCalculatedCalories,
+                          child: Text('End Exercise'),
+                        ),
+                        IconButton(
+                          iconSize: 100,
+                          onPressed: pauseTimer,
+                          icon: Icon(
+                            Icons.pause,
+                            size: 100,
+                          ),
+                        ),
+                      ],
                     )
                   : IconButton(
                       iconSize: 100,
-                      onPressed: isRunning ? pauseTimer : resumeTimer,
+                      onPressed: resumeTimer,
                       icon: Icon(
-                        isRunning ? Icons.pause : Icons.play_arrow_rounded,
+                        Icons.play_arrow_rounded,
                         size: 100,
                       ),
                     ),
@@ -484,17 +505,14 @@ class _ExercisessState extends State<Exercisess> {
           ],
         ),
       ),
-      Positioned(
-          top: 30,
-          left: 10,
-          child: IconButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (ctx) => WorkoutCardio()),
-                    (Route) => false);
-              },
-              icon: Icon(Icons.arrow_back)))
+      // Positioned(
+      //     top: 30,
+      //     left: 10,
+      //     child: IconButton(
+      //         onPressed: () {
+      //           widget.previousWorkout();
+      //         },
+      //         icon: Icon(Icons.arrow_back)))
     ]);
   }
 }

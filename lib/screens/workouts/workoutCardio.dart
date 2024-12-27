@@ -187,7 +187,7 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                     right: 30,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (ctx) => Exercisess(
@@ -201,10 +201,16 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                               workoutGifImages: WorkoutGifImages,
                               nextExerciseRoute:
                                   "", // Handle next route if needed
+                              previousWorkout: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (ctx) => WorkoutCardio()),
+                                );
+                              },
                             ),
                           ),
-                          (route) =>
-                              false, // This removes all routes until the new one
+                          // This removes all routes until the new one
                         );
                         // if (WorkoutExercises[index] == "Cycling") {
                         //   Navigator.pushAndRemoveUntil(

@@ -145,13 +145,14 @@ class BarChartSample1State extends State<BarChartSample1> {
     _fetchTotalStepCount();
     fetchStepsForWeek();
     fetchExercisesForWeek();
+    print("Monday Calories: ${_weeklyCalories["Monday"]}");
   }
 
   Future<void> fetchStepsForWeek() async {
     final userId = Provider.of<UserData>(context, listen: false).userId;
     DateTime now = DateTime.now();
-    DateTime startOfWeek = now.subtract(
-        Duration(days: now.weekday - 1)); // Start of this week (Monday)
+    DateTime startOfWeek = now
+        .subtract(Duration(days: now.weekday)); // Start of this week (Monday)
     DateTime endOfWeek =
         startOfWeek.add(Duration(days: 6)); // End of this week (Sunday)
 
@@ -193,10 +194,12 @@ class BarChartSample1State extends State<BarChartSample1> {
   Future<void> fetchExercisesForWeek() async {
     final userId = Provider.of<UserData>(context, listen: false).userId;
     DateTime now = DateTime.now();
-    DateTime startOfWeek = now.subtract(
-        Duration(days: now.weekday - 1)); // Start of this week (Monday)
+    DateTime startOfWeek = now
+        .subtract(Duration(days: now.weekday)); // Start of this week (Monday)
     DateTime endOfWeek =
         startOfWeek.add(Duration(days: 6)); // End of this week (Sunday)
+    print('Start of Week: $startOfWeek');
+    print('End of Week: $endOfWeek');
 
     try {
       final querySnapshot = await FirebaseFirestore.instance

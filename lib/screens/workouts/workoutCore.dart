@@ -187,7 +187,7 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                     right: 30,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (ctx) => Exercisess(
@@ -199,13 +199,18 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                               videoTutorials: videotutorial,
                               workoutExercises: WorkoutExercises,
                               workoutGifImages: WorkoutGifImages,
+                              previousWorkout: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) => WorkoutCore()));
+                              },
 
                               nextExerciseRoute:
                                   "", // Handle next route if needed
                             ),
                           ),
-                          (route) =>
-                              false, // This removes all routes until the new one
+                          // This removes all routes until the new one
                         );
                         // if (WorkoutExercises[index] == "Plank") {
                         //   Navigator.pushAndRemoveUntil(
