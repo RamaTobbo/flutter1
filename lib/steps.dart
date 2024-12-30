@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/provider/steps.dart';
+import 'package:track_pro/provider/userdata.dart';
 
 class Steps1 extends StatefulWidget {
   const Steps1({super.key});
@@ -19,9 +20,57 @@ class _Steps1State extends State<Steps1> {
   bool _isCounting = false; // Tracks whether the timer is running
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
 
+  @override
+  void initState() {
+    super.initState();
+    fetchUserInformation();
+  }
+
+  // Fetch the user information from Firestore
+  Future<void> fetchUserInformation() async {
+    try {
+      // Get the user ID from provider or SharedPreferences
+      String userId = Provider.of<UserData>(context, listen: false).userId;
+
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (snapshot.exists) {
+        setState(() {
+          height = snapshot['height'];
+          weight = snapshot['weight'];
+
+          // Update the weight in Firebase Realtime Database
+          updateWeightInRealtimeDB(weight);
+        });
+      } else {
+        debugPrint("No user found for the given ID.");
+      }
+    } catch (e) {
+      debugPrint("Error fetching user information: $e");
+    }
+  }
+
+  // Update weight in Firebase Realtime Database in real-time
+  void updateWeightInRealtimeDB(int weight) {
+    // Set the weight value in the 'sensors' node of the Realtime Database
+    _databaseRef.child('sensors').update({
+      'weight': weight, // Upload the weight to the sensors node
+    }).then((_) {
+      print("Weight updated successfully in Firebase Realtime Database.");
+    }).catchError((error) {
+      print("Error updating weight in Realtime Database: $error");
+    });
+  }
+
+  int weight = 0;
+  int height = 0;
   double calories = 0;
   int steps = 0;
   double distance = 0;
+
   Future<void> uploadData(int stepss, double caloriess) async {
     final prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
@@ -104,10 +153,10 @@ class _Steps1State extends State<Steps1> {
       'startStepsCounting': false,
     });
     uploadData(steps, calories);
+
     calories = 0.0;
     steps = 0;
     distance = 0;
-    _fetchData();
   }
 
   @override

@@ -8,6 +8,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:track_pro/provider/steps.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/heartRate.dart';
@@ -24,6 +25,51 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
+  double steps = 0;
+  DateTime? _lastPressed;
+  void _fetchTotalStepCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+
+    if (userId != null) {
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      try {
+        // Fetch all steps for the user
+        QuerySnapshot snapshot = await firestore
+            .collection('users')
+            .doc(userId)
+            .collection('steps')
+            .orderBy('timestamp',
+                descending: true) // Optional: You can order by timestamp
+            .get(); // No limit to fetch all documents
+
+        if (snapshot.docs.isNotEmpty) {
+          double totalSteps = 0.0;
+
+          // Sum all the steps
+          for (var doc in snapshot.docs) {
+            var stepsData = doc['steps'];
+            if (stepsData != null) {
+              // Ensure the value is treated as a double, even if it's stored as an integer
+              totalSteps += (stepsData is int)
+                  ? stepsData.toDouble()
+                  : stepsData.toDouble();
+            }
+          }
+
+          // Update the total steps value
+          steps = totalSteps;
+          Provider.of<Steps>(context, listen: false).setTotalSteps(totalSteps);
+        } else {
+          print('No steps found for the user.');
+        }
+      } catch (e) {
+        print('Error fetching total step count: $e');
+      }
+    } else {
+      print('User ID not found in SharedPreferences.');
+    }
+  }
 
   int? heartRate;
   int? humidity;
@@ -40,6 +86,13 @@ class _HomepageState extends State<Homepage> {
                 .toInt(); // Convert to int if it's a double
           } else if (data['heartRate'] is int) {
             heartRate = data['heartRate']
+                as int; // Directly assign if it's already an int
+          }
+          if (data[' temperature '] is double) {
+            temperature = (data[' temperature '] as double)
+                .toInt(); // Convert to int if it's a double
+          } else if (data[' temperature '] is int) {
+            temperature = data[' temperature ']
                 as int; // Directly assign if it's already an int
           }
         });
@@ -97,7 +150,6 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  DateTime? _lastPressed;
   Future<bool> _onWillPop() async {
     DateTime now = DateTime.now();
     if (_lastPressed == null ||
@@ -334,7 +386,8 @@ class _HomepageState extends State<Homepage> {
                                           left: 20.0, top: 20),
                                       child: Row(
                                         children: [
-                                          Text('Result',
+                                          Text(
+                                              '${Provider.of<Steps>(context).totalsteps}',
                                               style: GoogleFonts.roboto(
                                                   fontSize: 29,
                                                   fontWeight: FontWeight.bold,
@@ -481,11 +534,18 @@ class _HomepageState extends State<Homepage> {
                                   padding: const EdgeInsets.only(left: 98.0),
                                   child: Row(
                                     children: [
-                                      Text('${receivedPressure}${"\u2103"}',
-                                          style: GoogleFonts.roboto(
-                                              fontSize: 29,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black)),
+                                      receivedPressure != null
+                                          ? Text(
+                                              '${receivedPressure}${"\u2103"}',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 29,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black))
+                                          : Text('${temperature}',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 29,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black)),
                                       const SizedBox(
                                         width: 4,
                                       ),
