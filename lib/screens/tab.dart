@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:track_pro/screens/trainingExercises.dart';
+import 'package:track_pro/steps.dart';
 
 class TabNav extends StatefulWidget {
   TabNav({super.key, this.index = 0});
@@ -146,7 +147,7 @@ class _TabNavState extends State<TabNav> {
         activeScreen = const Heartrate();
         break;
       case 2:
-        activeScreen = const StepsCalories();
+        activeScreen = const Steps1();
         break;
       case 4:
         activeScreen = Temperature(

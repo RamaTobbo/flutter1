@@ -24,6 +24,7 @@ class _ConnectagainState extends State<Connectagain> {
   BluetoothCharacteristic? pressureCharacteristic;
   BluetoothCharacteristic? temperatureCharacteristic;
   BluetoothCharacteristic? humidityCharacteristic;
+  BluetoothCharacteristic? stepsCharacteristic;
 
   bool connectionStatus = false;
   bool isConnecting = false;
@@ -99,6 +100,10 @@ class _ConnectagainState extends State<Connectagain> {
       timeCharacteristic = sensorService.characteristics.firstWhere(
         (char) =>
             char.uuid.toString() == "00000001-5ec4-4083-81cd-a10b8d5cf6ec",
+      );
+      stepsCharacteristic = sensorService.characteristics.firstWhere(
+        (char) =>
+            char.uuid.toString() == "00000006-5ec4-4083-81cd-a10b8d5cf6ec",
       );
       pressureCharacteristic = sensorService.characteristics.firstWhere(
         (char) =>
@@ -372,7 +377,7 @@ class _ConnectagainState extends State<Connectagain> {
                                         )));
                           },
                           child: Text(
-                            "Connect",
+                            "Connect And Activate SmartWatch",
                             style: TextStyle(color: Colors.black),
                           ),
                         ),

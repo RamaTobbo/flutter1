@@ -175,7 +175,7 @@ class _ExerciseCalendarState extends State<ExerciseCalendar> {
                           ],
                         ),
                       );
-                    },
+                   },
                   ),
           ),
         ],
