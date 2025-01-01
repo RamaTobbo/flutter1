@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-
+import 'package:track_pro/DataHistory/stepsCalendar.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/provider/userdata.dart';
 import 'package:track_pro/screens/CaloriesBurnedPerExercise.dart';
@@ -239,10 +239,8 @@ class _CaloriesburnedfromstepsState extends State<Caloriesburnedfromsteps> {
           right: 30,
           child: IconButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (ctx) => const ExerciseCalendar()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (ctx) => const StepsCalendar()));
             },
             icon: const Icon(Icons.calendar_month),
           ),
