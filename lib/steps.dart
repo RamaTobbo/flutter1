@@ -20,16 +20,23 @@ class _Steps1State extends State<Steps1> {
   bool _isCounting = false; // Tracks whether the timer is running
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
 
+  Timer? _timer;
+  int steps = 0;
+  double calories = 0;
+  double distance = 0;
+
   @override
   void initState() {
     super.initState();
-    fetchUserInformation();
+    fetchUserInformation(); // Fetch user information on app launch
   }
+
+  int weight = 0;
+  int height = 0;
 
   // Fetch the user information from Firestore
   Future<void> fetchUserInformation() async {
     try {
-      // Get the user ID from provider or SharedPreferences
       String userId = Provider.of<UserData>(context, listen: false).userId;
 
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
@@ -55,7 +62,6 @@ class _Steps1State extends State<Steps1> {
 
   // Update weight in Firebase Realtime Database in real-time
   void updateWeightInRealtimeDB(int weight) {
-    // Set the weight value in the 'sensors' node of the Realtime Database
     _databaseRef.child('sensors').update({
       'weight': weight, // Upload the weight to the sensors node
     }).then((_) {
@@ -65,11 +71,79 @@ class _Steps1State extends State<Steps1> {
     });
   }
 
-  int weight = 0;
-  int height = 0;
-  double calories = 0;
-  int steps = 0;
-  double distance = 0;
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _elapsedTime++;
+      });
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+    _timer = null;
+    _elapsedTime = 0;
+  }
+
+  void _fetchData() {
+    _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value as Map?;
+      if (data != null) {
+        setState(() {
+          steps = data['steps'] is int
+              ? data['steps']
+              : (data['steps'] as double?)?.toInt();
+
+          if (data['calories'] is double) {
+            calories = data['calories'] as double;
+          } else if (data['calories'] is int) {
+            calories = data['calories'] as double;
+          }
+
+          distance = steps * 0.4;
+        });
+      }
+    });
+  }
+
+  String _formatTime(int elapsedTime) {
+    int hours = elapsedTime ~/ 3600;
+    int minutes = (elapsedTime % 3600) ~/ 60;
+    int seconds = elapsedTime % 60;
+    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  void _startCounting() {
+    setState(() {
+      _isCounting = true;
+    });
+
+    DatabaseReference ref = FirebaseDatabase.instance.ref('sensors');
+    ref.update({
+      'startStepsCounting': true,
+    });
+
+    _startTimer();
+    _fetchData();
+  }
+
+  void _stopCounting() {
+    setState(() {
+      _isCounting = false;
+      _stopTimer();
+    });
+
+    DatabaseReference ref = FirebaseDatabase.instance.ref('sensors');
+    ref.update({
+      'startStepsCounting': false,
+    });
+
+    uploadData(steps, calories);
+
+    calories = 0.0;
+    steps = 0;
+    distance = 0;
+  }
 
   Future<void> uploadData(int stepss, double caloriess) async {
     final prefs = await SharedPreferences.getInstance();
@@ -99,66 +173,6 @@ class _Steps1State extends State<Steps1> {
     }
   }
 
-  void _fetchData() {
-    _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
-      final data = event.snapshot.value as Map?;
-      if (data != null) {
-        setState(() {
-          // Fetch steps as an integer, if it's a double convert it
-          steps = data['steps'] is int
-              ? data['steps']
-              : (data['steps'] as double?)?.toInt();
-
-          // Fetch calories as a double, if it's stored as a double
-          if (data['calories'] is double) {
-            calories = data['calories'] as double;
-          } else if (data['calories'] is int) {
-            calories = data['calories']
-                as double; // Convert it to double if it's stored as an int
-          }
-        });
-      }
-      distance = steps! * 0.4; //stride length
-    });
-  }
-
-  String _formatTime(int elapsedTime) {
-    int hours = elapsedTime ~/ 3600;
-    int minutes = elapsedTime ~/ 60;
-    int seconds = elapsedTime % 60;
-    return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-  }
-
-  // Start the counting timer
-  void _startCounting() {
-    setState(() {
-      _isCounting = true;
-    });
-    // Trigger the database update to start counting steps
-    DatabaseReference ref = FirebaseDatabase.instance.ref('sensors');
-    ref.update({
-      'startStepsCounting': true,
-    });
-    _fetchData(); // Fetch data when starting
-  }
-
-  // Stop the counting timer
-  void _stopCounting() {
-    setState(() {
-      _isCounting = false;
-    });
-    // Trigger the database update to stop counting steps
-    DatabaseReference ref = FirebaseDatabase.instance.ref('sensors');
-    ref.update({
-      'startStepsCounting': false,
-    });
-    uploadData(steps, calories);
-
-    calories = 0.0;
-    steps = 0;
-    distance = 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,23 +181,29 @@ class _Steps1State extends State<Steps1> {
           Column(
             children: [
               Container(
-                  width: 495,
-                  height: 248,
-                  decoration: BoxDecoration(
-                      color: Color(0xffffce48),
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(56),
-                          bottomRight: Radius.circular(44)))),
+                width: 495,
+                height: 248,
+                decoration: BoxDecoration(
+                  color: Color(0xffffce48),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(56),
+                    bottomRight: Radius.circular(44),
+                  ),
+                ),
+              ),
             ],
           ),
           Positioned(
             left: 20,
             top: 40,
-            child: Text('Calories And Steps',
-                style: GoogleFonts.roboto(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold)),
+            child: Text(
+              'Calories And Steps',
+              style: GoogleFonts.roboto(
+                color: Colors.black,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           Positioned(
             left: 59,
@@ -211,49 +231,57 @@ class _Steps1State extends State<Steps1> {
                     children: [
                       Row(
                         children: [
-                          Text('Steps',
-                              style: GoogleFonts.roboto(
-                                fontSize: 20,
-                                color: const Color(0xFF575757),
-                              )),
+                          Text(
+                            'Steps',
+                            style: GoogleFonts.roboto(
+                              fontSize: 20,
+                              color: const Color(0xFF575757),
+                            ),
+                          ),
                           const SizedBox(width: 60),
                           Text(
-                            '${steps ?? 0}', // Display steps or 0 if null
+                            '${steps ?? 0}',
                             style: GoogleFonts.roboto(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(width: 3),
-                          Text('step',
-                              style: GoogleFonts.roboto(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              )),
+                          Text(
+                            'step',
+                            style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 60),
                       Row(
                         children: [
-                          Text('Calories',
-                              style: GoogleFonts.roboto(
-                                fontSize: 20,
-                                color: const Color(0xFF575757),
-                              )),
+                          Text(
+                            'Calories',
+                            style: GoogleFonts.roboto(
+                              fontSize: 20,
+                              color: const Color(0xFF575757),
+                            ),
+                          ),
                           const SizedBox(width: 30),
                           Text(
-                            '${calories ?? 0}', // Display calories or 0 if null
+                            '${calories ?? 0}',
                             style: GoogleFonts.roboto(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(width: 3),
-                          Text('calories',
-                              style: GoogleFonts.roboto(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              )),
+                          Text(
+                            'calories',
+                            style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 60),
@@ -266,7 +294,7 @@ class _Steps1State extends State<Steps1> {
                                 Image.asset('assets/images/distance.png'),
                                 const SizedBox(height: 3),
                                 Text(
-                                  '${distance!.toStringAsFixed(2)}', // Placeholder for stride length
+                                  '${distance.toStringAsFixed(2)}',
                                   style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -280,7 +308,7 @@ class _Steps1State extends State<Steps1> {
                               children: [
                                 Image.asset('assets/images/fire.png'),
                                 Text(
-                                  '${calories}', // Placeholder for burned calories
+                                  '${calories}',
                                   style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -294,7 +322,7 @@ class _Steps1State extends State<Steps1> {
                               children: [
                                 Image.asset('assets/images/time.png'),
                                 Text(
-                                  _formatTime(_elapsedTime), // Timer display
+                                  _formatTime(_elapsedTime),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -322,7 +350,9 @@ class _Steps1State extends State<Steps1> {
                               ),
                             )
                           : ElevatedButton(
-                              onPressed: _startCounting,
+                              onPressed: () {
+                                _startCounting();
+                              },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF4a4d7a)),
                               child: const Padding(

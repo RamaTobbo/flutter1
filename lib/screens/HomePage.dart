@@ -74,35 +74,31 @@ class _HomepageState extends State<Homepage> {
   int? heartRate;
   int? humidity;
   int? pressure;
-  int? temperature;
+  double? temperature;
   void _fetchSensorData() {
     _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value as Map?;
       if (data != null) {
         setState(() {
-          // Check if the heartRate is a double, then convert it to int, or cast it directly if it's an int
           if (data['heartRate'] is double) {
-            heartRate = (data['heartRate'] as double)
-                .toInt(); // Convert to int if it's a double
+            heartRate = (data['heartRate'] as double).toInt();
           } else if (data['heartRate'] is int) {
-            heartRate = data['heartRate']
-                as int; // Directly assign if it's already an int
+            heartRate = data['heartRate'] as int;
           }
-          if (data[' temperature '] is double) {
-            temperature = (data[' temperature '] as double)
-                .toInt(); // Convert to int if it's a double
-          } else if (data[' temperature '] is int) {
-            temperature = data[' temperature ']
-                as int; // Directly assign if it's already an int
+          if (data['temperature'] is double) {
+            temperature = data['temperature'];
+          } else if (data['temperature'] is int) {
+            temperature = (data['temperature'] as int).toDouble();
           }
+          print('temp:${temperature}');
         });
       }
     });
   }
 
-  int height = 0; // In cm
+  int height = 0;
   int weight = 0;
-  String receivedTime = "No time yet"; // Variable to store the received time
+  String receivedTime = "No time yet";
   String receivedPressure = "No pressure yet";
   String receivedTemperature = "No temperature yet";
   String receivedHumidity = "No humidity yet";
@@ -116,6 +112,7 @@ class _HomepageState extends State<Homepage> {
     _checkBluetoothStatus();
     loadReceivedData();
     _loadUserId();
+    _fetchTotalStepCount();
     fetchUserInformation(context);
   }
 
@@ -534,14 +531,15 @@ class _HomepageState extends State<Homepage> {
                                   padding: const EdgeInsets.only(left: 98.0),
                                   child: Row(
                                     children: [
-                                      receivedPressure != null
+                                      receivedPressure.isNotEmpty
                                           ? Text(
                                               '${receivedPressure}${"\u2103"}',
                                               style: GoogleFonts.roboto(
                                                   fontSize: 29,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black))
-                                          : Text('${temperature}',
+                                          : Text(
+                                              '${temperature!.toStringAsFixed(2)}${"\u2103"}',
                                               style: GoogleFonts.roboto(
                                                   fontSize: 29,
                                                   fontWeight: FontWeight.bold,

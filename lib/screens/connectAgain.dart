@@ -377,7 +377,7 @@ class _ConnectagainState extends State<Connectagain> {
                                         )));
                           },
                           child: Text(
-                            "Connect And Activate SmartWatch",
+                            "Connect",
                             style: TextStyle(color: Colors.black),
                           ),
                         ),

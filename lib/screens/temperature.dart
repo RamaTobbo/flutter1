@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,6 +35,38 @@ class _TemperatureState extends State<Temperature> {
   void initState() {
     super.initState();
     loadReceivedData();
+    _fetchSensorData();
+  }
+
+  int? heartRate;
+  double? humidity;
+  double? pressure;
+  double? temperature;
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
+  void _fetchSensorData() {
+    _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value as Map?;
+      if (data != null) {
+        setState(() {
+          if (data['temperature'] is double) {
+            temperature = data['temperature'];
+          } else if (data['temperature'] is int) {
+            temperature = (data['temperature'] as int).toDouble();
+          }
+          if (data['pressure'] is double) {
+            pressure = data['pressure'];
+          } else if (data['pressure'] is int) {
+            pressure = (data['pressure'] as int).toDouble();
+          }
+          if (data['humidity'] is double) {
+            humidity = data['humidity'];
+          } else if (data['humidity'] is int) {
+            humidity = (data['humidity'] as int).toDouble();
+          }
+          print('temp:${temperature}');
+        });
+      }
+    });
   }
 
   Future<void> loadReceivedData() async {
@@ -47,6 +80,7 @@ class _TemperatureState extends State<Temperature> {
       receivedHumidity =
           prefs.getString('receivedHumidity') ?? "No humidity yet";
     });
+    print('hum:${receivedHumidity}');
   }
 
   void getCurrentLocation() async {
@@ -235,10 +269,15 @@ class _TemperatureState extends State<Temperature> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  Text(
-                                    '${receivedPressure}${"\u2103"}',
-                                    style: resultstyle,
-                                  ),
+                                  receivedPressure.isNotEmpty
+                                      ? Text(
+                                          '${receivedPressure}${"\u2103"}',
+                                          style: resultstyle,
+                                        )
+                                      : Text(
+                                          '${temperature!.toStringAsFixed(2)}${"\u2103"}',
+                                          style: resultstyle,
+                                        )
                                 ],
                               ),
                             ),
@@ -255,8 +294,11 @@ class _TemperatureState extends State<Temperature> {
                                 const SizedBox(
                                   width: 35,
                                 ),
-                                Text('${receivedTemperature}%',
-                                    style: resultstyle),
+                                receivedTemperature.isNotEmpty
+                                    ? Text('${receivedTemperature}%',
+                                        style: resultstyle)
+                                    : Text('${humidity!.toStringAsFixed(2)}%',
+                                        style: resultstyle)
                               ],
                             ),
                             const SizedBox(
@@ -272,8 +314,12 @@ class _TemperatureState extends State<Temperature> {
                                 const SizedBox(
                                   width: 35,
                                 ),
-                                Text('${receivedHumidity} hpa',
-                                    style: resultstyle),
+                                receivedHumidity.isNotEmpty
+                                    ? Text('${receivedHumidity} hpa',
+                                        style: resultstyle)
+                                    : Text(
+                                        '${pressure!.toStringAsFixed(2)} hpa',
+                                        style: resultstyle)
                               ],
                             ),
                           ],
