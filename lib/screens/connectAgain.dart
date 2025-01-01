@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class _ConnectagainState extends State<Connectagain> {
   BluetoothCharacteristic? temperatureCharacteristic;
   BluetoothCharacteristic? humidityCharacteristic;
   BluetoothCharacteristic? stepsCharacteristic;
-
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
   bool connectionStatus = false;
   bool isConnecting = false;
 
@@ -375,6 +376,11 @@ class _ConnectagainState extends State<Connectagain> {
                                     builder: (ctx) => TabNav(
                                           index: 0,
                                         )));
+                            DatabaseReference ref =
+                                FirebaseDatabase.instance.ref('sensors');
+                            ref.update({
+                              'activateHeartRateSensor': true,
+                            });
                           },
                           child: Text(
                             "Connect",

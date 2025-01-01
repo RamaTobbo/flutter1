@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -255,7 +256,7 @@ class _ExercisessState extends State<Exercisess> {
               },
             ),
           ),
-          (Route) => false);
+          (Route) => true);
     } else {
       Navigator.pushAndRemoveUntil(
           context,
@@ -422,11 +423,23 @@ class _ExercisessState extends State<Exercisess> {
           child: Column(
             children: [
               isAnimationDisplayed
-                  ? Image.asset(
-                      widget.animationImage,
-                      width: 90,
-                      height: 90,
-                    )
+                  ? (widget.animationImage.endsWith('.svg')
+                      ? SvgPicture.asset(
+                          widget.animationImage,
+                          width: 90,
+                          height: 90,
+                        )
+                      : widget.animationImage.endsWith('.png')
+                          ? Image.asset(
+                              widget.animationImage,
+                              width: 90,
+                              height: 90,
+                            )
+                          : Image.asset(
+                              widget.animationImage,
+                              width: 90,
+                              height: 90,
+                            ))
                   : Text('youtube video'),
               SizedBox(height: 20),
               ToggleSwitch(

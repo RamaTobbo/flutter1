@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:track_pro/provider/sensorsData.dart';
 import 'package:track_pro/screens/bluetoothPairingSuccess.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class SelectBluetoothDevice extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
   BluetoothCharacteristic? pressureCharacteristic;
   BluetoothCharacteristic? temperatureCharacteristic;
   BluetoothCharacteristic? humidityCharacteristic;
-
+  final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
   bool connectionStatus = false;
   bool isConnecting = false;
 
@@ -364,6 +365,11 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                                 MaterialPageRoute(
                                     builder: (ctx) =>
                                         Bluetoothpairingsuccess()));
+                            DatabaseReference ref =
+                                FirebaseDatabase.instance.ref('sensors');
+                            ref.update({
+                              'activateHeartRateSensor': true,
+                            });
                           },
                           child: Text(
                             "Connect",

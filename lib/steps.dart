@@ -82,7 +82,6 @@ class _Steps1State extends State<Steps1> {
   void _stopTimer() {
     _timer?.cancel();
     _timer = null;
-    _elapsedTime = 0;
   }
 
   void _fetchData() {
@@ -137,12 +136,15 @@ class _Steps1State extends State<Steps1> {
     ref.update({
       'startStepsCounting': false,
     });
-
-    uploadData(steps, calories);
-
-    calories = 0.0;
-    steps = 0;
-    distance = 0;
+    if (steps > 0) {
+      uploadData(steps, calories);
+    }
+    setState(() {
+      calories = 0.0;
+      steps = 0;
+      distance = 0;
+      _elapsedTime = 0;
+    });
   }
 
   Future<void> uploadData(int stepss, double caloriess) async {
