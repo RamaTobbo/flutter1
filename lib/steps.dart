@@ -16,7 +16,7 @@ class Steps1 extends StatefulWidget {
 }
 
 class _Steps1State extends State<Steps1> {
-  int _elapsedTime = 0;
+  double _elapsedTime = 0;
   bool _isCounting = false; // Tracks whether the timer is running
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
 
@@ -105,10 +105,10 @@ class _Steps1State extends State<Steps1> {
     });
   }
 
-  String _formatTime(int elapsedTime) {
+  String _formatTime(double elapsedTime) {
     int hours = elapsedTime ~/ 3600;
     int minutes = (elapsedTime % 3600) ~/ 60;
-    int seconds = elapsedTime % 60;
+    double seconds = elapsedTime % 60;
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
@@ -137,7 +137,7 @@ class _Steps1State extends State<Steps1> {
       'startStepsCounting': false,
     });
     if (steps > 0) {
-      uploadData(steps, calories);
+      uploadData(steps, calories, _elapsedTime);
     }
     setState(() {
       calories = 0.0;
@@ -147,7 +147,7 @@ class _Steps1State extends State<Steps1> {
     });
   }
 
-  Future<void> uploadData(int stepss, double caloriess) async {
+  Future<void> uploadData(int stepss, double caloriess, double time) async {
     final prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
 
@@ -165,7 +165,7 @@ class _Steps1State extends State<Steps1> {
       await stepsCollection.add({
         'steps': stepss,
         'caloriesBurned': caloriess,
-        'duration': _elapsedTime,
+        'duration': time,
         'timestamp': FieldValue.serverTimestamp(),
       });
 
