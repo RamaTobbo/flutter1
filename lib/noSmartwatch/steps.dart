@@ -246,7 +246,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                               children: [
                                 Image.asset('assets/images/fire.png'),
                                 Text(
-                                  '${stepsProvider.burnedCalories.round()}',
+                                  '${'${((Provider.of<Steps>(context, listen: false).steps / 3) * 0.04).toStringAsFixed(2)}'}',
                                   style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.bold,
                                   ),

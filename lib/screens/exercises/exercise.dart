@@ -111,7 +111,13 @@ class _ExercisessState extends State<Exercisess> {
 
   void nextExercise() {
     int nextIndex = widget.exerciseIndex + 1;
+    print(
+        "nextIndex: $nextIndex, workoutExercises.length: ${widget.workoutExercises.length}");
     if (nextIndex < widget.workoutExercises.length) {
+      print("Navigating to next exercise:");
+      print("Exercise Name: ${widget.workoutExercises[nextIndex]}");
+      print("Video Tutorial: ${widget.videoTutorials[nextIndex]}");
+      print("Exercise Index: $nextIndex");
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -360,7 +366,7 @@ class _ExercisessState extends State<Exercisess> {
                         ),
                       ),
                       IconButton(
-                          onPressed: nextWorkout,
+                          onPressed: nextExercise,
                           icon: Icon(Icons.arrow_right)),
                     ],
                   ),

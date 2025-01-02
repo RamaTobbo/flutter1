@@ -313,7 +313,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Row(
                           children: [
                             const SizedBox(
