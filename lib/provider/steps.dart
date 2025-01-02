@@ -59,8 +59,8 @@ class Steps extends ChangeNotifier {
     if (!_isCounting || !_isPaused) return;
 
     _isPaused = false;
-    _accelerometerSubscription?.resume(); // Resume accelerometer
-    _startTimer(); // Restart the timer
+    _accelerometerSubscription?.resume();
+    _startTimer();
 
     Future.delayed(Duration(milliseconds: 500), () {
       _lastPausedTime = null;
@@ -114,7 +114,7 @@ class Steps extends ChangeNotifier {
     if ((magnitude - _previousMagnitude).abs() > _threshold) {
       _steps++;
       // _burnedCalories = _steps * 0.04;
-      _strideLength = _steps * 0.64;
+      _strideLength = _steps;
       notifyListeners();
     }
 
@@ -132,7 +132,7 @@ class Steps extends ChangeNotifier {
     if (magnitudeDifference.abs() > _threshold) {
       _steps -= (_steps - _stepsBeforePause);
       _burnedCalories = _steps * 0.04;
-      _strideLength = _steps * 0.64;
+      _strideLength = _steps;
       notifyListeners();
     }
   }

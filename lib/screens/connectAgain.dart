@@ -1,13 +1,11 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/sensorsData.dart';
-import 'package:track_pro/screens/bluetoothPairingSuccess.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_pro/screens/tab.dart';
 
@@ -30,7 +28,7 @@ class _ConnectagainState extends State<Connectagain> {
   bool connectionStatus = false;
   bool isConnecting = false;
 
-  String receivedTime = "No time yet"; // Variable to store the received time
+  String receivedTime = "No time yet";
   String receivedPressure = "No pressure yet";
   String receivedTemperature = "No temperature yet";
   String receivedHumidity = "No humidity yet";
@@ -46,11 +44,10 @@ class _ConnectagainState extends State<Connectagain> {
     });
   }
 
-  // Function to request necessary permissions
   Future<void> getPermissions() async {
     try {
       await Permission.bluetooth.request();
-      await Permission.locationWhenInUse.request(); // For scanning Bluetooth
+      await Permission.locationWhenInUse.request();
     } catch (e) {
       print("Error requesting permissions: $e");
     }
@@ -70,10 +67,8 @@ class _ConnectagainState extends State<Connectagain> {
         isConnecting = true;
       });
 
-      // Connect to the device
       await device.connect();
 
-      // Discover services on the device
       List<BluetoothService> services = await device.discoverServices();
       print("Services discovered: ");
       services.forEach((service) {
@@ -83,7 +78,6 @@ class _ConnectagainState extends State<Connectagain> {
         });
       });
 
-      // Try finding the sensor service
       BluetoothService? sensorService;
       try {
         sensorService = services.firstWhere((service) =>
@@ -97,7 +91,6 @@ class _ConnectagainState extends State<Connectagain> {
         return;
       }
 
-      // Finding characteristics for time, pressure, temperature, and humidity
       timeCharacteristic = sensorService.characteristics.firstWhere(
         (char) =>
             char.uuid.toString() == "00000001-5ec4-4083-81cd-a10b8d5cf6ec",
@@ -127,13 +120,11 @@ class _ConnectagainState extends State<Connectagain> {
         return;
       }
 
-      // Subscribe to notifications for time, pressure, temperature, and humidity
       await timeCharacteristic!.setNotifyValue(true);
       await pressureCharacteristic!.setNotifyValue(true);
       await temperatureCharacteristic!.setNotifyValue(true);
       await humidityCharacteristic!.setNotifyValue(true);
 
-      // Listen for changes to each characteristic
       timeCharacteristic!.value.listen((value) {
         String timeString = String.fromCharCodes(value);
         setState(() {
@@ -302,7 +293,6 @@ class _ConnectagainState extends State<Connectagain> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            // Bluetooth activation status switch
             StreamBuilder(
               stream: FlutterBluePlus.adapterState,
               builder: (context, snapshot) {
@@ -337,8 +327,6 @@ class _ConnectagainState extends State<Connectagain> {
             SizedBox(
               height: 80,
             ),
-
-            // Device scan results
             StreamBuilder<List<ScanResult>>(
               stream: FlutterBluePlus.scanResults,
               initialData: const [],
@@ -393,45 +381,13 @@ class _ConnectagainState extends State<Connectagain> {
                 );
               },
             ),
-
-            // Show loading indicator if connecting
             if (isConnecting)
               Center(
                 child: CircularProgressIndicator(),
               ),
-
-            // Display the received values on the UI
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Text(
-                    'Current Time: $receivedTime',
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.amber),
-                  ),
-                  Text(
-                    'Pressure: $receivedPressure',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'Temperature: $receivedTemperature',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'Humidity: $receivedHumidity',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
-
-      // Scan button for Bluetooth devices
       floatingActionButton: StreamBuilder<bool>(
         stream: FlutterBluePlus.isScanning,
         initialData: false,

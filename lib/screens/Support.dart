@@ -24,14 +24,12 @@ class _SupportState extends State<Support> {
 
   Future<void> sendEmail(String userEmail, String content) async {
     try {
-      // Authenticate the user
       final GoogleSignInAccount? account = await _googleSignIn.signIn();
       if (account == null) {
         throw Exception("Google Sign-In failed");
       }
       final GoogleSignInAuthentication auth = await account.authentication;
 
-      // Create Authenticated HTTP Client
       final accessToken = AccessToken(
         'Bearer',
         auth.accessToken!,
@@ -46,10 +44,8 @@ class _SupportState extends State<Support> {
         ),
       );
 
-      // Create Gmail API instance
       final gmailApi = GmailApi(authClient);
 
-      // Construct the email
       final message = Message()
         ..raw = base64UrlEncode(utf8.encode(
           'From: $userEmail\n'
@@ -58,7 +54,6 @@ class _SupportState extends State<Support> {
           '$content',
         ));
 
-      // Send the email
       await gmailApi.users.messages.send(message, 'me');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Message sent successfully!")),

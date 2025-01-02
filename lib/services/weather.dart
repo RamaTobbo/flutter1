@@ -3,7 +3,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:track_pro/models/weather.dart';
-import 'package:track_pro/provider/location.dart';
 
 class WeatherService {
   static const String Base_Url =

@@ -21,7 +21,6 @@ class BluetoothDataProvider extends ChangeNotifier {
     _humidity = humidity;
     _pressure = pressure;
 
-    // Notify listeners (the UI) that the data has changed
     notifyListeners();
   }
 

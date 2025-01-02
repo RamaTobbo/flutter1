@@ -9,12 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:track_pro/models/location.dart';
-import 'package:track_pro/models/weather.dart';
+
 import 'package:track_pro/provider/location.dart';
-import 'package:track_pro/provider/sensorsData.dart';
+
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/map.dart';
-import 'package:track_pro/services/weather.dart';
 
 class Temperature extends StatefulWidget {
   const Temperature({super.key, required this.place});
@@ -114,10 +113,8 @@ class _TemperatureState extends State<Temperature> {
     double longitude = locationData.longitude!.toDouble();
     double latitude = locationData.latitude!.toDouble();
 
-    // Store the location in the provider
     Provider.of<location1>(context, listen: false).setLatitude(latitude);
-    Provider.of<location1>(context, listen: false)
-        .setLongitude(longitude); // Fix this line
+    Provider.of<location1>(context, listen: false).setLongitude(longitude);
 
     if (longitude == null || latitude == null) {
       return;

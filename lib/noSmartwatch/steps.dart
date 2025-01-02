@@ -232,7 +232,7 @@ class _StepsCaloriesState extends State<StepsCalories> {
                                 Image.asset('assets/images/distance.png'),
                                 const SizedBox(height: 3),
                                 Text(
-                                  '${stepsProvider.strideLength.toStringAsFixed(2)}',
+                                  '${(stepsProvider.steps / 3 * ((Provider.of<UserData>(context).height / 100) * 0.413)).toStringAsFixed(2)}',
                                   style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.bold,
                                   ),

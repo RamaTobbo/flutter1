@@ -99,7 +99,8 @@ class _Steps1State extends State<Steps1> {
             calories = data['calories'] as double;
           }
 
-          distance = steps * 0.4;
+          distance =
+              steps * (Provider.of<UserData>(context).height / 100) * 0.413;
         });
       }
     });

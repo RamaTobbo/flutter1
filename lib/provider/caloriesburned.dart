@@ -55,7 +55,6 @@ class CaloriesBurned with ChangeNotifier {
         return Exerciseshistory.fromFirestore(doc);
       }).toList();
 
-      // Calculate total burned calories
       _totalBurnedCalories = _exercisesh.fold(
         0.0,
         (sum, exercise) => sum + exercise.caloriesBurned,
