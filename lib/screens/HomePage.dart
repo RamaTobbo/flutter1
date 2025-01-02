@@ -71,10 +71,10 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  int? heartRate;
-  int? humidity;
-  int? pressure;
-  double? temperature;
+  int heartRate = 0;
+  int humidity = 0;
+  int pressure = 0;
+  double temperature = 0;
   void _fetchSensorData() {
     _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value as Map?;
@@ -107,6 +107,7 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     _fetchSensorData();
     _checkBluetoothStatus();
@@ -309,11 +310,15 @@ class _HomepageState extends State<Homepage> {
                                   padding: const EdgeInsets.only(left: 98.0),
                                   child: Row(
                                     children: [
-                                      Text('${heartRate}',
-                                          style: GoogleFonts.roboto(
-                                              fontSize: 29,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black)),
+                                      Text(
+                                        heartRate != null
+                                            ? '$heartRate'
+                                            : 'Loading...',
+                                        style: GoogleFonts.roboto(
+                                          fontSize: 29,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       const SizedBox(
                                         width: 4,
                                       ),

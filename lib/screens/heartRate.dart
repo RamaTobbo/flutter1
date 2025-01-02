@@ -20,26 +20,24 @@ class _HeartrateState extends State<Heartrate> {
   int? humidity;
   int? pressure;
   int? temperature;
+
   void _fetchSensorData() {
     _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value as Map?;
       if (data != null) {
         setState(() {
-          // Check if the heartRate is a double, then convert it to int, or cast it directly if it's an int
           if (data['heartRate'] is double) {
-            heartRate = (data['heartRate'] as double)
-                .toInt(); // Convert to int if it's a double
+            heartRate = (data['heartRate'] as double).toInt();
           } else if (data['heartRate'] is int) {
-            heartRate = data['heartRate']
-                as int; // Directly assign if it's already an int
+            heartRate = data['heartRate'] as int;
           }
         });
       }
     });
   }
 
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _fetchSensorData();
   }
@@ -83,7 +81,6 @@ class _HeartrateState extends State<Heartrate> {
     );
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
@@ -133,17 +130,19 @@ class _HeartrateState extends State<Heartrate> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: Image.asset(
-                                    'assets/images/heartpulse.png',
-                                    width: 90),
+                                  'assets/images/heartpulse.png',
+                                  width: 90,
+                                ),
                               ),
                               const SizedBox(width: 13),
-                              Text('${heartRate}',
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold)),
-                              const SizedBox(
-                                width: 2,
+                              Text(
+                                heartRate != null ? '$heartRate' : 'Loading...',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
+                              const SizedBox(width: 2),
                               const Padding(
                                 padding: EdgeInsets.only(top: 5.0),
                                 child: Text(
@@ -157,17 +156,19 @@ class _HeartrateState extends State<Heartrate> {
                         Positioned(
                           top: 10,
                           right: 16,
-                          child: heartRate! >= 60 && heartRate! <= 100
-                              ? Text(
-                                  'Normal',
-                                  style: GoogleFonts.roboto(
-                                      color: const Color(0xFF696969)),
-                                )
-                              : Text(
-                                  'Abnormal',
-                                  style: GoogleFonts.roboto(
-                                      color: const Color(0xFF696969)),
-                                ),
+                          child: heartRate != null
+                              ? (heartRate! >= 60 && heartRate! <= 100
+                                  ? Text(
+                                      'Normal',
+                                      style: GoogleFonts.roboto(
+                                          color: const Color(0xFF696969)),
+                                    )
+                                  : Text(
+                                      'Abnormal',
+                                      style: GoogleFonts.roboto(
+                                          color: const Color(0xFF696969)),
+                                    ))
+                              : Container(),
                         ),
                       ],
                     ),
@@ -202,9 +203,7 @@ class _HeartrateState extends State<Heartrate> {
                                   style: GoogleFonts.roboto(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold)),
-                              const SizedBox(
-                                width: 2,
-                              ),
+                              const SizedBox(width: 2),
                               const Text('oxygenres'),
                               const Padding(
                                 padding: EdgeInsets.only(top: 5.0),
@@ -257,7 +256,7 @@ class _HeartrateState extends State<Heartrate> {
                   width: 200,
                   height: 200,
                 ),
-              )
+              ),
             ],
           ),
         ),

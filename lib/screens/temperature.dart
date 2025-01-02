@@ -37,10 +37,9 @@ class _TemperatureState extends State<Temperature> {
     _fetchSensorData();
   }
 
-  int? heartRate;
-  double? humidity;
-  double? pressure;
-  double? temperature;
+  double humidity = 0;
+  double pressure = 0;
+  double temperature = 0;
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
   void _fetchSensorData() {
     _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
