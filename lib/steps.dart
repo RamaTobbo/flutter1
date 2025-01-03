@@ -96,9 +96,9 @@ class _Steps1State extends State<Steps1> {
             calories = data['calories'] as double;
           }
 
-          distance =
-              steps * (Provider.of<UserData>(context).height / 100) * 0.413;
+          // distance = steps * (height / 100) * 0.413;
         });
+        debugPrint("Height: $distance");
       }
     });
   }
@@ -294,7 +294,7 @@ class _Steps1State extends State<Steps1> {
                                 Image.asset('assets/images/distance.png'),
                                 const SizedBox(height: 3),
                                 Text(
-                                  '${distance.toStringAsFixed(2)}',
+                                  '${(steps * (height / 100) * 0.413).toStringAsFixed(2)}',
                                   style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.bold,
                                   ),
