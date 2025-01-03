@@ -17,7 +17,7 @@ class Steps1 extends StatefulWidget {
 
 class _Steps1State extends State<Steps1> {
   double _elapsedTime = 0;
-  bool _isCounting = false; // Tracks whether the timer is running
+  bool _isCounting = false;
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
 
   Timer? _timer;
@@ -28,13 +28,12 @@ class _Steps1State extends State<Steps1> {
   @override
   void initState() {
     super.initState();
-    fetchUserInformation(); // Fetch user information on app launch
+    fetchUserInformation();
   }
 
   int weight = 0;
   int height = 0;
 
-  // Fetch the user information from Firestore
   Future<void> fetchUserInformation() async {
     try {
       String userId = Provider.of<UserData>(context, listen: false).userId;
@@ -49,7 +48,6 @@ class _Steps1State extends State<Steps1> {
           height = snapshot['height'];
           weight = snapshot['weight'];
 
-          // Update the weight in Firebase Realtime Database
           updateWeightInRealtimeDB(weight);
         });
       } else {
@@ -60,10 +58,9 @@ class _Steps1State extends State<Steps1> {
     }
   }
 
-  // Update weight in Firebase Realtime Database in real-time
   void updateWeightInRealtimeDB(int weight) {
     _databaseRef.child('sensors').update({
-      'weight': weight, // Upload the weight to the sensors node
+      'weight': weight,
     }).then((_) {
       print("Weight updated successfully in Firebase Realtime Database.");
     }).catchError((error) {
