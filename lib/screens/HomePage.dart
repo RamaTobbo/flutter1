@@ -105,6 +105,7 @@ class _HomepageState extends State<Homepage> {
 
     super.initState();
     _fetchSensorData();
+
     _checkBluetoothStatus();
     loadReceivedData();
     _loadUserId();
