@@ -3,15 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
-
 import 'dart:convert';
-
 import 'package:track_pro/models/location.dart';
 import 'package:track_pro/models/weather.dart';
 import 'package:track_pro/provider/location.dart';
 import 'package:track_pro/provider/temp.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/themeprovider.dart';
+import 'package:track_pro/provider/weather.dart';
 import 'package:track_pro/screens/map.dart';
 import 'package:track_pro/services/weather.dart';
 
@@ -28,6 +27,8 @@ class _TemperatureState extends State<Temperature1> {
   final _weatherService = WeatherService('f8f10eafbcae3f86eabf5628da94f88a');
   Weather? _weather;
   DateTime? _lastPressed;
+  bool isGettingLocation = false;
+
   Future<bool> _onWillPop() async {
     DateTime now = DateTime.now();
     if (_lastPressed == null ||
@@ -45,7 +46,7 @@ class _TemperatureState extends State<Temperature1> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Exit'),
-          content: const Text('Do you want to exit trackPro app?'),
+          content: const Text('Do you want to exit TrackPro app?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -78,12 +79,8 @@ class _TemperatureState extends State<Temperature1> {
       setState(() {
         _weather = weather;
       });
-      // Provider.of<temp>(context, listen: false)
-      //     .setHumidity(weather.Humidity.round());
-      // Provider.of<temp>(context, listen: false)
-      //     .setHumidity(weather.temperature.round());
-      // Provider.of<temp>(context, listen: false)
-      //     .setCondition(weather.mainCondition);
+      Provider.of<WeatherProvider>(context, listen: false)
+          .setTemp(_weather!.temperature);
     } catch (e) {
       print('Error fetching weather data: $e');
     }
@@ -91,16 +88,16 @@ class _TemperatureState extends State<Temperature1> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _fetchWeather();
   }
 
-  @override
-  var isGettingLocation = false;
   void getCurrentLocation() async {
-    Location location = Location();
+    setState(() {
+      isGettingLocation = true;
+    });
 
+    Location location = Location();
     bool serviceEnabled;
     PermissionStatus permissionGranted;
     LocationData locationData;
@@ -121,34 +118,51 @@ class _TemperatureState extends State<Temperature1> {
       }
     }
 
-    setState(() {
-      isGettingLocation = true;
-    });
     locationData = await location.getLocation();
     final longitude = locationData.longitude;
     final latitude = locationData.latitude;
+
     if (longitude == null || latitude == null) {
       return;
     }
+
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=AIzaSyA664j9QIT6aPfNHPtMG9yKEM0Qx89RYVM');
     final response = await http.get(url);
     final resData = json.decode(response.body);
     final address = resData['results'][0]['formatted_address'];
+
     setState(() {
       pickedPlace =
           PlaceLocation(long: longitude, lat: latitude, address: address);
       isGettingLocation = false;
     });
+
+    if (pickedPlace != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => MapScreen(
+          location: pickedPlace!,
+          isSelecting: false,
+        ),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not get location. Please try again.'),
+        ),
+      );
+    }
   }
 
   final textstyle =
       GoogleFonts.roboto(fontSize: 20, color: const Color(0xff575757));
   final resultstyle =
       GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold);
+
   @override
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -236,7 +250,7 @@ class _TemperatureState extends State<Temperature1> {
                                   ),
                                   Text(
                                     _weather != null
-                                        ? '${_weather?.temperature.round()}°C'
+                                        ? '${Provider.of<WeatherProvider>(context, listen: false).temp}°C'
                                         : 'Loading...',
                                     style: resultstyle,
                                   ),
@@ -273,35 +287,26 @@ class _TemperatureState extends State<Temperature1> {
                         top: 360,
                         left: 20,
                         child: ElevatedButton(
-                          onPressed: () {
-                            getCurrentLocation();
-                            if (pickedPlace != null) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (ctx) => MapScreen(
-                                        location: pickedPlace!,
-                                        isSelecting: false,
-                                      )));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Could not get location. Please try again.'),
-                                ),
-                              );
-                            }
-                          },
+                          onPressed: getCurrentLocation,
                           style: ElevatedButton.styleFrom(
                               backgroundColor: themeProvider1.isDarkMode
                                   ? Color(0xffADD8E6)
                                   : const Color(0xFF4a4d7a)),
-                          child: const Padding(
+                          child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 40.0),
-                            child: Text(
-                              'View Location',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: isGettingLocation
+                                ? Text(
+                                    'Finding location..',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    'View Location',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
                       )

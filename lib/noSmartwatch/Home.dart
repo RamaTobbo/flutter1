@@ -89,8 +89,6 @@ class _HomeState extends State<Home> {
         setState(() {
           height = snapshot['height'];
           weight = snapshot['weight'];
-
-          // Optionally update weightHistory from Firestore
         });
       } else {
         debugPrint("No user found for the given ID.");

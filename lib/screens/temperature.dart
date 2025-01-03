@@ -9,9 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:track_pro/models/location.dart';
-
 import 'package:track_pro/provider/location.dart';
-
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/screens/map.dart';
 
@@ -25,11 +23,12 @@ class Temperature extends StatefulWidget {
 
 class _TemperatureState extends State<Temperature> {
   PlaceLocation? pickedPlace;
-  bool isGettingLocation = false; // Declare the variable here
-  String receivedTime = "No time yet"; // Variable to store the received time
+  bool isGettingLocation = false;
+  String receivedTime = "No time yet";
   String receivedPressure = "No pressure yet";
   String receivedTemperature = "No temperature yet";
   String receivedHumidity = "No humidity yet";
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +40,7 @@ class _TemperatureState extends State<Temperature> {
   double pressure = 0;
   double temperature = 0;
   final DatabaseReference _databaseRef = FirebaseDatabase.instance.ref();
+
   void _fetchSensorData() {
     _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value as Map?;
@@ -116,6 +116,9 @@ class _TemperatureState extends State<Temperature> {
     Provider.of<location1>(context, listen: false).setLongitude(longitude);
 
     if (longitude == null || latitude == null) {
+      setState(() {
+        isGettingLocation = false;
+      });
       return;
     }
 
@@ -130,6 +133,14 @@ class _TemperatureState extends State<Temperature> {
           PlaceLocation(long: longitude, lat: latitude, address: address);
       isGettingLocation = false;
     });
+
+    if (pickedPlace != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (ctx) => MapScreen(
+                location: pickedPlace!,
+                isSelecting: false,
+              )));
+    }
   }
 
   DateTime? _lastPressed;
@@ -327,33 +338,26 @@ class _TemperatureState extends State<Temperature> {
                         child: ElevatedButton(
                           onPressed: () {
                             getCurrentLocation();
-                            if (pickedPlace != null) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (ctx) => MapScreen(
-                                        location: pickedPlace!,
-                                        isSelecting: false,
-                                      )));
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Could not get location. Please try again.'),
-                                ),
-                              );
-                            }
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: themeProvider1.isDarkMode
                                   ? Color(0xffADD8E6)
                                   : const Color(0xFF4a4d7a)),
-                          child: const Padding(
+                          child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 40.0),
-                            child: Text(
-                              'View Location',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
+                            child: isGettingLocation
+                                ? Text(
+                                    'Finding location..',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    'View Location',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
                           ),
                         ),
                       )

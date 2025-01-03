@@ -12,6 +12,7 @@ import 'package:track_pro/provider/isAsmartWatchuser.dart';
 import 'package:track_pro/provider/location.dart';
 import 'package:track_pro/provider/sensorsData.dart';
 import 'package:track_pro/provider/steps.dart';
+import 'package:track_pro/provider/weather.dart';
 import 'package:track_pro/screens/listofDevices.dart';
 import 'package:track_pro/provider/themeprovider.dart';
 import 'package:track_pro/data/workout.dart';
@@ -66,6 +67,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => location1()),
         ChangeNotifierProvider(create: (_) => temp()),
         ChangeNotifierProvider(create: (context) => BluetoothDataProvider()),
+        ChangeNotifierProvider(create: (context) => WeatherProvider()),
       ],
       child: const MyApp(),
     ),
