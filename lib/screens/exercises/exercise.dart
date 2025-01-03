@@ -107,7 +107,7 @@ class _ExercisessState extends State<Exercisess> {
     }
   }
 
-  int currentExerciseIndex = 0; // Keep track of the current exercise
+  int currentExerciseIndex = 0;
 
   void nextExercise() {
     int nextIndex = widget.exerciseIndex + 1;
@@ -130,20 +130,46 @@ class _ExercisessState extends State<Exercisess> {
               workoutGifImages: widget.workoutGifImages,
               nextExerciseRoute: "",
               workoutName: widget.workoutName,
-              exerciseIndex: nextIndex, // Pass the new index
+              exerciseIndex: nextIndex,
               previousWorkout: () {},
             ),
           ),
-          // Clear the stack so user cannot go back
           (Route) => false);
+    }
+    if (widget.exerciseIndex == widget.workoutExercises.length - 1) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (ctx) => Finishedworkouts(
+              Workout: widget.workoutName,
+              repeatWorkout: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (ctx) => Exercisess(
+                        exerciseName: widget.workoutExercises[0],
+                        animationImage: widget.workoutGifImages[0],
+                        videoTutorial: widget.videoTutorials[0],
+                        videoTutorials: widget.videoTutorials,
+                        workoutExercises: widget.workoutExercises,
+                        workoutGifImages: widget.workoutGifImages,
+                        nextExerciseRoute: "",
+                        workoutName: widget.workoutName,
+                        exerciseIndex: 0,
+                        previousWorkout: () {},
+                      ),
+                    ),
+                    (Route) => false);
+              },
+            ),
+          ),
+          (Route) => true);
     }
   }
 
-  // Handle Previous Exercise
   void previousExercise() async {
     int previousIndex = widget.exerciseIndex - 1;
 
-    // Check if there's a previous exercise
     if (previousIndex >= 0) {
       Navigator.pushAndRemoveUntil(
         context,
@@ -157,14 +183,13 @@ class _ExercisessState extends State<Exercisess> {
             workoutGifImages: widget.workoutGifImages,
             nextExerciseRoute: "",
             workoutName: widget.workoutName,
-            exerciseIndex: previousIndex, // Pass the new index
+            exerciseIndex: previousIndex,
             previousWorkout: () {},
           ),
         ),
         (Route) => false,
       );
     } else {
-      // If no previous exercise, navigate to the workout page
       bool isNotUsingSmartWatch = await fetchUserUsingSmartWatch(context);
       Navigator.pushAndRemoveUntil(
         context,
@@ -195,7 +220,7 @@ class _ExercisessState extends State<Exercisess> {
       final exerciseData = {
         'exerciseName': exerciseName,
         'caloriesBurned': caloriesBurned,
-        'date': Timestamp.fromDate(date), // Save as Timestamp
+        'date': Timestamp.fromDate(date),
       };
 
       await FirebaseFirestore.instance
@@ -233,14 +258,12 @@ class _ExercisessState extends State<Exercisess> {
   }
 
   void nextWorkout() {
-    // Check if current exercise is the last one
     if (widget.exerciseIndex == widget.workoutExercises.length - 1) {
-      // Navigate to Finishedworkouts if it's the last exercise
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
             builder: (ctx) => Finishedworkouts(
-              Workout: widget.workoutName, // workout name
+              Workout: widget.workoutName,
               repeatWorkout: () {
                 Navigator.pushAndRemoveUntil(
                     context,

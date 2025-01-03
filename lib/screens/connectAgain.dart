@@ -314,6 +314,12 @@ class _ConnectagainState extends State<Connectagain> {
                             FlutterBluePlus.turnOn();
                           } else {
                             FlutterBluePlus.turnOff();
+
+                            DatabaseReference ref =
+                                FirebaseDatabase.instance.ref('sensors');
+                            ref.update({
+                              'activateHeartRateSensor': false,
+                            });
                           }
                         });
                       },

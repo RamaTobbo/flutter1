@@ -34,30 +34,25 @@ class _HomepageState extends State<Homepage> {
     if (userId != null) {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       try {
-        // Fetch all steps for the user
         QuerySnapshot snapshot = await firestore
             .collection('users')
             .doc(userId)
             .collection('steps')
-            .orderBy('timestamp',
-                descending: true) // Optional: You can order by timestamp
-            .get(); // No limit to fetch all documents
+            .orderBy('timestamp', descending: true)
+            .get();
 
         if (snapshot.docs.isNotEmpty) {
           double totalSteps = 0.0;
 
-          // Sum all the steps
           for (var doc in snapshot.docs) {
             var stepsData = doc['steps'];
             if (stepsData != null) {
-              // Ensure the value is treated as a double, even if it's stored as an integer
               totalSteps += (stepsData is int)
                   ? stepsData.toDouble()
                   : stepsData.toDouble();
             }
           }
 
-          // Update the total steps value
           steps = totalSteps;
           Provider.of<Steps>(context, listen: false).setTotalSteps(totalSteps);
         } else {
@@ -120,17 +115,19 @@ class _HomepageState extends State<Homepage> {
   void _checkBluetoothStatus() async {
     FlutterBluePlus flutterBlue = FlutterBluePlus();
 
-    // Check if Bluetooth is powered on
     bool isOn = await FlutterBluePlus.isOn;
     if (!isOn) {
-      // If Bluetooth is off, navigate to the ConnectPage
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Connectagain()),
       );
+      DatabaseReference ref = FirebaseDatabase.instance.ref('sensors');
+      ref.update({
+        'activateHeartRateSensor': false,
+      });
     } else {
       setState(() {
-        isBluetoothOn = true; // Bluetooth is on, proceed to main screen
+        isBluetoothOn = true;
       });
     }
   }
@@ -199,8 +196,6 @@ class _HomepageState extends State<Homepage> {
         setState(() {
           height = snapshot['height'];
           weight = snapshot['weight'];
-
-          // Optionally update weightHistory from Firestore
         });
       } else {
         debugPrint("No user found for the given ID.");
@@ -215,7 +210,6 @@ class _HomepageState extends State<Homepage> {
     final storedUserId = prefs.getString('userId');
 
     if (storedUserId != null) {
-      // Set the userId in the UserData provider
       Provider.of<UserData>(context, listen: false).setUserId(storedUserId);
       print("UserId loaded from SharedPreferences: $storedUserId");
     } else {

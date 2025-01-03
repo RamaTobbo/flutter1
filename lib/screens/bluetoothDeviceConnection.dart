@@ -22,7 +22,6 @@ class _BluetoothdeviceconnectionState extends State<Bluetoothdeviceconnection> {
   void initState() {
     super.initState();
 
-    // Delay for 10 seconds, then navigate to another screen
     Future.delayed(Duration(seconds: 10), () {
       Navigator.pushReplacement(
         context,

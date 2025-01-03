@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:track_pro/DataHistory/exercisesCalendar.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -50,12 +50,13 @@ class _CaloriesburnedfromstepsState extends State<Caloriesburnedfromsteps> {
       double totalCalories = 0.0;
       for (var doc in snapshot.docs) {
         var caloriesBurnedData = doc['caloriesBurned'] ?? 0.0;
+
         totalCalories += caloriesBurnedData;
         var stepsData = doc['steps'] ?? 0;
         var durationData = doc['duration'] ?? 0;
         var timestampData = doc['timestamp'] ?? DateTime.now();
 
-        if (caloriesBurnedData != 0) {
+        if (caloriesBurnedData != 0 && stepsData != 0) {
           stepsDataList.add({
             'steps': stepsData,
             'caloriesBurned': caloriesBurnedData,

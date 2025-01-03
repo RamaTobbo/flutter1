@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:intl/intl.dart'; // Import the intl package
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:track_pro/provider/sensorsData.dart';
@@ -314,6 +314,7 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                             FlutterBluePlus.turnOn();
                           } else {
                             FlutterBluePlus.turnOff();
+                          
                           }
                         });
                       },
