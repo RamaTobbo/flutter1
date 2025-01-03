@@ -32,6 +32,7 @@ class _HomeState extends State<Home> {
   double? userBmi;
   double steps = 0;
   DateTime? _lastPressed;
+
   void _fetchTotalStepCount() async {
     final prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userId');
@@ -39,30 +40,25 @@ class _HomeState extends State<Home> {
     if (userId != null) {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       try {
-        // Fetch all steps for the user
         QuerySnapshot snapshot = await firestore
             .collection('users')
             .doc(userId)
             .collection('steps')
-            .orderBy('timestamp',
-                descending: true) // Optional: You can order by timestamp
-            .get(); // No limit to fetch all documents
+            .orderBy('timestamp', descending: true)
+            .get();
 
         if (snapshot.docs.isNotEmpty) {
           double totalSteps = 0.0;
 
-          // Sum all the steps
           for (var doc in snapshot.docs) {
             var stepsData = doc['steps'];
             if (stepsData != null) {
-              // Ensure the value is treated as a double, even if it's stored as an integer
               totalSteps += (stepsData is int)
                   ? stepsData.toDouble()
                   : stepsData.toDouble();
             }
           }
 
-          // Update the total steps value
           steps = totalSteps;
           Provider.of<Steps>(context, listen: false).setTotalSteps(totalSteps);
         } else {
@@ -148,6 +144,12 @@ class _HomeState extends State<Home> {
       setState(() {
         _weather = weather;
       });
+
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setDouble('temperature', weather.temperature);
+      prefs.setDouble('humidity', weather.Humidity);
+      prefs.setString('mainCondition', weather.mainCondition);
+
       Provider.of<temp>(context, listen: false)
           .setHumidity(weather.Humidity.round());
       Provider.of<temp>(context, listen: false)
@@ -159,14 +161,29 @@ class _HomeState extends State<Home> {
     }
   }
 
+  void _loadWeatherData() async {
+    final prefs = await SharedPreferences.getInstance();
+    double? savedTemperature = prefs.getDouble('temperature');
+    double? savedHumidity = prefs.getDouble('humidity');
+    String? savedMainCondition = prefs.getString('mainCondition');
+
+    if (savedTemperature != null && savedMainCondition != null) {
+      setState(() {
+        _weather.temperature = savedTemperature;
+        _weather.Humidity = savedHumidity!;
+        _weather.mainCondition = savedMainCondition;
+      });
+    }
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _fetchTotalStepCount();
     _fetchWeather();
     _loadUserId();
     fetchUserInformation(context);
+    _loadWeatherData();
   }
 
   Future<void> _loadUserId() async {
@@ -174,7 +191,6 @@ class _HomeState extends State<Home> {
     final storedUserId = prefs.getString('userId');
 
     if (storedUserId != null) {
-      // Set the userId in the UserData provider
       Provider.of<UserData>(context, listen: false).setUserId(storedUserId);
       print("UserId loaded from SharedPreferences: $storedUserId");
     } else {
@@ -192,18 +208,18 @@ class _HomeState extends State<Home> {
     if (height > 0 && weight > 0) {
       bmi = weight / ((height / 100) * (height / 100));
     }
-    ;
 
     String bmiCategory;
     if (bmi < 18.5) {
       bmiCategory = 'UnderWeight';
     } else if (bmi > 18.5 && bmi <= 24.9) {
       bmiCategory = 'Normal';
-    } else if (bmi > 15 && bmi <= 29.9) {
+    } else if (bmi > 25 && bmi <= 29.9) {
       bmiCategory = 'OverWeight';
     } else {
       bmiCategory = 'Obese';
     }
+
     return PopScope(
       child: Stack(
         children: [
@@ -458,7 +474,7 @@ class _HomeState extends State<Home> {
                                     SizedBox(
                                       width: 40,
                                     ),
-                                    Text('${_weather!.mainCondition}',
+                                    Text('${_weather.mainCondition}',
                                         style: GoogleFonts.roboto(
                                             color: const Color(0xFF3e4445),
                                             fontSize: 15,
@@ -471,7 +487,7 @@ class _HomeState extends State<Home> {
                                     children: [
                                       Text(
                                           _weather != null
-                                              ? '${_weather?.temperature.round()}°C'
+                                              ? '${_weather.temperature.round()}°C'
                                               : 'Loading...',
                                           style: themeProvider1.isDarkMode
                                               ? GoogleFonts.roboto(
@@ -503,20 +519,6 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 70,
-            right: 20,
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (ctx) => const Chatbot()));
-              },
-              child: Image.asset(
-                'assets/images/chat.png',
-                width: 70,
               ),
             ),
           ),

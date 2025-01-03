@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:track_pro/models/location.dart';
 import 'package:track_pro/models/weather.dart';
@@ -25,18 +26,22 @@ class Temperature1 extends StatefulWidget {
 class _TemperatureState extends State<Temperature1> {
   PlaceLocation? pickedPlace;
   final _weatherService = WeatherService('f8f10eafbcae3f86eabf5628da94f88a');
-  Weather? _weather;
+  Weather _weather = Weather();
   DateTime? _lastPressed;
   bool isGettingLocation = false;
 
-  Future<bool> _onWillPop() async {
-    DateTime now = DateTime.now();
-    if (_lastPressed == null ||
-        now.difference(_lastPressed!) > Duration(seconds: 2)) {
-      _lastPressed = now;
-      return false;
-    } else {
-      return await _showExitDialog() ?? false;
+  void _loadWeatherData() async {
+    final prefs = await SharedPreferences.getInstance();
+    double? savedTemperature = prefs.getDouble('temperature');
+    double? savedHumidity = prefs.getDouble('humidity');
+    String? savedMainCondition = prefs.getString('mainCondition');
+
+    if (savedTemperature != null && savedMainCondition != null) {
+      setState(() {
+        _weather.temperature = savedTemperature;
+        _weather.Humidity = savedHumidity!;
+        _weather.mainCondition = savedMainCondition;
+      });
     }
   }
 
@@ -90,6 +95,7 @@ class _TemperatureState extends State<Temperature1> {
   void initState() {
     super.initState();
     _fetchWeather();
+    _loadWeatherData();
   }
 
   void getCurrentLocation() async {
@@ -158,6 +164,16 @@ class _TemperatureState extends State<Temperature1> {
       GoogleFonts.roboto(fontSize: 20, color: const Color(0xff575757));
   final resultstyle =
       GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.bold);
+  Future<bool> _onWillPop() async {
+    DateTime now = DateTime.now();
+    if (_lastPressed == null ||
+        now.difference(_lastPressed!) > Duration(seconds: 2)) {
+      _lastPressed = now;
+      return false;
+    } else {
+      return await _showExitDialog() ?? false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +266,7 @@ class _TemperatureState extends State<Temperature1> {
                                   ),
                                   Text(
                                     _weather != null
-                                        ? '${Provider.of<WeatherProvider>(context, listen: false).temp}°C'
+                                        ? '${_weather.temperature}°C'
                                         : 'Loading...',
                                     style: resultstyle,
                                   ),
@@ -272,7 +288,7 @@ class _TemperatureState extends State<Temperature1> {
                                 ),
                                 Text(
                                     _weather != null
-                                        ? '${_weather?.Humidity.round()}%'
+                                        ? '${_weather.Humidity}%'
                                         : 'Loading...',
                                     style: resultstyle),
                               ],

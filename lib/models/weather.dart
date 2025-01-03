@@ -4,9 +4,9 @@ class Weather {
     this.Humidity = 60,
     this.mainCondition = 'loading...',
   });
-  final double temperature;
-  final double Humidity;
-  final String mainCondition;
+  double temperature;
+  double Humidity;
+  String mainCondition;
   // final String mainCondition;
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
