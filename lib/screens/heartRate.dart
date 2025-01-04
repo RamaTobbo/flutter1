@@ -20,6 +20,7 @@ class _HeartrateState extends State<Heartrate> {
   int? humidity;
   int? pressure;
   int? temperature;
+  int? spo2;
 
   void _fetchSensorData() {
     _databaseRef.child('sensors').onValue.listen((DatabaseEvent event) {
@@ -30,6 +31,11 @@ class _HeartrateState extends State<Heartrate> {
             heartRate = (data['heartRate'] as double).toInt();
           } else if (data['heartRate'] is int) {
             heartRate = data['heartRate'] as int;
+          }
+          if (data['spo2'] is double) {
+            spo2 = (data['spo2'] as double).toInt();
+          } else if (data['spo2'] is int) {
+            spo2 = data['spo2'] as int;
           }
         });
       }
@@ -203,8 +209,13 @@ class _HeartrateState extends State<Heartrate> {
                                   style: GoogleFonts.roboto(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold)),
-                              const SizedBox(width: 2),
-                              const Text('oxygenres'),
+                              const SizedBox(width: 6),
+                              Text(
+                                '$spo2',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 20,
+                                ),
+                              ),
                               const Padding(
                                 padding: EdgeInsets.only(top: 5.0),
                                 child: Text(
@@ -218,7 +229,7 @@ class _HeartrateState extends State<Heartrate> {
                         Positioned(
                           top: 10,
                           right: 16,
-                          child: heartRate1 >= 60 && heartRate1 <= 100
+                          child: spo2! >= 90 && spo2! <= 100
                               ? Text(
                                   'Normal',
                                   style: GoogleFonts.roboto(
