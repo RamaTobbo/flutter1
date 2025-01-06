@@ -15,18 +15,16 @@ class _ExerciseCalendarState extends State<ExerciseCalendar> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   List<Map<String, dynamic>> _exercises = [];
-  Set<String> _daysWithExercises = Set<
-      String>(); // Use String to store 'yyyy-MM-dd' format to avoid issues with DateTime comparisons
+  Set<String> _daysWithExercises = Set<String>();
 
   @override
   void initState() {
     super.initState();
-    // Fetch exercises for today and for previous days
+
     fetchExercisesForDay(_selectedDay);
-    getAllDaysBeforeSelectedDay(); // Populate days before selected day
+    getAllDaysBeforeSelectedDay();
   }
 
-  // Fetch exercises for a specific day
   Future<void> fetchExercisesForDay(DateTime day) async {
     final userId = Provider.of<UserData>(context, listen: false).userId;
     final startOfDay = DateTime(day.year, day.month, day.day);
@@ -50,10 +48,9 @@ class _ExerciseCalendarState extends State<ExerciseCalendar> {
 
       setState(() {
         _exercises = exercises;
-        // Mark the day as having exercises
+
         if (_exercises.isNotEmpty) {
-          _daysWithExercises
-              .add(_formatDate(day)); // Add formatted date string to the set
+          _daysWithExercises.add(_formatDate(day));
         }
       });
     } catch (e) {
@@ -175,7 +172,7 @@ class _ExerciseCalendarState extends State<ExerciseCalendar> {
                           ],
                         ),
                       );
-                   },
+                    },
                   ),
           ),
         ],

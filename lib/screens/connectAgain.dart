@@ -169,7 +169,6 @@ class _ConnectagainState extends State<Connectagain> {
         print("Receivedd humidity: $humidityString");
       });
 
-      // Update connection status
       setState(() {
         connectionStatus = true;
         isConnecting = false;
@@ -188,103 +187,6 @@ class _ConnectagainState extends State<Connectagain> {
       debugPrint("Received humidity: $receivedTime");
     }
   }
-
-  // // Connect to the selected Bluetooth device and discover services
-  // Future<void> connectToDevice(BluetoothDevice device) async {
-  //   try {
-  //     setState(() {
-  //       isConnecting = true;
-  //     });
-
-  //     // Connect to the device
-  //     await device.connect();
-
-  //     // Discover services on the device
-  //     List<BluetoothService> services = await device.discoverServices();
-  //     print("Services discovered: ");
-  //     services.forEach((service) {
-  //       print("Service UUID: ${service.uuid}");
-  //       service.characteristics.forEach((characteristic) {
-  //         print("Characteristic UUID: ${characteristic.uuid}");
-  //       });
-  //     });
-
-  //     // Try finding the time, pressure, temperature, and humidity services
-  //     BluetoothService? sensorService;
-  //     try {
-  //       sensorService = services.firstWhere((service) =>
-  //           service.uuid.toString() == "00000000-5ec4-4083-81cd-a10b8d5cf6ec");
-  //     } catch (e) {
-  //       print("Service not found: ${e.toString()}");
-  //     }
-
-  //     if (sensorService == null) {
-  //       print("Sensor service not found!");
-  //       return;
-  //     }
-
-  //     // Finding characteristics for time, pressure, temperature, and humidity
-  //     timeCharacteristic = sensorService.characteristics.firstWhere(
-  //       (char) =>
-  //           char.uuid.toString() == "00000001-5ec4-4083-81cd-a10b8d5cf6ec",
-  //     );
-  //     pressureCharacteristic = sensorService.characteristics.firstWhere(
-  //       (char) =>
-  //           char.uuid.toString() == "00000002-5ec4-4083-81cd-a10b8d5cf6ec",
-  //     );
-  //     temperatureCharacteristic = sensorService.characteristics.firstWhere(
-  //       (char) =>
-  //           char.uuid.toString() == "00000003-5ec4-4083-81cd-a10b8d5cf6ec",
-  //     );
-  //     humidityCharacteristic = sensorService.characteristics.firstWhere(
-  //       (char) =>
-  //           char.uuid.toString() == "00000004-5ec4-4083-81cd-a10b8d5cf6ec",
-  //     );
-
-  //     if (timeCharacteristic == null ||
-  //         pressureCharacteristic == null ||
-  //         temperatureCharacteristic == null ||
-  //         humidityCharacteristic == null) {
-  //       print("One or more characteristics not found!");
-  //       return;
-  //     }
-
-  //     // Explicitly read the characteristic's value
-  //     List<int> timeValue = await timeCharacteristic!.read();
-  //     String timeString = String.fromCharCodes(timeValue);
-
-  //     List<int> pressureValue = await pressureCharacteristic!.read();
-  //     String pressureString = String.fromCharCodes(pressureValue);
-
-  //     List<int> temperatureValue = await temperatureCharacteristic!.read();
-  //     String temperatureString = String.fromCharCodes(temperatureValue);
-
-  //     List<int> humidityValue = await humidityCharacteristic!.read();
-  //     String humidityString = String.fromCharCodes(humidityValue);
-
-  //     print("Received time string: $timeString");
-  //     print("Received pressure: $pressureString");
-  //     print("Received temperature: $temperatureString");
-  //     print("Received humidity: $humidityString");
-
-  //     setState(() {
-  //       receivedTime = timeString;
-  //       receivedPressure = pressureString;
-  //       receivedTemperature = temperatureString;
-  //       receivedHumidity = humidityString;
-  //     });
-
-  //     setState(() {
-  //       connectionStatus = true;
-  //       isConnecting = false;
-  //     });
-  //   } catch (e) {
-  //     setState(() {
-  //       isConnecting = false;
-  //     });
-  //     print("Error connecting to device: $e");
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

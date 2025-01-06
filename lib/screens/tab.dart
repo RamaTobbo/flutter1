@@ -33,17 +33,15 @@ class _TabNavState extends State<TabNav> {
   void _checkBluetoothStatus() async {
     FlutterBluePlus flutterBlue = FlutterBluePlus();
 
-    // Check if Bluetooth is powered on
     bool isOn = await FlutterBluePlus.isOn;
     if (!isOn) {
-      // If Bluetooth is off, navigate to the ConnectPage
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Connectagain()),
       );
     } else {
       setState(() {
-        isBluetoothOn = true; // Bluetooth is on, proceed to main screen
+        isBluetoothOn = true;
       });
     }
   }

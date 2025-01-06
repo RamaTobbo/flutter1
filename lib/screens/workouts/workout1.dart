@@ -75,7 +75,6 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
     fetchLowerBodyExercises(context);
   }
 
-  // Fetch workout name
   void fetchLowerBody(BuildContext context) async {
     try {
       QuerySnapshot workoutNameSnapshot = await FirebaseFirestore.instance
@@ -103,7 +102,6 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
     }
   }
 
-  // Fetch lower body exercises and their images
   void fetchLowerBodyExercises(BuildContext context) async {
     try {
       QuerySnapshot lowerBodySnapshot = await FirebaseFirestore.instance
@@ -174,7 +172,7 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 8.0, left: 20),
                       child: Text(
-                        WorkoutExercises[index], // Exercise name
+                        WorkoutExercises[index],
                         style: GoogleFonts.robotoFlex(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -207,35 +205,10 @@ class _WorkoutLowerBoddyState extends State<WorkoutLowerBoddy> {
                                       builder: (ctx) => WorkoutLowerBoddy()),
                                 );
                               },
-
-                              nextExerciseRoute:
-                                  "", // Handle next route if needed
+                              nextExerciseRoute: "",
                             ),
                           ),
-                          // This removes all routes until the new one
                         );
-                        // if (WorkoutExercises[index] == "Cycling") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Bicycle()),
-                        //       (Route) => false);
-                        // } else if (WorkoutExercises[index] == "Walking") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Walking()),
-                        //       (Route) => false);
-                        // } else if (WorkoutExercises[index] == "Jumping Jacks") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (ctx) => Jumpingjacks()),
-                        //       (Route) => false);
-                        // } else if (WorkoutExercises[index] == "Burpees") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Burpees()),
-                        //       (Route) => false);
-                        // }
                       },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(

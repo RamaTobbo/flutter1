@@ -199,8 +199,7 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                               videoTutorials: videotutorial,
                               workoutExercises: WorkoutExercises,
                               workoutGifImages: WorkoutGifImages,
-                              nextExerciseRoute:
-                                  "", // Handle next route if needed
+                              nextExerciseRoute: "",
                               previousWorkout: () {
                                 Navigator.push(
                                   context,
@@ -210,30 +209,7 @@ class _WorkoutCardioState extends State<WorkoutCardio> {
                               },
                             ),
                           ),
-                          // This removes all routes until the new one
                         );
-                        // if (WorkoutExercises[index] == "Cycling") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Bicycle()),
-                        //       (Route) => false);
-                        // } else if (WorkoutExercises[index] == "Walking") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Walking()),
-                        //       (Route) => false);
-                        // } else if (WorkoutExercises[index] == "Jumping Jacks") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (ctx) => Jumpingjacks()),
-                        //       (Route) => false);
-                        // } else if (WorkoutExercises[index] == "Burpees") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Burpees()),
-                        //       (Route) => false);
-                        // }
                       },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(

@@ -13,8 +13,8 @@ class ProfileUser extends StatefulWidget {
 
 class _ProfileUserState extends State<ProfileUser> {
   String username = '';
-  int height = 0; // In cm
-  int weight = 0; // In kg
+  int height = 0;
+  int weight = 0;
   List<int> weightHistory = [];
   bool isEditingHeight = false;
   bool isEditingWeight = false;
@@ -52,8 +52,6 @@ class _ProfileUserState extends State<ProfileUser> {
           _heightController.text = height.toString();
           _weightController.text = weight.toString();
           weightHistory = List<int>.from(snapshot['weightHistory'] ?? []);
-
-          // Optionally update weightHistory from Firestore
         });
       } else {
         debugPrint("No user found for the given ID.");
@@ -109,7 +107,6 @@ class _ProfileUserState extends State<ProfileUser> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Username Section
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Text(
@@ -117,7 +114,6 @@ class _ProfileUserState extends State<ProfileUser> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              // Height Section
               Row(
                 children: [
                   Expanded(
@@ -139,7 +135,7 @@ class _ProfileUserState extends State<ProfileUser> {
                     ),
                     onPressed: () {
                       if (isEditingHeight) {
-                        updateUserInformation();
+                        // updateUserInformation();
                       }
                       setState(() {
                         isEditingHeight = !isEditingHeight;
@@ -149,7 +145,6 @@ class _ProfileUserState extends State<ProfileUser> {
                 ],
               ),
               SizedBox(height: 20),
-              // Weight Section
               Row(
                 children: [
                   Expanded(
@@ -181,13 +176,11 @@ class _ProfileUserState extends State<ProfileUser> {
                 ],
               ),
               SizedBox(height: 20),
-              // BMI Section
               Text(
                 'BMI: ${bmi.toStringAsFixed(2)} ($bmiCategory)',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
-              // Weight Graph
               Text(
                 'Weight History',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

@@ -205,25 +205,10 @@ class _WorkoutCoreState extends State<WorkoutCore> {
                                     MaterialPageRoute(
                                         builder: (ctx) => WorkoutCore()));
                               },
-
-                              nextExerciseRoute:
-                                  "", // Handle next route if needed
+                              nextExerciseRoute: "",
                             ),
                           ),
-                          // This removes all routes until the new one
                         );
-                        // if (WorkoutExercises[index] == "Plank") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(builder: (ctx) => Plank()),
-                        //       (Route) => false);
-                        // } else if (WorkoutExercises[index] == "Russian Twist") {
-                        //   Navigator.pushAndRemoveUntil(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (ctx) => RussianTwist()),
-                        //       (Route) => false);
-                        // }
                       },
                       child: Text('Begin', style: style),
                       style: ElevatedButton.styleFrom(

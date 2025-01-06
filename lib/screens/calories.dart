@@ -96,25 +96,6 @@ class _CaloriesState extends State<Calories> {
     });
   }
 
-  // void beginTheCounter(Steps stepsProvider) {
-  //   accelerometerEventStream().listen((AccelerometerEvent event) {
-  //     double magnitude =
-  //         sqrt(pow(event.x, 2) + pow(event.y, 2) + pow(event.z, 2));
-
-  //     if ((_previousMagnitude - magnitude).abs() > _threshold) {
-  //       setState(() {
-  //         _steps++;
-
-  //       //  stepsProvider.incrementStep();
-  //        // Provider.of<Steps>(context, listen: false).setSteps(_steps);
-  //         _burnedCalories = _steps * 0.04;
-  //         _strideLength = _steps * 0.64;
-  //       });
-  //     }
-  //     _previousMagnitude = magnitude;
-  //   });
-  // }
-
   Widget build(BuildContext context) {
     final themeProvider1 = Provider.of<ThemeProvider>(context);
     final stepsProvider = Provider.of<Steps>(context);

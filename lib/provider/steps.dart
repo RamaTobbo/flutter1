@@ -33,7 +33,6 @@ class Steps extends ChangeNotifier {
     _isCounting = true;
     _isPaused = false;
 
-    // Start accelerometer subscription to track steps
     _accelerometerSubscription =
         accelerometerEvents.listen((AccelerometerEvent event) {
       _handleStepDetection(event);
@@ -97,7 +96,6 @@ class Steps extends ChangeNotifier {
     });
   }
 
-  // Stop the timer
   void _stopTimer() {
     _timer?.cancel();
     _timer = null;

@@ -46,11 +46,9 @@ class _BluetoothpairingsuccessState extends State<Bluetoothpairingsuccess> {
   }
 
   void _initializeScreen() async {
-    // Delay to simulate splash screen removal
     await Future.delayed(const Duration(seconds: 1));
     FlutterNativeSplash.remove();
 
-    // Check setup status
     await _checkSetupCompletion();
   }
 

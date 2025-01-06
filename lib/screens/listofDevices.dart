@@ -24,7 +24,7 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
   bool connectionStatus = false;
   bool isConnecting = false;
 
-  String receivedTime = "No time yet"; // Variable to store the received time
+  String receivedTime = "No time yet";
   String receivedPressure = "No pressure yet";
   String receivedTemperature = "No temperature yet";
   String receivedHumidity = "No humidity yet";
@@ -40,11 +40,10 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
     });
   }
 
-  // Function to request necessary permissions
   Future<void> getPermissions() async {
     try {
       await Permission.bluetooth.request();
-      await Permission.locationWhenInUse.request(); // For scanning Bluetooth
+      await Permission.locationWhenInUse.request();
     } catch (e) {
       print("Error requesting permissions: $e");
     }
@@ -64,10 +63,8 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         isConnecting = true;
       });
 
-      // Connect to the device
       await device.connect();
 
-      // Discover services on the device
       List<BluetoothService> services = await device.discoverServices();
       print("Services discovered: ");
       services.forEach((service) {
@@ -77,7 +74,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         });
       });
 
-      // Try finding the sensor service
       BluetoothService? sensorService;
       try {
         sensorService = services.firstWhere((service) =>
@@ -91,7 +87,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         return;
       }
 
-      // Finding characteristics for time, pressure, temperature, and humidity
       timeCharacteristic = sensorService.characteristics.firstWhere(
         (char) =>
             char.uuid.toString() == "00000001-5ec4-4083-81cd-a10b8d5cf6ec",
@@ -117,13 +112,11 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         return;
       }
 
-      // Subscribe to notifications for time, pressure, temperature, and humidity
       await timeCharacteristic!.setNotifyValue(true);
       await pressureCharacteristic!.setNotifyValue(true);
       await temperatureCharacteristic!.setNotifyValue(true);
       await humidityCharacteristic!.setNotifyValue(true);
 
-      // Listen for changes to each characteristic
       timeCharacteristic!.value.listen((value) {
         String timeString = String.fromCharCodes(value);
         setState(() {
@@ -168,7 +161,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
         print("Receivedd humidity: $humidityString");
       });
 
-      // Update connection status
       setState(() {
         connectionStatus = true;
         isConnecting = false;
@@ -292,7 +284,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            // Bluetooth activation status switch
             StreamBuilder(
               stream: FlutterBluePlus.adapterState,
               builder: (context, snapshot) {
@@ -314,7 +305,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                             FlutterBluePlus.turnOn();
                           } else {
                             FlutterBluePlus.turnOff();
-                          
                           }
                         });
                       },
@@ -328,8 +318,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
             SizedBox(
               height: 80,
             ),
-
-            // Device scan results
             StreamBuilder<List<ScanResult>>(
               stream: FlutterBluePlus.scanResults,
               initialData: const [],
@@ -383,14 +371,10 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
                 );
               },
             ),
-
-            // Show loading indicator if connecting
             if (isConnecting)
               Center(
                 child: CircularProgressIndicator(),
               ),
-
-            // Display the received values on the UI
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -420,8 +404,6 @@ class _SelectBluetoothDeviceState extends State<SelectBluetoothDevice> {
           ],
         ),
       ),
-
-      // Scan button for Bluetooth devices
       floatingActionButton: StreamBuilder<bool>(
         stream: FlutterBluePlus.isScanning,
         initialData: false,

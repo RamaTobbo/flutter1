@@ -203,7 +203,7 @@ class BarChartSample1State extends State<BarChartSample1> {
 
   List<PieChartSectionData> _getPieChartSections() {
     return _weeklystepsCalories.entries.map((entry) {
-      double calories = entry.value; // Adjust calculation if needed
+      double calories = entry.value;
       Color sectionColor;
 
       switch (entry.key) {
