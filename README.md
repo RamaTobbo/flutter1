@@ -101,3 +101,11 @@ Here’s a glimpse of the app's user interface:
   <img src="image-32.png" width="300" />
   <img src="image-33.png" width="300" />
 </div>
+## Smartwatch Screenshots
+
+Here are some screenshots of the **TrackPro** app on a smartwatch:
+
+<div style="display: flex; justify-content: space-between;">
+  <img src="C:\Users\10User\flutter1\DEMO\smartwatch.jpg" width="300" />
+  <img src="image-34.png" width="300" />
+</div>
