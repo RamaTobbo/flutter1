@@ -29,9 +29,9 @@ By integrating all these features into a single platform, **TrackPro** will empo
 This project leverages several powerful technologies to build and manage the app efficiently:
 
 - **Flutter**: Used for building the mobile app's cross-platform interface.
-- **Squareline Studio**: A design and UI development tool for building smooth and intuitive smartWatch user interfaces.
+- **Squareline Studio**: A design and UI development tool for building smooth and intuitive smartwatch user interfaces.
 - **Firebase**: Used for authentication, real-time database, and cloud storage for user data and app content.
-- **Arduino**: Integrated with the app to provide sensor data (such as heart rate, oxygen levels,steps,temperature,pressure and humidity) from Arduino-based devices to the app.
+- **Arduino**: Integrated with the app to provide sensor data (such as heart rate, oxygen levels, steps, temperature, pressure, and humidity) from Arduino-based devices to the app.
 
 ## App Screenshots
 
@@ -49,68 +49,16 @@ Here’s a glimpse of the app's user interface:
   <img src="image-4.png" width="300" />
   <img src="image-5.png" width="300" />
 </div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-7.png" width="300" />
-  <img src="image-8.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-9.png" width="300" />
-  <img src="image-10.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-11.png" width="300" />
-  <img src="image-13.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-14.png" width="300" />
-  <img src="image-15.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-16.png" width="300" />
-  <img src="image-17.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-18.png" width="300" />
-  <img src="image-19.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-20.png" width="300" />
-  <img src="image-21.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-22.png" width="300" />
-  <img src="image-23.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-24.png" width="300" />
-  <img src="image-25.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-26.png" width="300" />
-  <img src="image-27.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-28.png" width="300" />
-  <img src="image-29.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-30.png" width="300" />
-  <img src="image-31.png" width="300" />
-</div>
-<div style="display: flex; justify-content: space-between;">
-  <img src="image-32.png" width="300" />
-  <img src="image-33.png" width="300" />
-</div>
+<!-- Add more images here if necessary -->
+
 ## Smartwatch Screenshots
 
 Here are some screenshots of the **TrackPro** app on a smartwatch:
 
 <div style="display: flex; justify-content: space-between;">
-  <img src="DEMO/20241217_174541.jpg"width="300" />
+  <img src="DEMO/20241217_174541.jpg" width="300" />
   <img src="image-34.png" width="300" />
 </div>
 <div style="display: flex; justify-content: space-between;">
- 
   <img src="image-35.png" width="300" />
 </div>
-
