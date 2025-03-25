@@ -24,6 +24,14 @@ For smartwatch owners, **TrackPro** will offer advanced capabilities like:
 
 By integrating all these features into a single platform, **TrackPro** will empower users to stay on top of their fitness journey, improve their health, and achieve their personal goals more effectively.
 
+## Technologies Used
+
+This project leverages several powerful technologies to build and manage the app efficiently:
+
+- **Flutter**: Used for building the mobile app's cross-platform interface.
+- **Squareline Studio**: A design and UI development tool for building smooth and intuitive smartWatch user interfaces.
+- **Firebase**: Used for authentication, real-time database, and cloud storage for user data and app content.
+- **Arduino**: Integrated with the app to provide sensor data (such as heart rate, oxygen levels,steps,temperature,pressure and humidity) from Arduino-based devices to the app.
 
 ## App Screenshots
 
