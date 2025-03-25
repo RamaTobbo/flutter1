@@ -12,6 +12,11 @@ A few resources to get you started if this is your first Flutter project:
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
 For help getting started with Flutter development, view the
+<img src="image-1.png" width="300" />
+<img src="image.png" width="300" />
+<img src="image-2.png" width="300" />
+<img src="image-3.png" width="300" />
+
 ![first screen!](image-1.png)
 ![second screen!](image.png)
 ![third screen!](image-2.png)
