@@ -107,6 +107,6 @@ Here are some screenshots of the **TrackPro** app on a smartwatch:
 
 <div style="display: flex; justify-content: space-between;">
   <img src="DEMO/20241217_174541.jpg"width="300" />
-  <img src="image-34.png" width="300" />
+  <img src="image-34.png" width="300" height="600" />
 </div>
 
