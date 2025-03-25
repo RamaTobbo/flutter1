@@ -24,14 +24,6 @@ For smartwatch owners, **TrackPro** will offer advanced capabilities like:
 
 By integrating all these features into a single platform, **TrackPro** will empower users to stay on top of their fitness journey, improve their health, and achieve their personal goals more effectively.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
 ## App Screenshots
 
