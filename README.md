@@ -10,9 +10,11 @@ A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-
-<img src="image-1.png" width="300" />
-<img src="image.png" width="300" />
-<img src="image-2.png" width="300" />
-<img src="image-3.png" width="300" />
+<div style="display: flex; justify-content: space-between;">
+  <img src="image-1.png" width="300" />
+  <img src="image-2.png" width="300" />
+</div>
+<div style="display: flex; justify-content: space-between;">
+  <img src="image-3.png" width="300" />
+  <img src="image.png" width="300" />
+</div>
