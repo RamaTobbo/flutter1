@@ -104,7 +104,7 @@ Here’s a glimpse of the app's user interface:
 
 ## Smartwatch Screenshots
 
-Here are some screenshots of the **TrackPro** app on a smartwatch:
+Here are some screenshots of the **TrackPro** smartwatch:
 
 <div style="display: flex; justify-content: space-between;">
   <img src="DEMO/20241217_174541.jpg" width="300" />
