@@ -13,9 +13,8 @@ A few resources to get you started if this is your first Flutter project:
 <div style="display: flex; justify-content: space-between;">
   <img src="image-1.png" width="300" />
   <img src="image-2.png" width="300" />
-    <img src="image-3.png" width="300" />
 </div>
 <div style="display: flex; justify-content: space-between;">
-
+  <img src="image-3.png" width="300" />
   <img src="image.png" width="300" />
 </div>
